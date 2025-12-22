@@ -1,0 +1,4 @@
+# WireGuard secrets / profiles
+*.conf
+*.key
+adminpc.conf
