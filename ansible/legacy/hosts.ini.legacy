@@ -1,0 +1,11 @@
+[all]
+appserver01     ansible_host=10.118.0.8
+controlplane01  ansible_host=10.118.0.2
+controlplane02  ansible_host=10.118.0.3
+controlplane03  ansible_host=10.118.0.4
+toolserver01    ansible_host=10.118.0.5
+workernode01    ansible_host=10.118.0.6
+workernode02    ansible_host=10.118.0.7
+
+[all:vars]
+ansible_user=root

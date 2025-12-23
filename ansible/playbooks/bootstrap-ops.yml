@@ -1,0 +1,34 @@
+- name: Bootstrap ops user on all nodes
+  hosts: all
+  become: false
+  vars:
+    ops_user: ops
+    ops_pubkey: "{{ lookup('file', playbook_dir + '/ops.pub') }}"
+  tasks:
+    - name: Ensure ops user exists
+      ansible.builtin.user:
+        name: "{{ ops_user }}"
+        shell: /bin/bash
+        create_home: true
+        state: present
+
+    - name: Ensure ops is in sudo group
+      ansible.builtin.user:
+        name: "{{ ops_user }}"
+        groups: sudo
+        append: true
+
+    - name: Install SSH public key for ops
+      ansible.posix.authorized_key:
+        user: "{{ ops_user }}"
+        key: "{{ ops_pubkey }}"
+        state: present
+
+    # (khuyến nghị) Cho ops sudo không cần password để vận hành nhanh
+    - name: Allow ops passwordless sudo
+      ansible.builtin.copy:
+        dest: "/etc/sudoers.d/90-ops-nopasswd"
+        content: "ops ALL=(ALL) NOPASSWD:ALL\n"
+        owner: root
+        group: root
+        mode: "0440"
