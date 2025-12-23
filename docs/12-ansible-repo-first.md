@@ -221,3 +221,45 @@ export ANSIBLE_CONFIG=/opt/infra-osdu-do/ansible/ansible.cfg
 Sau đó chạy gọn:
 
 ansible all -m ping
+## Evidence - Ansible working (Tue Dec 23 16:53:38 +07 2025)
+
+### ansible --version
+ansible [core 2.17.14]
+  config file = /opt/infra-osdu-do/ansible/ansible.cfg
+  configured module search path = ['/home/ops/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /opt/infra-osdu-do/.venv/lib/python3.10/site-packages/ansible
+  ansible collection location = /home/ops/.ansible/collections:/usr/share/ansible/collections
+  executable location = /opt/infra-osdu-do/.venv/bin/ansible
+  python version = 3.10.12 (main, Nov  4 2025, 08:48:33) [GCC 11.4.0] (/opt/infra-osdu-do/.venv/bin/python3)
+  jinja version = 3.1.6
+  libyaml = True
+
+### ansible all -m ping
+ToolServer01 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+WorkerNode02 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+ControlPlane01 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+ControlPlane03 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+ControlPlane02 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+WorkerNode01 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+AppServer01 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
