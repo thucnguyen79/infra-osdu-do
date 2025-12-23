@@ -3,3 +3,5 @@
 *.key
 adminpc.conf
 .venv/
+ansible/collections/
+
