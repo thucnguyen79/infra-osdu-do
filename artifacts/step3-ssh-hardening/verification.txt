@@ -1,0 +1,54 @@
+Step 3.3 verification (Tue Dec 23 21:25:25 +07 2025)
+
+== Drop-in exists? ==
+ControlPlane01 | CHANGED | rc=0 >>
+OK
+ControlPlane02 | CHANGED | rc=0 >>
+OK
+ControlPlane03 | CHANGED | rc=0 >>
+OK
+ToolServer01 | CHANGED | rc=0 >>
+OK
+WorkerNode02 | CHANGED | rc=0 >>
+OK
+AppServer01 | CHANGED | rc=0 >>
+OK
+WorkerNode01 | CHANGED | rc=0 >>
+OK
+
+== Key settings ==
+WorkerNode02 | CHANGED | rc=0 >>
+3:PasswordAuthentication no
+8:AuthenticationMethods publickey
+10:PermitRootLogin prohibit-password
+11:AllowUsers ops root
+ControlPlane02 | CHANGED | rc=0 >>
+3:PasswordAuthentication no
+8:AuthenticationMethods publickey
+10:PermitRootLogin prohibit-password
+11:AllowUsers ops root
+ControlPlane01 | CHANGED | rc=0 >>
+3:PasswordAuthentication no
+8:AuthenticationMethods publickey
+10:PermitRootLogin prohibit-password
+11:AllowUsers ops root
+ToolServer01 | CHANGED | rc=0 >>
+3:PasswordAuthentication no
+8:AuthenticationMethods publickey
+10:PermitRootLogin prohibit-password
+11:AllowUsers ops root
+ControlPlane03 | CHANGED | rc=0 >>
+3:PasswordAuthentication no
+8:AuthenticationMethods publickey
+10:PermitRootLogin prohibit-password
+11:AllowUsers ops root
+AppServer01 | CHANGED | rc=0 >>
+3:PasswordAuthentication no
+8:AuthenticationMethods publickey
+10:PermitRootLogin prohibit-password
+11:AllowUsers ops root
+WorkerNode01 | CHANGED | rc=0 >>
+3:PasswordAuthentication no
+8:AuthenticationMethods publickey
+10:PermitRootLogin prohibit-password
+11:AllowUsers ops root

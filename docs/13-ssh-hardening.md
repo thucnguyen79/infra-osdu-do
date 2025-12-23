@@ -25,3 +25,4 @@
   - sshd -t check result (from playbook)
   - SSH new session test after reload
   - ansible-playbook logs (summary)
+  - evidence put in artifacts/step3-ssh-hardening/verification.txt
