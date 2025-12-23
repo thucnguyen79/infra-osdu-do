@@ -1,34 +1,51 @@
-- name: Bootstrap ops user on all nodes
-  hosts: all
-  become: false
+---
+- name: Bootstrap ops user and SSH keys
+  hosts: lb:controlplane:worker
+  become: true
+  gather_facts: false
+
   vars:
     ops_user: ops
-    ops_pubkey: "{{ lookup('file', playbook_dir + '/ops.pub') }}"
+    ops_groups: "sudo"
+    sudo_nopasswd: true
+    ssh_pubkeys:
+      - "{{ lookup('file', 'ansible/files/ops_ansible.pub') }}"
+      - "{{ lookup('file', 'ansible/files/ops_adminpc.pub') }}"
+
+  pre_tasks:
+    - name: Ensure python3 is installed (for Ansible modules)
+      raw: |
+        test -e /usr/bin/python3 || (apt-get update -y && apt-get install -y python3)
+      changed_when: false
+
   tasks:
     - name: Ensure ops user exists
-      ansible.builtin.user:
+      user:
         name: "{{ ops_user }}"
         shell: /bin/bash
-        create_home: true
-        state: present
-
-    - name: Ensure ops is in sudo group
-      ansible.builtin.user:
-        name: "{{ ops_user }}"
-        groups: sudo
+        groups: "{{ ops_groups }}"
         append: true
+        create_home: true
 
-    - name: Install SSH public key for ops
-      ansible.posix.authorized_key:
-        user: "{{ ops_user }}"
-        key: "{{ ops_pubkey }}"
-        state: present
-
-    # (khuyến nghị) Cho ops sudo không cần password để vận hành nhanh
-    - name: Allow ops passwordless sudo
-      ansible.builtin.copy:
-        dest: "/etc/sudoers.d/90-ops-nopasswd"
-        content: "ops ALL=(ALL) NOPASSWD:ALL\n"
+    - name: Allow ops sudo (NOPASSWD optional)
+      copy:
+        dest: "/etc/sudoers.d/{{ ops_user }}"
+        content: "{{ ops_user }} ALL=(ALL) {{ 'NOPASSWD:' if sudo_nopasswd else '' }}ALL\n"
         owner: root
         group: root
         mode: "0440"
+
+    - name: Ensure .ssh dir exists
+      file:
+        path: "/home/{{ ops_user }}/.ssh"
+        state: directory
+        owner: "{{ ops_user }}"
+        group: "{{ ops_user }}"
+        mode: "0700"
+
+    - name: Install authorized keys for ops
+      authorized_key:
+        user: "{{ ops_user }}"
+        key: "{{ item }}"
+        state: present
+      loop: "{{ ssh_pubkeys }}"
