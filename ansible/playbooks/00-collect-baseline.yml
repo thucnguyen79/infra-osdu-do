@@ -1,0 +1,67 @@
+---
+- name: Collect baseline info before hardening
+  hosts: lb:controlplane:worker:tool
+  become: true
+  gather_facts: true
+
+  vars:
+    outdir: "/opt/infra-osdu-do/artifacts/step3-baseline/{{ inventory_hostname }}"
+
+  tasks:
+    - name: Create output dir on ToolServer01
+      file:
+        path: "{{ outdir }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      become: false
+
+    - name: Save hostname
+      copy:
+        dest: "{{ outdir }}/hostname.txt"
+        content: "{{ inventory_hostname }}\n"
+      delegate_to: localhost
+      become: false
+
+    - name: Collect ip -br a
+      command: ip -br a
+      register: ipbr
+      changed_when: false
+
+    - name: Write ip -br a
+      copy:
+        dest: "{{ outdir }}/ip-br-a.txt"
+        content: "{{ ipbr.stdout }}\n"
+      delegate_to: localhost
+      become: false
+
+    - name: Collect swap status
+      command: sh -c "swapon --show || true"
+      register: sw
+      changed_when: false
+
+    - name: Write swap status
+      copy:
+        dest: "{{ outdir }}/swapon.txt"
+        content: "{{ sw.stdout }}\n"
+      delegate_to: localhost
+      become: false
+
+    - name: Collect sysctl key values
+      command: sh -c "sysctl net.ipv4.ip_forward net.bridge.bridge-nf-call-iptables net.bridge.bridge-nf-call-ip6tables 2>/dev/null || true"
+      register: sysctl_out
+      changed_when: false
+
+    - name: Write sysctl values
+      copy:
+        dest: "{{ outdir }}/sysctl.txt"
+        content: "{{ sysctl_out.stdout }}\n"
+      delegate_to: localhost
+      become: false
+
+    - name: Fetch sshd_config (if exists)
+      fetch:
+        src: /etc/ssh/sshd_config
+        dest: "{{ outdir }}/sshd_config"
+        flat: true
+      ignore_errors: true
