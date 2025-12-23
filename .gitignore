@@ -2,3 +2,4 @@
 *.conf
 *.key
 adminpc.conf
+.venv/
