@@ -1,0 +1,94 @@
+---
+- name: SSH hardening (key-only) via sshd drop-in
+  hosts: lb:controlplane:worker
+  become: true
+  gather_facts: false
+
+  vars:
+    dropin_dir: /etc/ssh/sshd_config.d
+    dropin_file: /etc/ssh/sshd_config.d/99-osdu-hardening.conf
+    allow_users: "ops root"
+    permit_root_login: "prohibit-password"
+
+  tasks:
+    - name: Ensure openssh-server installed
+      apt:
+        name: openssh-server
+        state: present
+        update_cache: false
+
+    - name: Ensure drop-in directory exists
+      file:
+        path: "{{ dropin_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Ensure sshd_config includes drop-in directory
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        line: "Include /etc/ssh/sshd_config.d/*.conf"
+        insertafter: BOF
+        state: present
+
+    - name: Backup existing drop-in if any
+      copy:
+        src: "{{ dropin_file }}"
+        dest: "{{ dropin_file }}.bak.{{ lookup('pipe','date +%F-%H%M%S') }}"
+        remote_src: true
+      ignore_errors: true
+
+    - name: Write SSH hardening drop-in config
+      copy:
+        dest: "{{ dropin_file }}"
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          # Managed by Ansible - Step 3.3 (OSDU/K8s lab)
+          # Key-only SSH, safe break-glass root (key only)
+          PasswordAuthentication no
+          KbdInteractiveAuthentication no
+          ChallengeResponseAuthentication no
+          PermitEmptyPasswords no
+          PubkeyAuthentication yes
+          AuthenticationMethods publickey
+
+          PermitRootLogin {{ permit_root_login }}
+          AllowUsers {{ allow_users }}
+
+          X11Forwarding no
+          UseDNS no
+          MaxAuthTries 3
+          LoginGraceTime 30
+          ClientAliveInterval 300
+          ClientAliveCountMax 2
+
+    - name: Validate sshd configuration
+      command: sshd -t
+      changed_when: false
+
+    - name: Reload SSH service (no disconnect expected)
+      systemd:
+        name: ssh
+        state: reloaded
+
+    - name: Wait for SSH port to be reachable
+      wait_for:
+        host: "{{ ansible_host | default(inventory_hostname) }}"
+        port: 22
+        timeout: 15
+      delegate_to: localhost
+      become: false
+
+    - name: Verify new SSH session from ToolServer01 (ops)
+      command: >
+        ssh -o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=5
+        ops@{{ ansible_host | default(inventory_hostname) }} "echo SSH_OK && hostname"
+      register: ssh_test
+      changed_when: false
+      delegate_to: localhost
+      become: false
+
+    - name: Show verification output
+      debug:
+        var: ssh_test.stdout

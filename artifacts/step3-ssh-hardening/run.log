@@ -1,0 +1,177 @@
+Step 3.3 SSH hardening evidence
+Time: Tue Dec 23 20:50:39 +07 2025
+
+== Canary: ControlPlane01 ==
+
+PLAY [SSH hardening (key-only) via sshd drop-in] *******************************
+
+TASK [Ensure openssh-server installed] *****************************************
+ok: [ControlPlane01]
+
+TASK [Ensure drop-in directory exists] *****************************************
+ok: [ControlPlane01]
+
+TASK [Ensure sshd_config includes drop-in directory] ***************************
+ok: [ControlPlane01]
+
+TASK [Backup existing drop-in if any] ******************************************
+changed: [ControlPlane01]
+
+TASK [Write SSH hardening drop-in config] **************************************
+ok: [ControlPlane01]
+
+TASK [Validate sshd configuration] *********************************************
+ok: [ControlPlane01]
+
+TASK [Reload SSH service (no disconnect expected)] *****************************
+changed: [ControlPlane01]
+
+TASK [Wait for SSH port to be reachable] ***************************************
+ok: [ControlPlane01 -> localhost]
+
+TASK [Verify new SSH session from ToolServer01 (ops)] **************************
+ok: [ControlPlane01 -> localhost]
+
+TASK [Show verification output] ************************************************
+ok: [ControlPlane01] => {
+    "ssh_test.stdout": "SSH_OK\nubuntu-s-4vcpu-8gb-240gb-intel-tor1-01"
+}
+
+PLAY RECAP *********************************************************************
+ControlPlane01             : ok=10   changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+
+== Rollout: all nodes ==
+
+PLAY [SSH hardening (key-only) via sshd drop-in] *******************************
+
+TASK [Ensure openssh-server installed] *****************************************
+ok: [ControlPlane01]
+ok: [ControlPlane02]
+ok: [WorkerNode02]
+ok: [ControlPlane03]
+ok: [WorkerNode01]
+ok: [AppServer01]
+
+TASK [Ensure drop-in directory exists] *****************************************
+ok: [ControlPlane02]
+ok: [ControlPlane01]
+ok: [ControlPlane03]
+ok: [WorkerNode02]
+ok: [WorkerNode01]
+ok: [AppServer01]
+
+TASK [Ensure sshd_config includes drop-in directory] ***************************
+ok: [ControlPlane02]
+ok: [ControlPlane01]
+ok: [ControlPlane03]
+ok: [WorkerNode02]
+ok: [WorkerNode01]
+ok: [AppServer01]
+
+TASK [Backup existing drop-in if any] ******************************************
+changed: [ControlPlane01]
+changed: [ControlPlane02]
+changed: [WorkerNode02]
+changed: [ControlPlane03]
+changed: [AppServer01]
+changed: [WorkerNode01]
+
+TASK [Write SSH hardening drop-in config] **************************************
+ok: [ControlPlane02]
+ok: [ControlPlane03]
+ok: [WorkerNode02]
+ok: [ControlPlane01]
+ok: [WorkerNode01]
+ok: [AppServer01]
+
+TASK [Validate sshd configuration] *********************************************
+ok: [ControlPlane02]
+ok: [ControlPlane03]
+ok: [WorkerNode02]
+ok: [ControlPlane01]
+ok: [WorkerNode01]
+ok: [AppServer01]
+
+TASK [Reload SSH service (no disconnect expected)] *****************************
+changed: [ControlPlane03]
+changed: [ControlPlane02]
+changed: [WorkerNode02]
+changed: [ControlPlane01]
+changed: [WorkerNode01]
+changed: [AppServer01]
+
+TASK [Wait for SSH port to be reachable] ***************************************
+ok: [WorkerNode02 -> localhost]
+ok: [WorkerNode01 -> localhost]
+ok: [AppServer01 -> localhost]
+ok: [ControlPlane01 -> localhost]
+ok: [ControlPlane02 -> localhost]
+ok: [ControlPlane03 -> localhost]
+
+TASK [Verify new SSH session from ToolServer01 (ops)] **************************
+ok: [ControlPlane01 -> localhost]
+ok: [AppServer01 -> localhost]
+ok: [ControlPlane02 -> localhost]
+ok: [ControlPlane03 -> localhost]
+ok: [WorkerNode01 -> localhost]
+ok: [WorkerNode02 -> localhost]
+
+TASK [Show verification output] ************************************************
+ok: [AppServer01] => {
+    "ssh_test.stdout": "SSH_OK\nubuntu-s-8vcpu-32gb-640gb-intel-tor1-03"
+}
+ok: [ControlPlane01] => {
+    "ssh_test.stdout": "SSH_OK\nubuntu-s-4vcpu-8gb-240gb-intel-tor1-01"
+}
+ok: [ControlPlane02] => {
+    "ssh_test.stdout": "SSH_OK\nubuntu-s-4vcpu-8gb-240gb-intel-tor1-02"
+}
+ok: [ControlPlane03] => {
+    "ssh_test.stdout": "SSH_OK\nControlPlane03"
+}
+ok: [WorkerNode01] => {
+    "ssh_test.stdout": "SSH_OK\nWorkerNode01"
+}
+ok: [WorkerNode02] => {
+    "ssh_test.stdout": "SSH_OK\nubuntu-s-8vcpu-32gb-640gb-intel-tor1-02"
+}
+
+PLAY RECAP *********************************************************************
+AppServer01                : ok=10   changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ControlPlane01             : ok=10   changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ControlPlane02             : ok=10   changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ControlPlane03             : ok=10   changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+WorkerNode01               : ok=10   changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+WorkerNode02               : ok=10   changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+
+== Post-check: ansible all -m ping ==
+ControlPlane02 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+ControlPlane03 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+ControlPlane01 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+WorkerNode01 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+WorkerNode02 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+AppServer01 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+ToolServer01 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}

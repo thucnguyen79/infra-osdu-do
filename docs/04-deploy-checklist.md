@@ -26,3 +26,11 @@
 - [x] Public SSH to CP/Worker/AppServer01 blocked
 - [x] Private SSH via VPN/VPC works (ssh ops@10.118.0.2 OK)
 - [x] Evidence stored in artifacts/step3-firewall/
+
+### Step 3.3 SSH hardening (key-only)
+- [x] Canary: apply hardening to ControlPlane01
+- [x] Verify: new SSH session ops@10.118.0.2 works
+- [x] Rollout: apply hardening to CP/Worker/AppServer01
+- [x] Verify: ansible ping all OK after hardening
+- [x] Apply hardening to ToolServer01 last
+- [x] Evidence stored in artifacts/step3-ssh-hardening/

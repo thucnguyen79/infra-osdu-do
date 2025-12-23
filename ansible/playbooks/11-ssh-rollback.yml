@@ -1,0 +1,23 @@
+---
+- name: Rollback SSH hardening (remove drop-in)
+  hosts: lb:controlplane:worker
+  become: true
+  gather_facts: false
+
+  vars:
+    dropin_file: /etc/ssh/sshd_config.d/99-osdu-hardening.conf
+
+  tasks:
+    - name: Remove hardening drop-in file
+      file:
+        path: "{{ dropin_file }}"
+        state: absent
+
+    - name: Validate sshd configuration
+      command: sshd -t
+      changed_when: false
+
+    - name: Reload SSH service
+      systemd:
+        name: ssh
+        state: reloaded
