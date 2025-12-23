@@ -279,7 +279,10 @@ git push origin main
 
 ### Fix modprobe issue in  ansible/ansible.cfg
 
-Chuẩn repo-first thì bạn làm 3 việc: (1) khai báo collection trong ansible/requirements.yml → (2) cài collections vào thư mục trong repo → (3) gọi đúng FQCN community.general.modprobe trong playbook.
+Chuẩn repo-first thì ta làm 3 việc: 
+(1) khai báo collection trong ansible/requirements.yml → 
+(2) cài collections vào thư mục trong repo → 
+(3) gọi đúng FQCN community.general.modprobe trong playbook.
 
 Dưới đây là các bước “đúng chuẩn” + lệnh copy/paste chạy luôn.
 
@@ -314,11 +317,11 @@ Mở ansible/ansible.cfg và thêm/đảm bảo có dòng sau trong [defaults]:
 collections_paths = /opt/infra-osdu-do/ansible/collections:~/.ansible/collections:/usr/share/ansible/collections
 
 
-Vì bạn đang export ANSIBLE_CONFIG=/opt/infra-osdu-do/ansible/ansible.cfg nên chỉ cần cấu hình ở đây là ổn.
+Vì ta đang export ANSIBLE_CONFIG=/opt/infra-osdu-do/ansible/ansible.cfg nên chỉ cần cấu hình ở đây là ổn.
 
 4) Sửa playbook: đổi modprobe: thành community.general.modprobe:
 
-Đoạn bạn paste sửa thành:
+Đoạn được paste sửa thành:
 
     - name: Load overlay module
       community.general.modprobe:
@@ -331,7 +334,7 @@ Vì bạn đang export ANSIBLE_CONFIG=/opt/infra-osdu-do/ansible/ansible.cfg nê
         state: present
 
 
-Bạn có thể dùng sed để sửa nhanh (ít sai):
+Có thể dùng sed để sửa nhanh (ít sai):
 
 sed -i 's/^\(\s*\)modprobe:/\1community.general.modprobe:/' ansible/playbooks/20-k8s-node-baseline.yml
 
@@ -356,6 +359,6 @@ ansible/collections nên được commit hay không?
 
 Thường không commit cả thư mục collections (nặng). Chỉ commit requirements.yml, và khi deploy thì chạy ansible-galaxy collection install ... để pull về.
 
-Bạn có thể thêm .gitignore:
+Ta có thể thêm .gitignore:
 
 ansible/collections/
