@@ -1,10 +1,17 @@
-# DigitalOcean Firewall - Step 2 (WireGuard)
+# DigitalOcean Firewall - VPN (WireGuard)
 
-## Inbound rules
-- UDP 51820 -> ToolServer01 (147.182.146.253)
-  - Source: <YOUR_PUBLIC_IP>/32 (khuyến nghị) hoặc 0.0.0.0/0 (POC tạm)
+## Droplet
+- Name: ToolServer01
+- Public IP: 147.182.146.253
+
+## Rule (Inbound)
+- Protocol: UDP
+- Port: 51820
+- Source CIDR: x.x.x.x/32   (Office/Home public IP)
+- Target: ToolServer01
+- Purpose: Allow WireGuard VPN handshake/traffic
 
 ## Notes
-- Không mở public SSH cho ControlPlane/Worker.
-- SSH (22) của ToolServer01 nên allowlist theo IP quản trị.
-- Bước 3 sẽ siết tiếp firewall cho toàn cụm.
+- Prefer restricting source CIDR (avoid 0.0.0.0/0).
+- Ensure SSH (TCP 22) remains allowed from admin IPs.
+- If UFW is enabled on the droplet, allow UDP 51820 there as well.
