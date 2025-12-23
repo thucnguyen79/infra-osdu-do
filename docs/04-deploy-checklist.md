@@ -34,3 +34,11 @@
 - [x] Verify: ansible ping all OK after hardening
 - [x] Apply hardening to ToolServer01 last
 - [x] Evidence stored in artifacts/step3-ssh-hardening/
+
+## Step 4 - Kubernetes prerequisites (node baseline)
+### Step 4.1 Node baseline (CP/Worker)
+- [x] Swap disabled on all CP/Worker
+- [x] Kernel modules overlay, br_netfilter loaded
+- [x] sysctl configured for Kubernetes networking
+- [x] containerd installed & running (SystemdCgroup=true)
+- [x] Evidence stored in artifacts/step4-node-baseline/

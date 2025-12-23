@@ -1,0 +1,158 @@
+Step 4.1 run log (Tue Dec 23 21:59:37 +07 2025)
+
+PLAY [Step 4.1 - Kubernetes node baseline (kubeadm prerequisites)] *************
+
+TASK [Gathering Facts] *********************************************************
+ok: [ControlPlane03]
+ok: [ControlPlane02]
+ok: [ControlPlane01]
+ok: [WorkerNode01]
+ok: [WorkerNode02]
+
+TASK [Create evidence directory on ToolServer01] *******************************
+ok: [ControlPlane03 -> localhost]
+ok: [WorkerNode01 -> localhost]
+ok: [ControlPlane02 -> localhost]
+ok: [ControlPlane01 -> localhost]
+ok: [WorkerNode02 -> localhost]
+
+TASK [Install required packages] ***********************************************
+ok: [WorkerNode02]
+ok: [WorkerNode01]
+ok: [ControlPlane01]
+ok: [ControlPlane03]
+ok: [ControlPlane02]
+
+TASK [Disable swap immediately] ************************************************
+ok: [ControlPlane02]
+ok: [WorkerNode02]
+ok: [ControlPlane03]
+ok: [WorkerNode01]
+ok: [ControlPlane01]
+
+TASK [Comment swap entries in /etc/fstab (safe)] *******************************
+ok: [ControlPlane03]
+ok: [WorkerNode02]
+ok: [WorkerNode01]
+ok: [ControlPlane01]
+ok: [ControlPlane02]
+
+TASK [Capture swap status] *****************************************************
+ok: [ControlPlane01]
+ok: [ControlPlane02]
+ok: [ControlPlane03]
+ok: [WorkerNode02]
+ok: [WorkerNode01]
+
+TASK [Save swapon status to artifacts] *****************************************
+ok: [WorkerNode02 -> localhost]
+ok: [ControlPlane02 -> localhost]
+ok: [ControlPlane01 -> localhost]
+ok: [WorkerNode01 -> localhost]
+ok: [ControlPlane03 -> localhost]
+
+TASK [Ensure kernel modules config for Kubernetes] *****************************
+ok: [ControlPlane01]
+ok: [ControlPlane03]
+ok: [ControlPlane02]
+ok: [WorkerNode01]
+ok: [WorkerNode02]
+
+TASK [Load overlay module] *****************************************************
+ok: [ControlPlane02]
+ok: [ControlPlane03]
+ok: [WorkerNode02]
+ok: [WorkerNode01]
+ok: [ControlPlane01]
+
+TASK [Load br_netfilter module] ************************************************
+ok: [ControlPlane01]
+ok: [ControlPlane03]
+ok: [ControlPlane02]
+ok: [WorkerNode01]
+ok: [WorkerNode02]
+
+TASK [Capture lsmod relevant] **************************************************
+ok: [ControlPlane01]
+ok: [ControlPlane02]
+ok: [ControlPlane03]
+ok: [WorkerNode01]
+ok: [WorkerNode02]
+
+TASK [Save lsmod to artifacts] *************************************************
+ok: [ControlPlane01 -> localhost]
+ok: [ControlPlane03 -> localhost]
+ok: [WorkerNode01 -> localhost]
+ok: [ControlPlane02 -> localhost]
+ok: [WorkerNode02 -> localhost]
+
+TASK [Ensure sysctl params for Kubernetes] *************************************
+ok: [ControlPlane02]
+ok: [ControlPlane01]
+ok: [ControlPlane03]
+ok: [WorkerNode01]
+ok: [WorkerNode02]
+
+TASK [Apply sysctl] ************************************************************
+ok: [ControlPlane01]
+ok: [ControlPlane02]
+ok: [ControlPlane03]
+ok: [WorkerNode01]
+ok: [WorkerNode02]
+
+TASK [Capture sysctl values] ***************************************************
+ok: [ControlPlane01]
+ok: [ControlPlane02]
+ok: [ControlPlane03]
+ok: [WorkerNode01]
+ok: [WorkerNode02]
+
+TASK [Save sysctl to artifacts] ************************************************
+ok: [ControlPlane01 -> localhost]
+ok: [WorkerNode01 -> localhost]
+ok: [WorkerNode02 -> localhost]
+ok: [ControlPlane02 -> localhost]
+ok: [ControlPlane03 -> localhost]
+
+TASK [Ensure containerd config exists (generate default if missing)] ***********
+ok: [ControlPlane01]
+ok: [ControlPlane02]
+ok: [ControlPlane03]
+ok: [WorkerNode01]
+ok: [WorkerNode02]
+
+TASK [Set SystemdCgroup = true in containerd config] ***************************
+ok: [ControlPlane01]
+ok: [ControlPlane02]
+ok: [ControlPlane03]
+ok: [WorkerNode01]
+ok: [WorkerNode02]
+
+TASK [Restart containerd] ******************************************************
+changed: [ControlPlane02]
+changed: [ControlPlane03]
+changed: [ControlPlane01]
+changed: [WorkerNode02]
+changed: [WorkerNode01]
+
+TASK [Capture containerd status] ***********************************************
+ok: [ControlPlane02]
+ok: [ControlPlane01]
+ok: [ControlPlane03]
+ok: [WorkerNode01]
+ok: [WorkerNode02]
+
+TASK [Save containerd status to artifacts] *************************************
+ok: [ControlPlane02 -> localhost]
+ok: [WorkerNode01 -> localhost]
+ok: [ControlPlane01 -> localhost]
+ok: [ControlPlane03 -> localhost]
+ok: [WorkerNode02 -> localhost]
+
+PLAY RECAP *********************************************************************
+ControlPlane01             : ok=21   changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ControlPlane02             : ok=21   changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ControlPlane03             : ok=21   changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+WorkerNode01               : ok=21   changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+WorkerNode02               : ok=21   changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

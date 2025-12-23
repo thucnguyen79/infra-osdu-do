@@ -1,6 +1,6 @@
 ---
 - name: SSH hardening (key-only) via sshd drop-in
-  hosts: lb:controlplane:worker
+  hosts: lb:controlplane:worker:tool
   become: true
   gather_facts: false
 
