@@ -1,0 +1,15 @@
+Step 3.1.2 - Firewall verification
+
+1) Confirm public SSH blocked for cluster nodes (from AdminPC):
+- ControlPlane01 public: ssh ops@165.227.45.55 -> expected FAIL
+- WorkerNode01 public:   ssh ops@159.203.10.8  -> expected FAIL
+- AppServer01 public:    ssh ops@142.93.154.5  -> expected FAIL
+
+2) Confirm private SSH OK (from VPN / ToolServer01):
+- ssh ops@10.118.0.2 -> expected OK
+- ssh ops@10.118.0.6 -> expected OK
+
+Status:
+- Confirmed by operator: CP/Worker/AppServer01 cannot be accessed by public SSH; ToolServer01 VPN OK.
+
+Verified at: Tue Dec 23 20:26:31 +07 2025

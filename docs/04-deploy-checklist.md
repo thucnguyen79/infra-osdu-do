@@ -18,3 +18,11 @@
 - [x] ansible.cfg created and points to ansible/hosts.ini
 - [x] ansible/hosts.ini uses ONLY 10.118.0.x addresses
 - [x] Ansible ping: ansible all -m ping (SUCCESS)
+
+## Step 3 - Security baseline (Firewall/SSH)
+### Step 3.1 DigitalOcean Firewall
+- [x] FW-TOOLSERVER01 created and applied
+- [x] FW-CLUSTER-NODES created and applied
+- [x] Public SSH to CP/Worker/AppServer01 blocked
+- [x] Private SSH via VPN/VPC works (ssh ops@10.118.0.2 OK)
+- [x] Evidence stored in artifacts/step3-firewall/
