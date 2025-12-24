@@ -27,3 +27,11 @@ Commands (secrets are stored in artifacts-private/):
 
 Non-secret evidence:
 - artifacts/step4-controlplane-endpoint/ControlPlane01/post-init.txt
+### Chú thích
+Có thể làm repo-first bằng Ansible và đó thường là hướng “tối ưu hơn” về:
+- tính lặp lại (idempotent ở mức hợp lý),
+- chuẩn hoá evidence/log,
+- giảm thao tác tay,
+- kiểm soát secrets tốt hơn (lưu vào artifacts-private/, không commit).
+
+Tuy nhiên, dù dùng Ansible, bước kubeadm init vẫn là “one-time action”, cho nên bước này thực hiện các lệnh thủ công trước
