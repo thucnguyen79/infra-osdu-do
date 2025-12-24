@@ -1,0 +1,110 @@
+---
+- name: "Step 4.2 - Install Kubernetes packages (kubeadm/kubelet/kubectl) + node-ip"
+  hosts: k8s_cluster
+  become: true
+  vars:
+    # Chọn minor version bạn muốn (ví dụ 1.30). Repo sẽ lấy patch mới nhất trong minor đó.
+    k8s_minor: "1.30"
+
+    artifacts_root: "/opt/infra-osdu-do/artifacts/step4-k8s-packages"
+    # Ép node register theo private IP (inventory ansible_host = 10.118.0.x)
+    k8s_node_ip: "{{ ansible_host }}"
+
+  tasks:
+    - name: "Create evidence directory on ToolServer01"
+      ansible.builtin.file:
+        path: "{{ artifacts_root }}/{{ inventory_hostname }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      become: false
+
+    - name: "Install prereq packages for apt repo"
+      ansible.builtin.apt:
+        name:
+          - ca-certificates
+          - curl
+          - gpg
+          - apt-transport-https
+        state: present
+        update_cache: true
+
+    - name: "Ensure apt keyrings dir exists"
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: "0755"
+
+    - name: "Install Kubernetes apt key (pkgs.k8s.io)"
+      ansible.builtin.shell: |
+        set -euo pipefail
+        curl -fsSL "https://pkgs.k8s.io/core:/stable:/v{{ k8s_minor }}/deb/Release.key" \
+          | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      args:
+        executable: /bin/bash
+        creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+    - name: "Add Kubernetes apt repo (pkgs.k8s.io stable v{{ k8s_minor }})"
+      ansible.builtin.copy:
+        dest: /etc/apt/sources.list.d/kubernetes.list
+        mode: "0644"
+        content: |
+          deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v{{ k8s_minor }}/deb/ /
+
+    - name: "apt update"
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: "Install kubelet/kubeadm/kubectl"
+      ansible.builtin.apt:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: present
+
+    - name: "Hold kubelet/kubeadm/kubectl"
+      ansible.builtin.dpkg_selections:
+        name: "{{ item }}"
+        selection: hold
+      loop:
+        - kubelet
+        - kubeadm
+        - kubectl
+
+    - name: "Force kubelet to use private node-ip"
+      ansible.builtin.copy:
+        dest: /etc/default/kubelet
+        mode: "0644"
+        content: |
+          KUBELET_EXTRA_ARGS=--node-ip={{ k8s_node_ip }}
+
+    - name: "Reload systemd + restart kubelet"
+      ansible.builtin.systemd:
+        name: kubelet
+        state: restarted
+        daemon_reload: true
+        enabled: true
+
+    # -------------------------
+    # Evidence collection
+    # -------------------------
+    - name: "Capture versions and status"
+      ansible.builtin.shell: |
+        set -e
+        echo "== kubeadm ==" && kubeadm version -o short || true
+        echo "== kubelet ==" && kubelet --version || true
+        echo "== kubectl ==" && kubectl version --client=true --short || true
+        echo "== apt policy kubeadm ==" && apt-cache policy kubeadm | sed -n '1,80p' || true
+        echo "== hold ==" && apt-mark showhold | egrep 'kubelet|kubeadm|kubectl' || true
+        echo "== kubelet status ==" && systemctl status kubelet --no-pager -l | sed -n '1,80p' || true
+      register: k8s_pkg_evidence
+      changed_when: false
+
+    - name: "Save evidence to artifacts"
+      ansible.builtin.copy:
+        dest: "{{ artifacts_root }}/{{ inventory_hostname }}/k8s-packages.txt"
+        mode: "0644"
+        content: "{{ k8s_pkg_evidence.stdout }}\n"
+      delegate_to: localhost
+      become: false

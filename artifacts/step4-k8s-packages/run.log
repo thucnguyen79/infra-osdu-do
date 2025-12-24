@@ -1,0 +1,111 @@
+
+PLAY [Step 4.2 - Install Kubernetes packages (kubeadm/kubelet/kubectl) + node-ip] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [ControlPlane03]
+ok: [ControlPlane01]
+ok: [ControlPlane02]
+ok: [WorkerNode02]
+ok: [WorkerNode01]
+
+TASK [Create evidence directory on ToolServer01] *******************************
+changed: [ControlPlane03 -> localhost]
+changed: [ControlPlane02 -> localhost]
+changed: [WorkerNode01 -> localhost]
+ok: [ControlPlane01 -> localhost]
+changed: [WorkerNode02 -> localhost]
+
+TASK [Install prereq packages for apt repo] ************************************
+ok: [ControlPlane01]
+ok: [ControlPlane03]
+ok: [WorkerNode02]
+ok: [ControlPlane02]
+ok: [WorkerNode01]
+
+TASK [Ensure apt keyrings dir exists] ******************************************
+ok: [ControlPlane02]
+ok: [ControlPlane01]
+ok: [WorkerNode02]
+ok: [ControlPlane03]
+ok: [WorkerNode01]
+
+TASK [Install Kubernetes apt key (pkgs.k8s.io)] ********************************
+ok: [ControlPlane01]
+changed: [ControlPlane03]
+changed: [ControlPlane02]
+changed: [WorkerNode02]
+changed: [WorkerNode01]
+
+TASK [Add Kubernetes apt repo (pkgs.k8s.io stable v1.30)] **********************
+ok: [ControlPlane01]
+changed: [ControlPlane02]
+changed: [ControlPlane03]
+changed: [WorkerNode02]
+changed: [WorkerNode01]
+
+TASK [apt update] **************************************************************
+changed: [ControlPlane01]
+changed: [ControlPlane02]
+changed: [ControlPlane03]
+changed: [WorkerNode02]
+changed: [WorkerNode01]
+
+TASK [Install kubelet/kubeadm/kubectl] *****************************************
+ok: [ControlPlane01]
+changed: [ControlPlane02]
+changed: [ControlPlane03]
+changed: [WorkerNode02]
+changed: [WorkerNode01]
+
+TASK [Hold kubelet/kubeadm/kubectl] ********************************************
+ok: [ControlPlane01] => (item=kubelet)
+changed: [ControlPlane02] => (item=kubelet)
+changed: [WorkerNode02] => (item=kubelet)
+changed: [ControlPlane03] => (item=kubelet)
+changed: [WorkerNode01] => (item=kubelet)
+ok: [ControlPlane01] => (item=kubeadm)
+changed: [ControlPlane02] => (item=kubeadm)
+changed: [ControlPlane03] => (item=kubeadm)
+changed: [WorkerNode02] => (item=kubeadm)
+changed: [WorkerNode01] => (item=kubeadm)
+ok: [ControlPlane01] => (item=kubectl)
+changed: [ControlPlane03] => (item=kubectl)
+changed: [ControlPlane02] => (item=kubectl)
+changed: [WorkerNode02] => (item=kubectl)
+changed: [WorkerNode01] => (item=kubectl)
+
+TASK [Force kubelet to use private node-ip] ************************************
+ok: [ControlPlane01]
+changed: [ControlPlane03]
+changed: [ControlPlane02]
+changed: [WorkerNode02]
+changed: [WorkerNode01]
+
+TASK [Reload systemd + restart kubelet] ****************************************
+changed: [ControlPlane02]
+changed: [ControlPlane01]
+changed: [WorkerNode02]
+changed: [ControlPlane03]
+changed: [WorkerNode01]
+
+TASK [Capture versions and status] *********************************************
+ok: [ControlPlane01]
+ok: [ControlPlane02]
+ok: [ControlPlane03]
+ok: [WorkerNode02]
+ok: [WorkerNode01]
+
+TASK [Save evidence to artifacts] **********************************************
+changed: [ControlPlane01 -> localhost]
+changed: [ControlPlane02 -> localhost]
+changed: [ControlPlane03 -> localhost]
+changed: [WorkerNode02 -> localhost]
+changed: [WorkerNode01 -> localhost]
+
+PLAY RECAP *********************************************************************
+ControlPlane01             : ok=13   changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ControlPlane02             : ok=13   changed=9    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ControlPlane03             : ok=13   changed=9    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+WorkerNode01               : ok=13   changed=9    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+WorkerNode02               : ok=13   changed=9    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

@@ -42,3 +42,7 @@
 - [x] sysctl configured for Kubernetes networking
 - [x] containerd installed & running (SystemdCgroup=true)
 - [x] Evidence stored in artifacts/step4-node-baseline/
+# Step 4.2 - Install Kubernetes packages (kubeadm/kubelet/kubectl)
+- [x] Install kubeadm/kubelet/kubectl on Control Planes & Workers
+- [x] Force kubelet node-ip = private IP (eth1 / 10.118.0.0/20)
+- [x] Hold packages to avoid unexpected upgrades

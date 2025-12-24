@@ -1,0 +1,47 @@
+
+PLAY [Step 4.2 - Install Kubernetes packages (kubeadm/kubelet/kubectl) + node-ip] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [ControlPlane01]
+
+TASK [Create evidence directory on ToolServer01] *******************************
+ok: [ControlPlane01 -> localhost]
+
+TASK [Install prereq packages for apt repo] ************************************
+ok: [ControlPlane01]
+
+TASK [Ensure apt keyrings dir exists] ******************************************
+ok: [ControlPlane01]
+
+TASK [Install Kubernetes apt key (pkgs.k8s.io)] ********************************
+changed: [ControlPlane01]
+
+TASK [Add Kubernetes apt repo (pkgs.k8s.io stable v1.30)] **********************
+changed: [ControlPlane01]
+
+TASK [apt update] **************************************************************
+changed: [ControlPlane01]
+
+TASK [Install kubelet/kubeadm/kubectl] *****************************************
+changed: [ControlPlane01]
+
+TASK [Hold kubelet/kubeadm/kubectl] ********************************************
+changed: [ControlPlane01] => (item=kubelet)
+changed: [ControlPlane01] => (item=kubeadm)
+changed: [ControlPlane01] => (item=kubectl)
+
+TASK [Force kubelet to use private node-ip] ************************************
+changed: [ControlPlane01]
+
+TASK [Reload systemd + restart kubelet] ****************************************
+changed: [ControlPlane01]
+
+TASK [Capture versions and status] *********************************************
+ok: [ControlPlane01]
+
+TASK [Save evidence to artifacts] **********************************************
+changed: [ControlPlane01 -> localhost]
+
+PLAY RECAP *********************************************************************
+ControlPlane01             : ok=13   changed=8    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
