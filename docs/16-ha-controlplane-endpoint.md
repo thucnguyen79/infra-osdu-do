@@ -16,3 +16,14 @@
 ## Evidence
 - artifacts/step4-controlplane-endpoint/*
 - (Secrets are NOT committed to git)
+
+## Step 4.3.5 - kubeadm init on ControlPlane01
+Commands (secrets are stored in artifacts-private/):
+- kubeadm init:
+  - sudo kubeadm init --config /etc/kubernetes/kubeadm/kubeadm-init-ha-v1.30.yaml --upload-certs
+- kubeconfig for ops on CP01:
+  - copy /etc/kubernetes/admin.conf to ~/.kube/config
+- copy kubeconfig to ToolServer01 for management
+
+Non-secret evidence:
+- artifacts/step4-controlplane-endpoint/ControlPlane01/post-init.txt

@@ -1,0 +1,15 @@
+Step 4.3.5 post-init evidence (Wed Dec 24 16:00:19 +07 2025)
+
+== kubectl get nodes -o wide ==
+NAME             STATUS     ROLES           AGE    VERSION    INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION       CONTAINER-RUNTIME
+controlplane01   NotReady   control-plane   101m   v1.30.14   10.118.0.2    <none>        Ubuntu 22.04.4 LTS   5.15.0-113-generic   containerd://1.7.28
+
+== kube-system pods ==
+NAME                                     READY   STATUS    RESTARTS   AGE    IP           NODE             NOMINATED NODE   READINESS GATES
+coredns-55cb58b774-s7tv5                 0/1     Pending   0          100m   <none>       <none>           <none>           <none>
+coredns-55cb58b774-w8rd2                 0/1     Pending   0          100m   <none>       <none>           <none>           <none>
+etcd-controlplane01                      1/1     Running   0          101m   10.118.0.2   controlplane01   <none>           <none>
+kube-apiserver-controlplane01            1/1     Running   0          101m   10.118.0.2   controlplane01   <none>           <none>
+kube-controller-manager-controlplane01   1/1     Running   0          101m   10.118.0.2   controlplane01   <none>           <none>
+kube-proxy-2r858                         1/1     Running   0          100m   10.118.0.2   controlplane01   <none>           <none>
+kube-scheduler-controlplane01            1/1     Running   0          101m   10.118.0.2   controlplane01   <none>           <none>
