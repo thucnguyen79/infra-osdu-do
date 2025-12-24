@@ -1,0 +1,6 @@
+== haproxy -c ==
+Configuration file is valid
+== listen 6443 ==
+LISTEN 0      4096      10.118.0.8:6443      0.0.0.0:*    users:(("haproxy",pid=105946,fd=6))        
+== systemctl haproxy ==
+active

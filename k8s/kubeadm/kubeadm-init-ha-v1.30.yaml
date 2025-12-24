@@ -1,0 +1,24 @@
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: "10.118.0.2"
+  bindPort: 6443
+nodeRegistration:
+  criSocket: "unix:///run/containerd/containerd.sock"
+  kubeletExtraArgs:
+    node-ip: "10.118.0.2"
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+kubernetesVersion: "v1.30.14"
+controlPlaneEndpoint: "k8s-api.internal:6443"
+networking:
+  podSubnet: "192.168.0.0/16"
+  serviceSubnet: "10.96.0.0/12"
+apiServer:
+  certSANs:
+    - "k8s-api.internal"
+    - "10.118.0.8"
+    - "10.118.0.2"
+    - "10.118.0.3"
+    - "10.118.0.4"

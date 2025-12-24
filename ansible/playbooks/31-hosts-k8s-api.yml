@@ -1,0 +1,16 @@
+---
+- name: "Step 4.3 - Add k8s-api.internal hosts entry"
+  hosts: k8s_cluster:toolserver
+  become: true
+  gather_facts: false
+
+  vars:
+    api_ip: "10.118.0.8"
+    api_name: "k8s-api.internal"
+
+  tasks:
+    - name: Ensure /etc/hosts contains k8s-api.internal
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ api_ip }} {{ api_name }}"
+        state: present

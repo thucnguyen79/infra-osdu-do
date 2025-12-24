@@ -1,0 +1,17 @@
+
+PLAY [Step 4.3 - Add k8s-api.internal hosts entry] *****************************
+
+TASK [Ensure /etc/hosts contains k8s-api.internal] *****************************
+ok: [ControlPlane03]
+ok: [ControlPlane02]
+ok: [WorkerNode02]
+ok: [ControlPlane01]
+ok: [WorkerNode01]
+
+PLAY RECAP *********************************************************************
+ControlPlane01             : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ControlPlane02             : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ControlPlane03             : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+WorkerNode01               : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+WorkerNode02               : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

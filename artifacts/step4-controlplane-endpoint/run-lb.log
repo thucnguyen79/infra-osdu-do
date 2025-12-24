@@ -1,0 +1,30 @@
+
+PLAY [Step 4.3 - Control plane endpoint LB (HAProxy) on AppServer01] ***********
+
+TASK [Gathering Facts] *********************************************************
+ok: [AppServer01]
+
+TASK [Ensure evidence dir on ToolServer01] *************************************
+changed: [AppServer01 -> localhost]
+
+TASK [Install haproxy] *********************************************************
+changed: [AppServer01]
+
+TASK [Configure haproxy for kube-apiserver (TCP 6443)] *************************
+changed: [AppServer01]
+
+TASK [Validate haproxy config] *************************************************
+ok: [AppServer01]
+
+TASK [Enable and restart haproxy] **********************************************
+changed: [AppServer01]
+
+TASK [Capture LB status evidence] **********************************************
+ok: [AppServer01]
+
+TASK [Save evidence to artifacts] **********************************************
+changed: [AppServer01 -> localhost]
+
+PLAY RECAP *********************************************************************
+AppServer01                : ok=8    changed=5    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

@@ -1,0 +1,21 @@
+
+PLAY [Step 4.3.4 - Stage kubeadm config to ControlPlane01 and validate] ********
+
+TASK [Ensure destination directory exists] *************************************
+ok: [ControlPlane01]
+
+TASK [Copy kubeadm config to node] *********************************************
+ok: [ControlPlane01]
+
+TASK [Validate kubeadm config] *************************************************
+ok: [ControlPlane01]
+
+TASK [Ensure evidence dir on ToolServer01] *************************************
+ok: [ControlPlane01]
+
+TASK [Save validation output to artifacts] *************************************
+ok: [ControlPlane01]
+
+PLAY RECAP *********************************************************************
+ControlPlane01             : ok=5    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

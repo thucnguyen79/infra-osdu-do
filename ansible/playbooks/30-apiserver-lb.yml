@@ -1,0 +1,87 @@
+---
+- name: "Step 4.3 - Control plane endpoint LB (HAProxy) on AppServer01"
+  hosts: lb
+  become: true
+  gather_facts: true
+
+  vars:
+    lb_bind_ip: "10.118.0.8"
+    cp_backends:
+      - { name: "cp1", ip: "10.118.0.2" }
+      - { name: "cp2", ip: "10.118.0.3" }
+      - { name: "cp3", ip: "10.118.0.4" }
+    evidence_dir: "/opt/infra-osdu-do/artifacts/step4-controlplane-endpoint/AppServer01"
+
+  tasks:
+    - name: Ensure evidence dir on ToolServer01
+      file:
+        path: "{{ evidence_dir }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      become: false
+
+    - name: Install haproxy
+      apt:
+        name: haproxy
+        state: present
+        update_cache: true
+
+    - name: Configure haproxy for kube-apiserver (TCP 6443)
+      copy:
+        dest: /etc/haproxy/haproxy.cfg
+        mode: "0644"
+        content: |
+          global
+            log /dev/log local0
+            log /dev/log local1 notice
+            daemon
+            maxconn 4096
+
+          defaults
+            log global
+            mode tcp
+            option tcplog
+            timeout connect 5s
+            timeout client  1m
+            timeout server  1m
+
+          frontend k8s_api
+            bind {{ lb_bind_ip }}:6443
+            default_backend k8s_api_back
+
+          backend k8s_api_back
+            option tcp-check
+            default-server inter 2s fall 2 rise 2
+          {% for s in cp_backends %}
+            server {{ s.name }} {{ s.ip }}:6443 check
+          {% endfor %}
+
+    - name: Validate haproxy config
+      command: haproxy -c -f /etc/haproxy/haproxy.cfg
+      changed_when: false
+
+    - name: Enable and restart haproxy
+      systemd:
+        name: haproxy
+        enabled: true
+        state: restarted
+
+    - name: Capture LB status evidence
+      shell: |
+        set -e
+        echo "== haproxy -c =="
+        haproxy -c -f /etc/haproxy/haproxy.cfg
+        echo "== listen 6443 =="
+        ss -lntp | egrep ':6443' || true
+        echo "== systemctl haproxy =="
+        systemctl is-active haproxy
+      register: lb_ev
+      changed_when: false
+
+    - name: Save evidence to artifacts
+      copy:
+        dest: "{{ evidence_dir }}/haproxy.txt"
+        content: "{{ lb_ev.stdout }}\n"
+      delegate_to: localhost
+      become: false

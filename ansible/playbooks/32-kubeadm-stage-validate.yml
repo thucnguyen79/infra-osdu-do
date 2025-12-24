@@ -1,0 +1,44 @@
+---
+- name: "Step 4.3.4 - Stage kubeadm config to ControlPlane01 and validate"
+  hosts: ControlPlane01
+  become: true
+  gather_facts: false
+
+  vars:
+    src_cfg: /opt/infra-osdu-do/k8s/kubeadm/kubeadm-init-ha-v1.30.yaml
+    dst_dir: /etc/kubernetes/kubeadm
+    dst_cfg: /etc/kubernetes/kubeadm/kubeadm-init-ha-v1.30.yaml
+    ev_dir: /opt/infra-osdu-do/artifacts/step4-controlplane-endpoint/ControlPlane01
+
+  tasks:
+    - name: Ensure destination directory exists
+      file:
+        path: "{{ dst_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Copy kubeadm config to node
+      copy:
+        src: "{{ src_cfg }}"
+        dest: "{{ dst_cfg }}"
+        mode: "0644"
+
+    - name: Validate kubeadm config
+      command: kubeadm config validate --config "{{ dst_cfg }}"
+      register: validate_out
+      changed_when: false
+
+    - name: Ensure evidence dir on ToolServer01
+      file:
+        path: "{{ ev_dir }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      become: false
+
+    - name: Save validation output to artifacts
+      copy:
+        dest: "{{ ev_dir }}/kubeadm-validate.txt"
+        content: "{{ validate_out.stdout }}\n{{ validate_out.stderr | default('') }}\n"
+      delegate_to: localhost
+      become: false
