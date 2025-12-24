@@ -1,0 +1,200 @@
+2025-12-24 16:59:37.108 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:17 ip_pool_type:VXLAN dst:"192.168.40.64/32" dst_node_name:"controlplane01" dst_node_ip:"10.118.0.2" nat_outgoing:true tunnel_type:{vxlan:true}
+2025-12-24 16:59:37.108 [INFO][63] felix/config_params.go 769: Parsing value for LogSeveritySys: None (from config file)
+2025-12-24 16:59:37.108 [INFO][63] felix/config_params.go 786: Value set to 'none', replacing with zero-value: "".
+2025-12-24 16:59:37.108 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:REMOTE_HOST dst:"10.118.0.4/32" dst_node_name:"controlplane03" dst_node_ip:"10.118.0.4"
+2025-12-24 16:59:37.108 [INFO][63] felix/config_params.go 805: Parsed value for LogSeveritySys:  (from config file)
+2025-12-24 16:59:37.108 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:17 ip_pool_type:VXLAN dst:"192.168.198.192/32" dst_node_name:"controlplane03" dst_node_ip:"10.118.0.4" nat_outgoing:true tunnel_type:{vxlan:true}
+2025-12-24 16:59:37.108 [INFO][63] felix/config_params.go 769: Parsing value for MetadataAddr: None (from config file)
+2025-12-24 16:59:37.108 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:REMOTE_HOST dst:"10.118.0.7/32" dst_node_name:"workernode02" dst_node_ip:"10.118.0.7"
+2025-12-24 16:59:37.108 [INFO][63] felix/config_params.go 786: Value set to 'none', replacing with zero-value: "".
+2025-12-24 16:59:37.108 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=ip_pool_type:VXLAN dst:"192.168.0.0/16" nat_outgoing:true
+2025-12-24 16:59:37.108 [INFO][63] felix/config_params.go 805: Parsed value for MetadataAddr:  (from config file)
+2025-12-24 16:59:37.108 [INFO][63] felix/config_params.go 769: Parsing value for LogFilePath: None (from config file)
+2025-12-24 16:59:37.108 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:17 ip_pool_type:VXLAN dst:"192.168.246.192/32" dst_node_name:"workernode02" dst_node_ip:"10.118.0.7" nat_outgoing:true tunnel_type:{vxlan:true}
+2025-12-24 16:59:37.108 [INFO][63] felix/config_params.go 786: Value set to 'none', replacing with zero-value: "".
+2025-12-24 16:59:37.108 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:REMOTE_HOST dst:"10.118.0.6/32" dst_node_name:"workernode01" dst_node_ip:"10.118.0.6"
+2025-12-24 16:59:37.108 [INFO][63] felix/config_params.go 805: Parsed value for LogFilePath:  (from config file)
+2025-12-24 16:59:37.108 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:LOCAL_WORKLOAD ip_pool_type:VXLAN dst:"192.168.232.0/26" dst_node_name:"controlplane02" dst_node_ip:"10.118.0.3" nat_outgoing:true
+2025-12-24 16:59:37.108 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:REMOTE_WORKLOAD ip_pool_type:VXLAN dst:"192.168.246.192/26" dst_node_name:"workernode02" dst_node_ip:"10.118.0.7" nat_outgoing:true
+2025-12-24 16:59:37.108 [INFO][63] felix/config_params.go 769: Parsing value for LogSeverityFile: None (from config file)
+2025-12-24 16:59:37.108 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:36 ip_pool_type:VXLAN dst:"192.168.232.0/32" dst_node_name:"controlplane02" dst_node_ip:"10.118.0.3" nat_outgoing:true tunnel_type:{vxlan:true}
+2025-12-24 16:59:37.108 [INFO][63] felix/config_params.go 786: Value set to 'none', replacing with zero-value: "".
+2025-12-24 16:59:37.108 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:17 ip_pool_type:VXLAN dst:"192.168.52.128/32" dst_node_name:"workernode01" dst_node_ip:"10.118.0.6" nat_outgoing:true tunnel_type:{vxlan:true}
+2025-12-24 16:59:37.108 [INFO][63] felix/config_params.go 805: Parsed value for LogSeverityFile:  (from config file)
+2025-12-24 16:59:37.108 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:REMOTE_WORKLOAD ip_pool_type:VXLAN dst:"192.168.40.64/26" dst_node_name:"controlplane01" dst_node_ip:"10.118.0.2" nat_outgoing:true
+2025-12-24 16:59:37.108 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:REMOTE_WORKLOAD ip_pool_type:VXLAN dst:"192.168.52.128/26" dst_node_name:"workernode01" dst_node_ip:"10.118.0.6" nat_outgoing:true
+2025-12-24 16:59:37.108 [INFO][63] felix/config_params.go 769: Parsing value for IPv4VXLANTunnelAddr: 192.168.232.0 (from datastore (per-host))
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:REMOTE_HOST dst:"10.118.0.2/32" dst_node_name:"controlplane01" dst_node_ip:"10.118.0.2"
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.RouteUpdate update from calculation graph. msg=types:LOCAL_HOST dst:"10.118.0.3/32" dst_node_name:"controlplane02" dst_node_ip:"10.118.0.3"
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 805: Parsed value for IPv4VXLANTunnelAddr: 192.168.232.0 (from datastore (per-host))
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 769: Parsing value for ReportingIntervalSecs: 0 (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.HostMetadataUpdate update from calculation graph. msg=hostname:"controlplane03" ipv4_addr:"10.118.0.4"
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 805: Parsed value for ReportingIntervalSecs: 0s (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.HostMetadataUpdate update from calculation graph. msg=hostname:"workernode01" ipv4_addr:"10.118.0.6"
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 769: Parsing value for BPFConnectTimeLoadBalancing: TCP (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.HostMetadataUpdate update from calculation graph. msg=hostname:"workernode02" ipv4_addr:"10.118.0.7"
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.HostMetadataUpdate update from calculation graph. msg=hostname:"controlplane01" ipv4_addr:"10.118.0.2"
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 805: Parsed value for BPFConnectTimeLoadBalancing: TCP (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.HostMetadataUpdate update from calculation graph. msg=hostname:"controlplane02" ipv4_addr:"10.118.0.3"
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 769: Parsing value for BPFHostNetworkedNATWithoutCTLB: Enabled (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 805: Parsed value for BPFHostNetworkedNATWithoutCTLB: Enabled (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 769: Parsing value for FloatingIPs: Disabled (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.HostMetadataV4V6Update update from calculation graph. msg=hostname:"controlplane01" ipv4_addr:"10.118.0.2/20" labels:{key:"beta.kubernetes.io/arch" value:"amd64"} labels:{key:"beta.kubernetes.io/os" value:"linux"} labels:{key:"kubernetes.io/arch" value:"amd64"} labels:{key:"kubernetes.io/hostname" value:"controlplane01"} labels:{key:"kubernetes.io/os" value:"linux"} labels:{key:"node-role.kubernetes.io/control-plane" value:""} labels:{key:"node.kubernetes.io/exclude-from-external-load-balancers" value:""}
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 805: Parsed value for FloatingIPs: Disabled (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 769: Parsing value for ClusterGUID: f2346b47c4704bb29a05ecc257d8edc9 (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 805: Parsed value for ClusterGUID: f2346b47c4704bb29a05ecc257d8edc9 (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.HostMetadataV4V6Update update from calculation graph. msg=hostname:"controlplane02" ipv4_addr:"10.118.0.3/20" labels:{key:"beta.kubernetes.io/arch" value:"amd64"} labels:{key:"beta.kubernetes.io/os" value:"linux"} labels:{key:"kubernetes.io/arch" value:"amd64"} labels:{key:"kubernetes.io/hostname" value:"controlplane02"} labels:{key:"kubernetes.io/os" value:"linux"} labels:{key:"node-role.kubernetes.io/control-plane" value:""} labels:{key:"node.kubernetes.io/exclude-from-external-load-balancers" value:""}
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 769: Parsing value for ClusterType: k8s,bgp,kubeadm,kdd (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.HostMetadataV4V6Update update from calculation graph. msg=hostname:"controlplane03" ipv4_addr:"10.118.0.4/20" labels:{key:"beta.kubernetes.io/arch" value:"amd64"} labels:{key:"beta.kubernetes.io/os" value:"linux"} labels:{key:"kubernetes.io/arch" value:"amd64"} labels:{key:"kubernetes.io/hostname" value:"controlplane03"} labels:{key:"kubernetes.io/os" value:"linux"} labels:{key:"node-role.kubernetes.io/control-plane" value:""} labels:{key:"node.kubernetes.io/exclude-from-external-load-balancers" value:""}
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 805: Parsed value for ClusterType: k8s,bgp,kubeadm,kdd (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.HostMetadataV4V6Update update from calculation graph. msg=hostname:"workernode01" ipv4_addr:"10.118.0.6/20" labels:{key:"beta.kubernetes.io/arch" value:"amd64"} labels:{key:"beta.kubernetes.io/os" value:"linux"} labels:{key:"kubernetes.io/arch" value:"amd64"} labels:{key:"kubernetes.io/hostname" value:"workernode01"} labels:{key:"kubernetes.io/os" value:"linux"}
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 769: Parsing value for CalicoVersion: v3.31.3 (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.HostMetadataV4V6Update update from calculation graph. msg=hostname:"workernode02" ipv4_addr:"10.118.0.7/20" labels:{key:"beta.kubernetes.io/arch" value:"amd64"} labels:{key:"beta.kubernetes.io/os" value:"linux"} labels:{key:"kubernetes.io/arch" value:"amd64"} labels:{key:"kubernetes.io/hostname" value:"workernode02"} labels:{key:"kubernetes.io/os" value:"linux"}
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 805: Parsed value for CalicoVersion: v3.31.3 (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 769: Parsing value for LogSeverityScreen: Info (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 805: Parsed value for LogSeverityScreen: INFO (from datastore (global))
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.IPAMPoolUpdate update from calculation graph. msg=id:"192.168.0.0-16" pool:{cidr:"192.168.0.0/16" masquerade:true vxlan_mode:"always"}
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 638: Merging in config from datastore (per-host): map[IPv4VXLANTunnelAddr:192.168.232.0]
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceUpdate update from calculation graph. msg=name:"kubernetes" namespace:"default" type:"ClusterIP" cluster_ips:"10.96.0.1" ports:{Protocol:"TCP" Port:443}
+2025-12-24 16:59:37.109 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceUpdate update from calculation graph. msg=name:"kube-dns" namespace:"kube-system" type:"ClusterIP" cluster_ips:"10.96.0.10" ports:{Protocol:"UDP" Port:53} ports:{Protocol:"TCP" Port:53} ports:{Protocol:"TCP" Port:9153}
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 769: Parsing value for IpInIpMtu: 0 (from environment variable)
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 805: Parsed value for IpInIpMtu: 0 (from environment variable)
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 769: Parsing value for Ipv6Support: false (from environment variable)
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 805: Parsed value for Ipv6Support: false (from environment variable)
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 769: Parsing value for HealthEnabled: true (from environment variable)
+2025-12-24 16:59:37.109 [INFO][63] felix/config_params.go 805: Parsed value for HealthEnabled: true (from environment variable)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 769: Parsing value for FelixHostname: controlplane02 (from environment variable)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 805: Parsed value for FelixHostname: controlplane02 (from environment variable)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 769: Parsing value for DatastoreType: kubernetes (from environment variable)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 805: Parsed value for DatastoreType: kubernetes (from environment variable)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 769: Parsing value for WireguardMTU: 0 (from environment variable)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 805: Parsed value for WireguardMTU: 0 (from environment variable)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 769: Parsing value for VXLANMTU: 0 (from environment variable)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 805: Parsed value for VXLANMTU: 0 (from environment variable)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 769: Parsing value for DefaultEndpointToHostAction: ACCEPT (from environment variable)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 805: Parsed value for DefaultEndpointToHostAction: ACCEPT (from environment variable)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 769: Parsing value for MetadataAddr: None (from config file)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 786: Value set to 'none', replacing with zero-value: "".
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 805: Parsed value for MetadataAddr:  (from config file)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 769: Parsing value for LogFilePath: None (from config file)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 786: Value set to 'none', replacing with zero-value: "".
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 805: Parsed value for LogFilePath:  (from config file)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 769: Parsing value for LogSeverityFile: None (from config file)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 786: Value set to 'none', replacing with zero-value: "".
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 805: Parsed value for LogSeverityFile:  (from config file)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 769: Parsing value for LogSeveritySys: None (from config file)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 786: Value set to 'none', replacing with zero-value: "".
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 805: Parsed value for LogSeveritySys:  (from config file)
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 769: Parsing value for IPv4VXLANTunnelAddr: 192.168.232.0 (from datastore (per-host))
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 805: Parsed value for IPv4VXLANTunnelAddr: 192.168.232.0 (from datastore (per-host))
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 769: Parsing value for ReportingIntervalSecs: 0 (from datastore (global))
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 805: Parsed value for ReportingIntervalSecs: 0s (from datastore (global))
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 769: Parsing value for BPFConnectTimeLoadBalancing: TCP (from datastore (global))
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 805: Parsed value for BPFConnectTimeLoadBalancing: TCP (from datastore (global))
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 769: Parsing value for BPFHostNetworkedNATWithoutCTLB: Enabled (from datastore (global))
+2025-12-24 16:59:37.110 [INFO][63] felix/config_params.go 805: Parsed value for BPFHostNetworkedNATWithoutCTLB: Enabled (from datastore (global))
+2025-12-24 16:59:37.111 [INFO][63] felix/config_params.go 769: Parsing value for FloatingIPs: Disabled (from datastore (global))
+2025-12-24 16:59:37.111 [INFO][63] felix/config_params.go 805: Parsed value for FloatingIPs: Disabled (from datastore (global))
+2025-12-24 16:59:37.111 [INFO][63] felix/config_params.go 769: Parsing value for ClusterGUID: f2346b47c4704bb29a05ecc257d8edc9 (from datastore (global))
+2025-12-24 16:59:37.111 [INFO][63] felix/config_params.go 805: Parsed value for ClusterGUID: f2346b47c4704bb29a05ecc257d8edc9 (from datastore (global))
+2025-12-24 16:59:37.111 [INFO][63] felix/config_params.go 769: Parsing value for ClusterType: k8s,bgp,kubeadm,kdd (from datastore (global))
+2025-12-24 16:59:37.111 [INFO][63] felix/config_params.go 805: Parsed value for ClusterType: k8s,bgp,kubeadm,kdd (from datastore (global))
+2025-12-24 16:59:37.111 [INFO][63] felix/config_params.go 769: Parsing value for CalicoVersion: v3.31.3 (from datastore (global))
+2025-12-24 16:59:37.111 [INFO][63] felix/config_params.go 805: Parsed value for CalicoVersion: v3.31.3 (from datastore (global))
+2025-12-24 16:59:37.111 [INFO][63] felix/config_params.go 769: Parsing value for LogSeverityScreen: Info (from datastore (global))
+2025-12-24 16:59:37.111 [INFO][63] felix/config_params.go 805: Parsed value for LogSeverityScreen: INFO (from datastore (global))
+2025-12-24 16:59:37.111 [INFO][63] felix/async_calc_graph.go 221: First flush after becoming in sync, sending InSync message.
+2025-12-24 16:59:37.111 [INFO][63] felix/daemon.go 1319: Datastore now in sync.
+2025-12-24 16:59:37.111 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"resourcequota-controller"} labels:{key:"projectcalico.org/name" value:"resourcequota-controller"}
+2025-12-24 16:59:37.111 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"statefulset-controller"} labels:{key:"projectcalico.org/name" value:"statefulset-controller"}
+2025-12-24 16:59:37.111 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"attachdetach-controller"} labels:{key:"projectcalico.org/name" value:"attachdetach-controller"}
+2025-12-24 16:59:37.111 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"bootstrap-signer"} labels:{key:"projectcalico.org/name" value:"bootstrap-signer"}
+2025-12-24 16:59:37.111 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"certificate-controller"} labels:{key:"projectcalico.org/name" value:"certificate-controller"}
+2025-12-24 16:59:37.111 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"deployment-controller"} labels:{key:"projectcalico.org/name" value:"deployment-controller"}
+2025-12-24 16:59:37.111 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"endpoint-controller"} labels:{key:"projectcalico.org/name" value:"endpoint-controller"}
+2025-12-24 16:59:37.111 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"horizontal-pod-autoscaler"} labels:{key:"projectcalico.org/name" value:"horizontal-pod-autoscaler"}
+2025-12-24 16:59:37.111 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"node-controller"} labels:{key:"projectcalico.org/name" value:"node-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"service-account-controller"} labels:{key:"projectcalico.org/name" value:"service-account-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"calico-node"} labels:{key:"projectcalico.org/name" value:"calico-node"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"generic-garbage-collector"} labels:{key:"projectcalico.org/name" value:"generic-garbage-collector"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"kube-proxy"} labels:{key:"projectcalico.org/name" value:"kube-proxy"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"validatingadmissionpolicy-status-controller"} labels:{key:"projectcalico.org/name" value:"validatingadmissionpolicy-status-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"calico-kube-controllers"} labels:{key:"projectcalico.org/name" value:"calico-kube-controllers"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"expand-controller"} labels:{key:"projectcalico.org/name" value:"expand-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"namespace-controller"} labels:{key:"projectcalico.org/name" value:"namespace-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"persistent-volume-binder"} labels:{key:"projectcalico.org/name" value:"persistent-volume-binder"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"replication-controller"} labels:{key:"projectcalico.org/name" value:"replication-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-node-lease" name:"default"} labels:{key:"projectcalico.org/name" value:"default"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"clusterrole-aggregation-controller"} labels:{key:"projectcalico.org/name" value:"clusterrole-aggregation-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"cronjob-controller"} labels:{key:"projectcalico.org/name" value:"cronjob-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"disruption-controller"} labels:{key:"projectcalico.org/name" value:"disruption-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"job-controller"} labels:{key:"projectcalico.org/name" value:"job-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"pvc-protection-controller"} labels:{key:"projectcalico.org/name" value:"pvc-protection-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"service-controller"} labels:{key:"projectcalico.org/name" value:"service-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"ttl-controller"} labels:{key:"projectcalico.org/name" value:"ttl-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"default" name:"default"} labels:{key:"projectcalico.org/name" value:"default"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"daemon-set-controller"} labels:{key:"projectcalico.org/name" value:"daemon-set-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"default"} labels:{key:"projectcalico.org/name" value:"default"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"pv-protection-controller"} labels:{key:"projectcalico.org/name" value:"pv-protection-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"token-cleaner"} labels:{key:"projectcalico.org/name" value:"token-cleaner"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"ttl-after-finished-controller"} labels:{key:"projectcalico.org/name" value:"ttl-after-finished-controller"}
+2025-12-24 16:59:37.112 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-public" name:"default"} labels:{key:"projectcalico.org/name" value:"default"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"ephemeral-volume-controller"} labels:{key:"projectcalico.org/name" value:"ephemeral-volume-controller"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"legacy-service-account-token-cleaner"} labels:{key:"projectcalico.org/name" value:"legacy-service-account-token-cleaner"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"pod-garbage-collector"} labels:{key:"projectcalico.org/name" value:"pod-garbage-collector"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"replicaset-controller"} labels:{key:"projectcalico.org/name" value:"replicaset-controller"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"root-ca-cert-publisher"} labels:{key:"projectcalico.org/name" value:"root-ca-cert-publisher"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"calico-cni-plugin"} labels:{key:"projectcalico.org/name" value:"calico-cni-plugin"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"coredns"} labels:{key:"projectcalico.org/name" value:"coredns"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"endpointslice-controller"} labels:{key:"projectcalico.org/name" value:"endpointslice-controller"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.ServiceAccountUpdate update from calculation graph. msg=id:{namespace:"kube-system" name:"endpointslicemirroring-controller"} labels:{key:"projectcalico.org/name" value:"endpointslicemirroring-controller"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.NamespaceUpdate update from calculation graph. msg=id:{name:"kube-system"} labels:{key:"kubernetes.io/metadata.name" value:"kube-system"} labels:{key:"projectcalico.org/name" value:"kube-system"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.NamespaceUpdate update from calculation graph. msg=id:{name:"default"} labels:{key:"kubernetes.io/metadata.name" value:"default"} labels:{key:"projectcalico.org/name" value:"default"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.NamespaceUpdate update from calculation graph. msg=id:{name:"kube-node-lease"} labels:{key:"kubernetes.io/metadata.name" value:"kube-node-lease"} labels:{key:"projectcalico.org/name" value:"kube-node-lease"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.NamespaceUpdate update from calculation graph. msg=id:{name:"kube-public"} labels:{key:"kubernetes.io/metadata.name" value:"kube-public"} labels:{key:"projectcalico.org/name" value:"kube-public"}
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.Encapsulation update from calculation graph. msg=vxlan_enabled:true
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2357: Received *proto.InSync update from calculation graph. msg=
+2025-12-24 16:59:37.113 [INFO][63] felix/int_dataplane.go 2367: Datastore in sync, flushing the dataplane for the first time... timeSinceStart=725.966555ms
+2025-12-24 16:59:37.113 [INFO][63] felix/ipsets.go 179: Queueing IP set for creation family="inet" setID="all-vxlan-net" setType="hash:net"
+2025-12-24 16:59:37.114 [INFO][63] felix/masq_mgr.go 145: IPAM pools updated, refreshing iptables rule ipVersion=0x4
+2025-12-24 16:59:37.114 [INFO][63] felix/ipsets.go 179: Queueing IP set for creation family="inet" setID="dscp-src-net" setType="hash:net"
+2025-12-24 16:59:37.229 [INFO][63] felix/int_dataplane.go 1737: Linux interface state changed. ifIndex=25 ifaceName="calico_tmp_B" state="down"
+2025-12-24 16:59:37.230 [INFO][63] felix/int_dataplane.go 1781: Linux interface addrs changed. addrs=set.Set{} ifaceName="calico_tmp_B"
+2025-12-24 16:59:37.230 [INFO][63] felix/int_dataplane.go 1737: Linux interface state changed. ifIndex=26 ifaceName="calico_tmp_A" state="down"
+2025-12-24 16:59:37.230 [INFO][63] felix/int_dataplane.go 1781: Linux interface addrs changed. addrs=set.Set{} ifaceName="calico_tmp_A"
+2025-12-24 16:59:37.330 [INFO][63] felix/vxlan_fdb.go 254: VXLAN FDB now in sync. family=2 iface="vxlan.calico"
+2025-12-24 16:59:37.330 [INFO][63] felix/wireguard.go 1763: Trying to connect to linkClient ipVersion=0x4
+2025-12-24 16:59:37.330 [INFO][63] felix/wireguard.go 648: Public key out of sync or updated ipVersion=0x4 ourPublicKey=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+2025-12-24 16:59:37.357 [INFO][63] felix/int_dataplane.go 2307: Completed first update to dataplane. secsSinceStart=0.96979219
+2025-12-24 16:59:37.362 [INFO][63] felix/health.go 204: Health of component changed name="InternalDataplaneMainLoop" newReport="live,ready" oldReport="live,non-ready"
+2025-12-24 16:59:37.362 [INFO][63] felix/int_dataplane.go 2415: Received interface update msg=&intdataplane.ifaceStateUpdate{Name:"calico_tmp_B", State:"down", Index:25}
+2025-12-24 16:59:37.362 [INFO][63] felix/int_dataplane.go 2442: Received interface addresses update msg=&intdataplane.ifaceAddrsUpdate{Name:"calico_tmp_B", Addrs:set.Typed[string]{}}
+2025-12-24 16:59:37.362 [INFO][63] felix/hostip_mgr.go 84: Interface addrs changed. update=&intdataplane.ifaceAddrsUpdate{Name:"calico_tmp_B", Addrs:set.Typed[string]{}}
+2025-12-24 16:59:37.362 [INFO][63] felix/int_dataplane.go 2415: Received interface update msg=&intdataplane.ifaceStateUpdate{Name:"calico_tmp_A", State:"down", Index:26}
+2025-12-24 16:59:37.362 [INFO][63] felix/int_dataplane.go 2442: Received interface addresses update msg=&intdataplane.ifaceAddrsUpdate{Name:"calico_tmp_A", Addrs:set.Typed[string]{}}
+2025-12-24 16:59:37.362 [INFO][63] felix/hostip_mgr.go 84: Interface addrs changed. update=&intdataplane.ifaceAddrsUpdate{Name:"calico_tmp_A", Addrs:set.Typed[string]{}}
+2025-12-24 16:59:37.398 [INFO][63] felix/health.go 334: Overall health status changed: live=true ready=true
++---------------------------+---------+----------------+-----------------+--------+
+|         COMPONENT         | TIMEOUT |    LIVENESS    |    READINESS    | DETAIL |
++---------------------------+---------+----------------+-----------------+--------+
+| CalculationGraph          | 30s     | reporting live | reporting ready |        |
+| FelixStartup              | -       | reporting live | reporting ready |        |
+| InternalDataplaneMainLoop | 1m30s   | reporting live | reporting ready |        |
++---------------------------+---------+----------------+-----------------+--------+
+2025-12-24 16:59:37.399 [INFO][61] complete-startup/utils.go 125: Using NODENAME environment for node name controlplane02
+2025-12-24 16:59:37.399 [INFO][61] complete-startup/utils.go 137: Determined node name: controlplane02
+2025-12-24 16:59:37.399 [INFO][61] complete-startup/utils.go 191: Setting NetworkUnavailable to false
+2025-12-24 16:59:37.402 [INFO][63] felix/int_dataplane.go 1737: Linux interface state changed. ifIndex=26 ifaceName="calico_tmp_A" state=""
+2025-12-24 16:59:37.402 [INFO][63] felix/int_dataplane.go 1781: Linux interface addrs changed. addrs=<nil> ifaceName="calico_tmp_A"
+2025-12-24 16:59:37.402 [INFO][63] felix/int_dataplane.go 2415: Received interface update msg=&intdataplane.ifaceStateUpdate{Name:"calico_tmp_A", State:"", Index:26}
+2025-12-24 16:59:37.402 [INFO][63] felix/int_dataplane.go 2442: Received interface addresses update msg=&intdataplane.ifaceAddrsUpdate{Name:"calico_tmp_A", Addrs:set.Set[string](nil)}
+2025-12-24 16:59:37.402 [INFO][63] felix/hostip_mgr.go 84: Interface addrs changed. update=&intdataplane.ifaceAddrsUpdate{Name:"calico_tmp_A", Addrs:set.Set[string](nil)}
+2025-12-24 16:59:37.407 [INFO][63] felix/int_dataplane.go 1737: Linux interface state changed. ifIndex=25 ifaceName="calico_tmp_B" state=""
+2025-12-24 16:59:37.407 [INFO][63] felix/int_dataplane.go 1781: Linux interface addrs changed. addrs=<nil> ifaceName="calico_tmp_B"
+2025-12-24 16:59:37.412 [INFO][61] complete-startup/startup.go 352: Calico started successfully
+2025-12-24 16:59:37.421 [INFO][63] felix/int_dataplane.go 2357: Received *proto.HostMetadataV4V6Update update from calculation graph. msg=hostname:"controlplane02" ipv4_addr:"10.118.0.3/20" labels:{key:"beta.kubernetes.io/arch" value:"amd64"} labels:{key:"beta.kubernetes.io/os" value:"linux"} labels:{key:"kubernetes.io/arch" value:"amd64"} labels:{key:"kubernetes.io/hostname" value:"controlplane02"} labels:{key:"kubernetes.io/os" value:"linux"} labels:{key:"node-role.kubernetes.io/control-plane" value:""} labels:{key:"node.kubernetes.io/exclude-from-external-load-balancers" value:""}
+2025-12-24 16:59:37.421 [INFO][63] felix/int_dataplane.go 2323: Dataplane updates throttled
+2025-12-24 16:59:37.421 [INFO][63] felix/int_dataplane.go 2415: Received interface update msg=&intdataplane.ifaceStateUpdate{Name:"calico_tmp_B", State:"", Index:25}
+2025-12-24 16:59:37.421 [INFO][63] felix/int_dataplane.go 2442: Received interface addresses update msg=&intdataplane.ifaceAddrsUpdate{Name:"calico_tmp_B", Addrs:set.Set[string](nil)}
+2025-12-24 16:59:37.421 [INFO][63] felix/hostip_mgr.go 84: Interface addrs changed. update=&intdataplane.ifaceAddrsUpdate{Name:"calico_tmp_B", Addrs:set.Set[string](nil)}
+2025-12-24 16:59:42.362 [INFO][63] felix/int_dataplane.go 2279: Dataplane updates no longer throttled

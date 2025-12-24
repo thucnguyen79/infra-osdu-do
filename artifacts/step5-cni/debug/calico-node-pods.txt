@@ -1,0 +1,6 @@
+NAME                READY   STATUS             RESTARTS         AGE   IP           NODE             NOMINATED NODE   READINESS GATES
+calico-node-5h4d9   0/1     CrashLoopBackOff   9 (3m10s ago)    23m   10.118.0.2   controlplane01   <none>           <none>
+calico-node-75ffq   0/1     CrashLoopBackOff   9 (3m ago)       23m   10.118.0.7   workernode02     <none>           <none>
+calico-node-7khvm   0/1     CrashLoopBackOff   9 (3m20s ago)    23m   10.118.0.4   controlplane03   <none>           <none>
+calico-node-84xvc   0/1     CrashLoopBackOff   9 (3m ago)       23m   10.118.0.6   workernode01     <none>           <none>
+calico-node-lwwr4   0/1     Running            10 (5m40s ago)   23m   10.118.0.3   controlplane02   <none>           <none>

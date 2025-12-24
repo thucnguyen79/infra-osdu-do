@@ -1,0 +1,237 @@
+Name:                 calico-node-lwwr4
+Namespace:            kube-system
+Priority:             2000001000
+Priority Class Name:  system-node-critical
+Service Account:      calico-node
+Node:                 controlplane02/10.118.0.3
+Start Time:           Wed, 24 Dec 2025 23:37:01 +0700
+Labels:               controller-revision-hash=6555f8979d
+                      k8s-app=calico-node
+                      pod-template-generation=1
+Annotations:          <none>
+Status:               Running
+SeccompProfile:       RuntimeDefault
+IP:                   10.118.0.3
+IPs:
+  IP:           10.118.0.3
+Controlled By:  DaemonSet/calico-node
+Init Containers:
+  upgrade-ipam:
+    Container ID:  containerd://43f8fac3088f83d503d2b613c796d4c2cea909c84d8af0c8b8be973387e45a9c
+    Image:         quay.io/calico/cni:v3.31.3
+    Image ID:      quay.io/calico/cni@sha256:a6ddb6d00a53f98c5392eb3b525cf00af10cace1f6ca9414230ff652e6700e78
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /opt/cni/bin/calico-ipam
+      -upgrade
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Wed, 24 Dec 2025 23:37:04 +0700
+      Finished:     Wed, 24 Dec 2025 23:37:04 +0700
+    Ready:          True
+    Restart Count:  0
+    Environment Variables from:
+      kubernetes-services-endpoint  ConfigMap  Optional: true
+    Environment:
+      KUBERNETES_NODE_NAME:        (v1:spec.nodeName)
+      CALICO_NETWORKING_BACKEND:  <set to the key 'calico_backend' of config map 'calico-config'>  Optional: false
+    Mounts:
+      /host/opt/cni/bin from cni-bin-dir (rw)
+      /var/lib/cni/networks from host-local-net-dir (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-v2gzv (ro)
+  install-cni:
+    Container ID:  containerd://94152aa419df382a12f538ff781ddbde36bf9261bae354a481b0634868743420
+    Image:         quay.io/calico/cni:v3.31.3
+    Image ID:      quay.io/calico/cni@sha256:a6ddb6d00a53f98c5392eb3b525cf00af10cace1f6ca9414230ff652e6700e78
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      /opt/cni/bin/install
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Wed, 24 Dec 2025 23:37:05 +0700
+      Finished:     Wed, 24 Dec 2025 23:37:05 +0700
+    Ready:          True
+    Restart Count:  0
+    Environment Variables from:
+      kubernetes-services-endpoint  ConfigMap  Optional: true
+    Environment:
+      CNI_CONF_NAME:         10-calico.conflist
+      CNI_NETWORK_CONFIG:    <set to the key 'cni_network_config' of config map 'calico-config'>  Optional: false
+      KUBERNETES_NODE_NAME:   (v1:spec.nodeName)
+      CNI_MTU:               <set to the key 'veth_mtu' of config map 'calico-config'>  Optional: false
+      SLEEP:                 false
+    Mounts:
+      /host/etc/cni/net.d from cni-net-dir (rw)
+      /host/opt/cni/bin from cni-bin-dir (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-v2gzv (ro)
+  ebpf-bootstrap:
+    Container ID:  containerd://9bfef945b316e57b9058d251c5c15e331bf5e5f7c63e0cea10c106dde4aaf4c6
+    Image:         quay.io/calico/node:v3.31.3
+    Image ID:      quay.io/calico/node@sha256:f2339c4ff3a57228cbc39a1f67ab81abded1997d843e0e0b1e86664c7c4eb6c0
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      calico-node
+      -init
+      -best-effort
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Wed, 24 Dec 2025 23:37:11 +0700
+      Finished:     Wed, 24 Dec 2025 23:37:11 +0700
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /nodeproc from nodeproc (ro)
+      /sys/fs from sys-fs (rw)
+      /var/run/calico from var-run-calico (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-v2gzv (ro)
+Containers:
+  calico-node:
+    Container ID:   containerd://b24e2e3f805497e70be5f303340693616f990eaef4678cd171dd0744b4a5bdea
+    Image:          quay.io/calico/node:v3.31.3
+    Image ID:       quay.io/calico/node@sha256:f2339c4ff3a57228cbc39a1f67ab81abded1997d843e0e0b1e86664c7c4eb6c0
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Wed, 24 Dec 2025 23:59:35 +0700
+    Last State:     Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Wed, 24 Dec 2025 23:53:21 +0700
+      Finished:     Wed, 24 Dec 2025 23:54:21 +0700
+    Ready:          False
+    Restart Count:  10
+    Requests:
+      cpu:      250m
+    Liveness:   exec [/bin/calico-node -felix-live -bird-live] delay=10s timeout=10s period=10s #success=1 #failure=6
+    Readiness:  exec [/bin/calico-node -felix-ready -bird-ready] delay=0s timeout=10s period=10s #success=1 #failure=3
+    Environment Variables from:
+      kubernetes-services-endpoint  ConfigMap  Optional: true
+    Environment:
+      DATASTORE_TYPE:                     kubernetes
+      WAIT_FOR_DATASTORE:                 true
+      NODENAME:                            (v1:spec.nodeName)
+      CALICO_NETWORKING_BACKEND:          <set to the key 'calico_backend' of config map 'calico-config'>  Optional: false
+      CLUSTER_TYPE:                       k8s,bgp
+      IP:                                 autodetect
+      CALICO_IPV4POOL_IPIP:               Never
+      CALICO_IPV4POOL_VXLAN:              Always
+      CALICO_IPV6POOL_VXLAN:              Never
+      FELIX_IPINIPMTU:                    <set to the key 'veth_mtu' of config map 'calico-config'>  Optional: false
+      FELIX_VXLANMTU:                     <set to the key 'veth_mtu' of config map 'calico-config'>  Optional: false
+      FELIX_WIREGUARDMTU:                 <set to the key 'veth_mtu' of config map 'calico-config'>  Optional: false
+      CALICO_IPV4POOL_CIDR:               192.168.0.0/16
+      CALICO_DISABLE_FILE_LOGGING:        true
+      FELIX_DEFAULTENDPOINTTOHOSTACTION:  ACCEPT
+      FELIX_IPV6SUPPORT:                  false
+      FELIX_HEALTHENABLED:                true
+    Mounts:
+      /host/etc/cni/net.d from cni-net-dir (rw)
+      /lib/modules from lib-modules (ro)
+      /run/xtables.lock from xtables-lock (rw)
+      /sys/fs/bpf from bpffs (rw)
+      /var/lib/calico from var-lib-calico (rw)
+      /var/log/calico/cni from cni-log-dir (ro)
+      /var/run/calico from var-run-calico (rw)
+      /var/run/nodeagent from policysync (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-v2gzv (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  lib-modules:
+    Type:          HostPath (bare host directory volume)
+    Path:          /lib/modules
+    HostPathType:  
+  var-run-calico:
+    Type:          HostPath (bare host directory volume)
+    Path:          /var/run/calico
+    HostPathType:  DirectoryOrCreate
+  var-lib-calico:
+    Type:          HostPath (bare host directory volume)
+    Path:          /var/lib/calico
+    HostPathType:  DirectoryOrCreate
+  xtables-lock:
+    Type:          HostPath (bare host directory volume)
+    Path:          /run/xtables.lock
+    HostPathType:  FileOrCreate
+  sys-fs:
+    Type:          HostPath (bare host directory volume)
+    Path:          /sys/fs/
+    HostPathType:  DirectoryOrCreate
+  bpffs:
+    Type:          HostPath (bare host directory volume)
+    Path:          /sys/fs/bpf
+    HostPathType:  Directory
+  nodeproc:
+    Type:          HostPath (bare host directory volume)
+    Path:          /proc
+    HostPathType:  
+  cni-bin-dir:
+    Type:          HostPath (bare host directory volume)
+    Path:          /opt/cni/bin
+    HostPathType:  DirectoryOrCreate
+  cni-net-dir:
+    Type:          HostPath (bare host directory volume)
+    Path:          /etc/cni/net.d
+    HostPathType:  
+  cni-log-dir:
+    Type:          HostPath (bare host directory volume)
+    Path:          /var/log/calico/cni
+    HostPathType:  
+  host-local-net-dir:
+    Type:          HostPath (bare host directory volume)
+    Path:          /var/lib/cni/networks
+    HostPathType:  
+  policysync:
+    Type:          HostPath (bare host directory volume)
+    Path:          /var/run/nodeagent
+    HostPathType:  DirectoryOrCreate
+  kube-api-access-v2gzv:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              kubernetes.io/os=linux
+Tolerations:                 :NoSchedule op=Exists
+                             :NoExecute op=Exists
+                             CriticalAddonsOnly op=Exists
+                             node.kubernetes.io/disk-pressure:NoSchedule op=Exists
+                             node.kubernetes.io/memory-pressure:NoSchedule op=Exists
+                             node.kubernetes.io/network-unavailable:NoSchedule op=Exists
+                             node.kubernetes.io/not-ready:NoExecute op=Exists
+                             node.kubernetes.io/pid-pressure:NoSchedule op=Exists
+                             node.kubernetes.io/unreachable:NoExecute op=Exists
+                             node.kubernetes.io/unschedulable:NoSchedule op=Exists
+Events:
+  Type     Reason            Age                   From               Message
+  ----     ------            ----                  ----               -------
+  Normal   Scheduled         23m                   default-scheduler  Successfully assigned kube-system/calico-node-lwwr4 to controlplane02
+  Normal   Pulling           23m                   kubelet            Pulling image "quay.io/calico/cni:v3.31.3"
+  Normal   Created           23m                   kubelet            Created container: install-cni
+  Normal   Pulled            23m                   kubelet            Successfully pulled image "quay.io/calico/cni:v3.31.3" in 2.757s (2.757s including waiting). Image size: 72141081 bytes.
+  Normal   Created           23m                   kubelet            Created container: upgrade-ipam
+  Normal   Started           23m                   kubelet            Started container upgrade-ipam
+  Normal   Pulled            23m                   kubelet            Container image "quay.io/calico/cni:v3.31.3" already present on machine
+  Normal   Started           23m                   kubelet            Started container install-cni
+  Normal   Pulling           23m                   kubelet            Pulling image "quay.io/calico/node:v3.31.3"
+  Normal   Pulled            23m                   kubelet            Successfully pulled image "quay.io/calico/node:v3.31.3" in 5.804s (5.804s including waiting). Image size: 159483847 bytes.
+  Normal   Created           23m                   kubelet            Created container: ebpf-bootstrap
+  Normal   Started           23m                   kubelet            Started container ebpf-bootstrap
+  Normal   Pulled            23m                   kubelet            Container image "quay.io/calico/node:v3.31.3" already present on machine
+  Normal   Created           23m                   kubelet            Created container: calico-node
+  Normal   Started           23m                   kubelet            Started container calico-node
+  Warning  Unhealthy         13m (x66 over 23m)    kubelet            Readiness probe failed: calico/node is not ready: BIRD is not ready: error querying BIRD: unable to connect to BIRDv4 socket: dial unix /var/run/bird/bird.ctl: connect: no such file or directory
+  Warning  DNSConfigForming  3m32s (x84 over 23m)  kubelet            Nameserver limits were exceeded, some nameservers have been omitted, the applied nameserver line is: 67.207.67.3 67.207.67.2 67.207.67.3

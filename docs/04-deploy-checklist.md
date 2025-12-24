@@ -103,3 +103,10 @@
 - [x] Post-join evidence saved (non-secret) under artifacts/step4-kubeadm-join/
 - [x] Docs updated: docs/17-kubeadm-join-nodes.md
 - [x] Control-plane join uses --apiserver-advertise-address = private eth1 IP (DO dual-NIC)
+
+# STEP 5 — Install CNI
+- [ ] Step 5.1 Verify kubeadm CIDRs (podSubnet/serviceSubnet)
+- [ ] Step 5.2 Prepare Calico VXLAN manifest (repo-first)
+- [ ] Step 5.3 Allow UDP 4789 within VPC (cloud firewall / host firewall if any)
+- [ ] Step 5.4 Apply CNI + verify nodes Ready + CoreDNS Running
+- [ ] Step 5.5 Save evidence + commit
