@@ -1,0 +1,5 @@
+5:    kubeadm.kubernetes.io/etcd.advertise-client-urls: https://138.197.136.247:2379
+16:    - --advertise-client-urls=https://138.197.136.247:2379
+22:    - --initial-advertise-peer-urls=https://138.197.136.247:2380
+26:    - --listen-client-urls=https://127.0.0.1:2379,https://138.197.136.247:2379
+28:    - --listen-peer-urls=https://138.197.136.247:2380

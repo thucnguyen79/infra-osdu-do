@@ -1,0 +1,11 @@
+/etc/kubernetes/manifests/kube-apiserver.yaml:5:    kubeadm.kubernetes.io/kube-apiserver.advertise-address.endpoint: 138.197.136.247:6443
+/etc/kubernetes/manifests/kube-apiserver.yaml:16:    - --advertise-address=138.197.136.247
+/etc/kubernetes/manifests/kube-apiserver.yaml:48:        host: 138.197.136.247
+/etc/kubernetes/manifests/kube-apiserver.yaml:59:        host: 138.197.136.247
+/etc/kubernetes/manifests/kube-apiserver.yaml:71:        host: 138.197.136.247
+/etc/kubernetes/manifests/etcd.yaml:5:    kubeadm.kubernetes.io/etcd.advertise-client-urls: https://138.197.136.247:2379
+/etc/kubernetes/manifests/etcd.yaml:16:    - --advertise-client-urls=https://138.197.136.247:2379
+/etc/kubernetes/manifests/etcd.yaml:22:    - --initial-advertise-peer-urls=https://138.197.136.247:2380
+/etc/kubernetes/manifests/etcd.yaml:23:    - --initial-cluster=controlplane01=https://10.118.0.2:2380,controlplane02=https://138.197.136.247:2380
+/etc/kubernetes/manifests/etcd.yaml:26:    - --listen-client-urls=https://127.0.0.1:2379,https://138.197.136.247:2379
+/etc/kubernetes/manifests/etcd.yaml:28:    - --listen-peer-urls=https://138.197.136.247:2380
