@@ -10,3 +10,5 @@
 - Nodes may remain NotReady until CNI is installed (Step 5)
 
 ## Control-plane join trên DO phải dùng --apiserver-advertise-address <private-ip>…” (vì kubeadm nếu không set sẽ chọn default NIC)
+- “Control-plane join must include --apiserver-advertise-address=<private eth1 IP>
+- docs/issues/step4.4-join-cp02-etcd-learner-not-in-sync.md
