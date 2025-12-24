@@ -1,0 +1,1 @@
+daemon set "calico-node" successfully rolled out

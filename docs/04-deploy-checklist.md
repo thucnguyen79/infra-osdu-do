@@ -110,3 +110,10 @@
 - [ ] Step 5.3 Allow UDP 4789 within VPC (cloud firewall / host firewall if any)
 - [ ] Step 5.4 Apply CNI + verify nodes Ready + CoreDNS Running
 - [ ] Step 5.5 Save evidence + commit
+- [ ] DS/calico-node Ready 5/5
+- [ ] IP_AUTODETECTION_METHOD pinned to eth1 (DO dual NIC)
+- [ ] Evidence saved: artifacts/step5-cni/*
+- [ ] 5.x Collect evidence for calico-node CrashLoopBackOff (describe/events/logs previous)
+- [ ] 5.x Patch Calico probes for VXLAN (felix-only) OR allow BGP port 179
+- [ ] 5.x Verify rollout ds/calico-node == ready on all nodes
+- [ ] 5.x Verify node-to-node pod networking (ping test pod)
