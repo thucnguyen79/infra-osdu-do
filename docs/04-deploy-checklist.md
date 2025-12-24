@@ -93,13 +93,13 @@
 - [x] Non-secret evidence saved under artifacts/step4-controlplane-endpoint/
 
 ### Step 4.4 Join nodes (CP02/CP03 + Workers)
-- [ ] Preflight: k8s-api.internal resolves to 10.118.0.8 on joining nodes
-- [ ] Preflight: TCP to k8s-api.internal:6443 OK from joining nodes
-- [ ] New join materials generated (token + cert-key) and stored in artifacts-private/
-- [ ] ControlPlane02 joined as control-plane
-- [ ] ControlPlane03 joined as control-plane
-- [ ] WorkerNode01 joined as worker
-- [ ] WorkerNode02 joined as worker
-- [ ] Post-join evidence saved (non-secret) under artifacts/step4-kubeadm-join/
-- [ ] Docs updated: docs/17-kubeadm-join-nodes.md
-- [ ] Control-plane join uses --apiserver-advertise-address = private eth1 IP (DO dual-NIC)
+- [x] Preflight: k8s-api.internal resolves to 10.118.0.8 on joining nodes
+- [x] Preflight: TCP to k8s-api.internal:6443 OK from joining nodes
+- [x] New join materials generated (token + cert-key) and stored in artifacts-private/
+- [x] ControlPlane02 joined as control-plane
+- [x] ControlPlane03 joined as control-plane
+- [x] WorkerNode01 joined as worker
+- [x] WorkerNode02 joined as worker
+- [x] Post-join evidence saved (non-secret) under artifacts/step4-kubeadm-join/
+- [x] Docs updated: docs/17-kubeadm-join-nodes.md
+- [x] Control-plane join uses --apiserver-advertise-address = private eth1 IP (DO dual-NIC)

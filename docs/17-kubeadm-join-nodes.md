@@ -12,3 +12,7 @@
 ## Control-plane join trên DO phải dùng --apiserver-advertise-address <private-ip>…” (vì kubeadm nếu không set sẽ chọn default NIC)
 - “Control-plane join must include --apiserver-advertise-address=<private eth1 IP>
 - docs/issues/step4.4-join-cp02-etcd-learner-not-in-sync.md
+
+## Worker join (WorkerNode01/02)
+- Workers join using the current join token (stored under artifacts-private/)
+- No special advertise-address flag is required for workers in this lab (kubelet node-ip already forced to private in Step 4.2)
