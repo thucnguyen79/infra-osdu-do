@@ -1,0 +1,2 @@
+NAME                       ENDPOINTS                              AGE
+ingress-nginx-controller   192.168.52.129:443,192.168.52.129:80   36m

@@ -1,0 +1,2 @@
+NAME            STATUS   AGE
+ingress-nginx   Active   8m10s

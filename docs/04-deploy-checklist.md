@@ -117,3 +117,21 @@
 - [ ] 5.x Patch Calico probes for VXLAN (felix-only) OR allow BGP port 179
 - [ ] 5.x Verify rollout ds/calico-node == ready on all nodes
 - [ ] 5.x Verify node-to-node pod networking (ping test pod)
+
+## Step 6 - Ingress Controller (ingress-nginx -NodePort private-only)
+
+- [x] 6.1 Prepare ingress-nginx kustomize overlay (do-private-nodeport)
+- [x] 6.2 Ensure namespace ingress-nginx exists
+- [x] 6.3 kubectl diff -k overlay (record output)
+- [x] 6.3 kubectl apply -k overlay (record output)
+- [x] 6.3 Rollout status ingress-nginx-controller
+- [x] 6.4 Verify Service is NodePort + pinned ports (30080/30443)
+- [x] 6.4 Confirm externalTrafficPolicy=Local
+- [x] 6.4 Fix DO Firewall to allow TCP 30080/30443 from 10.118.0.0/20
+- [x] 6.4 Ensure controller HA across both workers (replicas=2 + worker-only + anti-affinity)
+- [x] 6.4 NodePort TCP test from ToolServer01 to both workers OK
+- [x] 6.5 Deploy echo test app + service
+- [x] 6.5 Deploy echo ingress (host echo.internal)
+- [x] 6.5 Verify routing via both workers (curl Host header) OK
+
+

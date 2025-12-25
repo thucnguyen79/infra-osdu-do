@@ -1,0 +1,2 @@
+deployment.apps/echo created
+service/echo created

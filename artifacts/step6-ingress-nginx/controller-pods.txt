@@ -1,0 +1,2 @@
+NAME                                       READY   STATUS    RESTARTS   AGE   IP               NODE           NOMINATED NODE   READINESS GATES
+ingress-nginx-controller-f7764945c-8dhtj   1/1     Running   0          35m   192.168.52.129   workernode01   <none>           <none>

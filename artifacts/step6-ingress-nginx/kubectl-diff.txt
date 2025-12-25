@@ -1,0 +1,863 @@
+diff -u -N /tmp/LIVE-1166821479/admissionregistration.k8s.io.v1.ValidatingWebhookConfiguration..ingress-nginx-admission /tmp/MERGED-2145832203/admissionregistration.k8s.io.v1.ValidatingWebhookConfiguration..ingress-nginx-admission
+--- /tmp/LIVE-1166821479/admissionregistration.k8s.io.v1.ValidatingWebhookConfiguration..ingress-nginx-admission	2025-12-25 10:47:30.317616407 +0700
++++ /tmp/MERGED-2145832203/admissionregistration.k8s.io.v1.ValidatingWebhookConfiguration..ingress-nginx-admission	2025-12-25 10:47:30.321616472 +0700
+@@ -0,0 +1,40 @@
++apiVersion: admissionregistration.k8s.io/v1
++kind: ValidatingWebhookConfiguration
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  generation: 1
++  labels:
++    app.kubernetes.io/component: admission-webhook
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-admission
++  uid: 4fbb5f3b-c505-4d46-804e-bc8b67a6e4d9
++webhooks:
++- admissionReviewVersions:
++  - v1
++  clientConfig:
++    service:
++      name: ingress-nginx-controller-admission
++      namespace: ingress-nginx
++      path: /networking/v1/ingresses
++      port: 443
++  failurePolicy: Fail
++  matchPolicy: Equivalent
++  name: validate.nginx.ingress.kubernetes.io
++  namespaceSelector: {}
++  objectSelector: {}
++  rules:
++  - apiGroups:
++    - networking.k8s.io
++    apiVersions:
++    - v1
++    operations:
++    - CREATE
++    - UPDATE
++    resources:
++    - ingresses
++    scope: '*'
++  sideEffects: None
++  timeoutSeconds: 10
+diff -u -N /tmp/LIVE-1166821479/apps.v1.Deployment.ingress-nginx.ingress-nginx-controller /tmp/MERGED-2145832203/apps.v1.Deployment.ingress-nginx.ingress-nginx-controller
+--- /tmp/LIVE-1166821479/apps.v1.Deployment.ingress-nginx.ingress-nginx-controller	2025-12-25 10:47:30.273615702 +0700
++++ /tmp/MERGED-2145832203/apps.v1.Deployment.ingress-nginx.ingress-nginx-controller	2025-12-25 10:47:30.273615702 +0700
+@@ -0,0 +1,146 @@
++apiVersion: apps/v1
++kind: Deployment
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  generation: 1
++  labels:
++    app.kubernetes.io/component: controller
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-controller
++  namespace: ingress-nginx
++  uid: 0ba29427-8415-4ffc-8536-90ada80665ef
++spec:
++  progressDeadlineSeconds: 600
++  replicas: 1
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app.kubernetes.io/component: controller
++      app.kubernetes.io/instance: ingress-nginx
++      app.kubernetes.io/name: ingress-nginx
++  strategy:
++    rollingUpdate:
++      maxSurge: 25%
++      maxUnavailable: 1
++    type: RollingUpdate
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app.kubernetes.io/component: controller
++        app.kubernetes.io/instance: ingress-nginx
++        app.kubernetes.io/name: ingress-nginx
++        app.kubernetes.io/part-of: ingress-nginx
++        app.kubernetes.io/version: 1.13.5
++    spec:
++      affinity:
++        nodeAffinity:
++          preferredDuringSchedulingIgnoredDuringExecution:
++          - preference:
++              matchExpressions:
++              - key: node-role.kubernetes.io/control-plane
++                operator: DoesNotExist
++            weight: 100
++      automountServiceAccountToken: true
++      containers:
++      - args:
++        - /nginx-ingress-controller
++        - --election-id=ingress-nginx-leader
++        - --controller-class=k8s.io/ingress-nginx
++        - --ingress-class=nginx
++        - --configmap=$(POD_NAMESPACE)/ingress-nginx-controller
++        - --validating-webhook=:8443
++        - --validating-webhook-certificate=/usr/local/certificates/cert
++        - --validating-webhook-key=/usr/local/certificates/key
++        env:
++        - name: POD_NAME
++          valueFrom:
++            fieldRef:
++              apiVersion: v1
++              fieldPath: metadata.name
++        - name: POD_NAMESPACE
++          valueFrom:
++            fieldRef:
++              apiVersion: v1
++              fieldPath: metadata.namespace
++        - name: LD_PRELOAD
++          value: /usr/local/lib/libmimalloc.so
++        image: registry.k8s.io/ingress-nginx/controller:v1.13.5@sha256:5b346855be6752fa2a40f91983fa35a0c004b41493f36be6068a3d4350e69db8
++        imagePullPolicy: IfNotPresent
++        lifecycle:
++          preStop:
++            exec:
++              command:
++              - /wait-shutdown
++        livenessProbe:
++          failureThreshold: 5
++          httpGet:
++            path: /healthz
++            port: 10254
++            scheme: HTTP
++          initialDelaySeconds: 10
++          periodSeconds: 10
++          successThreshold: 1
++          timeoutSeconds: 1
++        name: controller
++        ports:
++        - containerPort: 80
++          name: http
++          protocol: TCP
++        - containerPort: 443
++          name: https
++          protocol: TCP
++        - containerPort: 8443
++          name: webhook
++          protocol: TCP
++        readinessProbe:
++          failureThreshold: 3
++          httpGet:
++            path: /healthz
++            port: 10254
++            scheme: HTTP
++          initialDelaySeconds: 10
++          periodSeconds: 10
++          successThreshold: 1
++          timeoutSeconds: 1
++        resources:
++          requests:
++            cpu: 100m
++            memory: 90Mi
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            add:
++            - NET_BIND_SERVICE
++            drop:
++            - ALL
++          readOnlyRootFilesystem: false
++          runAsGroup: 82
++          runAsNonRoot: true
++          runAsUser: 101
++          seccompProfile:
++            type: RuntimeDefault
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /usr/local/certificates/
++          name: webhook-cert
++          readOnly: true
++      dnsPolicy: ClusterFirst
++      nodeSelector:
++        kubernetes.io/os: linux
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext: {}
++      serviceAccount: ingress-nginx
++      serviceAccountName: ingress-nginx
++      terminationGracePeriodSeconds: 300
++      volumes:
++      - name: webhook-cert
++        secret:
++          defaultMode: 420
++          secretName: ingress-nginx-admission
++status: {}
+diff -u -N /tmp/LIVE-1166821479/batch.v1.Job.ingress-nginx.ingress-nginx-admission-create /tmp/MERGED-2145832203/batch.v1.Job.ingress-nginx.ingress-nginx-admission-create
+--- /tmp/LIVE-1166821479/batch.v1.Job.ingress-nginx.ingress-nginx-admission-create	2025-12-25 10:47:30.285615894 +0700
++++ /tmp/MERGED-2145832203/batch.v1.Job.ingress-nginx.ingress-nginx-admission-create	2025-12-25 10:47:30.285615894 +0700
+@@ -0,0 +1,81 @@
++apiVersion: batch/v1
++kind: Job
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  generation: 1
++  labels:
++    app.kubernetes.io/component: admission-webhook
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-admission-create
++  namespace: ingress-nginx
++  uid: a754d0a7-38f9-410e-a189-63e596c72288
++spec:
++  backoffLimit: 6
++  completionMode: NonIndexed
++  completions: 1
++  manualSelector: false
++  parallelism: 1
++  podReplacementPolicy: TerminatingOrFailed
++  selector:
++    matchLabels:
++      batch.kubernetes.io/controller-uid: a754d0a7-38f9-410e-a189-63e596c72288
++  suspend: false
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app.kubernetes.io/component: admission-webhook
++        app.kubernetes.io/instance: ingress-nginx
++        app.kubernetes.io/name: ingress-nginx
++        app.kubernetes.io/part-of: ingress-nginx
++        app.kubernetes.io/version: 1.13.5
++        batch.kubernetes.io/controller-uid: a754d0a7-38f9-410e-a189-63e596c72288
++        batch.kubernetes.io/job-name: ingress-nginx-admission-create
++        controller-uid: a754d0a7-38f9-410e-a189-63e596c72288
++        job-name: ingress-nginx-admission-create
++      name: ingress-nginx-admission-create
++    spec:
++      automountServiceAccountToken: true
++      containers:
++      - args:
++        - create
++        - --host=ingress-nginx-controller-admission,ingress-nginx-controller-admission.$(POD_NAMESPACE).svc
++        - --namespace=$(POD_NAMESPACE)
++        - --secret-name=ingress-nginx-admission
++        env:
++        - name: POD_NAMESPACE
++          valueFrom:
++            fieldRef:
++              apiVersion: v1
++              fieldPath: metadata.namespace
++        image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.6.5@sha256:03a00eb0e255e8a25fa49926c24cde0f7e12e8d072c445cdf5136ec78b546285
++        imagePullPolicy: IfNotPresent
++        name: create
++        resources: {}
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++          runAsGroup: 65532
++          runAsNonRoot: true
++          runAsUser: 65532
++          seccompProfile:
++            type: RuntimeDefault
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      nodeSelector:
++        kubernetes.io/os: linux
++      restartPolicy: OnFailure
++      schedulerName: default-scheduler
++      securityContext: {}
++      serviceAccount: ingress-nginx-admission
++      serviceAccountName: ingress-nginx-admission
++      terminationGracePeriodSeconds: 30
++  ttlSecondsAfterFinished: 0
++status: {}
+diff -u -N /tmp/LIVE-1166821479/batch.v1.Job.ingress-nginx.ingress-nginx-admission-patch /tmp/MERGED-2145832203/batch.v1.Job.ingress-nginx.ingress-nginx-admission-patch
+--- /tmp/LIVE-1166821479/batch.v1.Job.ingress-nginx.ingress-nginx-admission-patch	2025-12-25 10:47:30.297616087 +0700
++++ /tmp/MERGED-2145832203/batch.v1.Job.ingress-nginx.ingress-nginx-admission-patch	2025-12-25 10:47:30.297616087 +0700
+@@ -0,0 +1,83 @@
++apiVersion: batch/v1
++kind: Job
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  generation: 1
++  labels:
++    app.kubernetes.io/component: admission-webhook
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-admission-patch
++  namespace: ingress-nginx
++  uid: 8e78cfa4-a4c4-4f63-9a71-61d0e7b580e4
++spec:
++  backoffLimit: 6
++  completionMode: NonIndexed
++  completions: 1
++  manualSelector: false
++  parallelism: 1
++  podReplacementPolicy: TerminatingOrFailed
++  selector:
++    matchLabels:
++      batch.kubernetes.io/controller-uid: 8e78cfa4-a4c4-4f63-9a71-61d0e7b580e4
++  suspend: false
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app.kubernetes.io/component: admission-webhook
++        app.kubernetes.io/instance: ingress-nginx
++        app.kubernetes.io/name: ingress-nginx
++        app.kubernetes.io/part-of: ingress-nginx
++        app.kubernetes.io/version: 1.13.5
++        batch.kubernetes.io/controller-uid: 8e78cfa4-a4c4-4f63-9a71-61d0e7b580e4
++        batch.kubernetes.io/job-name: ingress-nginx-admission-patch
++        controller-uid: 8e78cfa4-a4c4-4f63-9a71-61d0e7b580e4
++        job-name: ingress-nginx-admission-patch
++      name: ingress-nginx-admission-patch
++    spec:
++      automountServiceAccountToken: true
++      containers:
++      - args:
++        - patch
++        - --webhook-name=ingress-nginx-admission
++        - --namespace=$(POD_NAMESPACE)
++        - --patch-mutating=false
++        - --secret-name=ingress-nginx-admission
++        - --patch-failure-policy=Fail
++        env:
++        - name: POD_NAMESPACE
++          valueFrom:
++            fieldRef:
++              apiVersion: v1
++              fieldPath: metadata.namespace
++        image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.6.5@sha256:03a00eb0e255e8a25fa49926c24cde0f7e12e8d072c445cdf5136ec78b546285
++        imagePullPolicy: IfNotPresent
++        name: patch
++        resources: {}
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++          runAsGroup: 65532
++          runAsNonRoot: true
++          runAsUser: 65532
++          seccompProfile:
++            type: RuntimeDefault
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      nodeSelector:
++        kubernetes.io/os: linux
++      restartPolicy: OnFailure
++      schedulerName: default-scheduler
++      securityContext: {}
++      serviceAccount: ingress-nginx-admission
++      serviceAccountName: ingress-nginx-admission
++      terminationGracePeriodSeconds: 30
++  ttlSecondsAfterFinished: 0
++status: {}
+diff -u -N /tmp/LIVE-1166821479/networking.k8s.io.v1.IngressClass..nginx /tmp/MERGED-2145832203/networking.k8s.io.v1.IngressClass..nginx
+--- /tmp/LIVE-1166821479/networking.k8s.io.v1.IngressClass..nginx	2025-12-25 10:47:30.305616215 +0700
++++ /tmp/MERGED-2145832203/networking.k8s.io.v1.IngressClass..nginx	2025-12-25 10:47:30.305616215 +0700
+@@ -0,0 +1,15 @@
++apiVersion: networking.k8s.io/v1
++kind: IngressClass
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  generation: 1
++  labels:
++    app.kubernetes.io/component: controller
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: nginx
++  uid: 36091876-c24d-4758-ad6f-30b4d85d4d43
++spec:
++  controller: k8s.io/ingress-nginx
+diff -u -N /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.ClusterRole..ingress-nginx /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.ClusterRole..ingress-nginx
+--- /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.ClusterRole..ingress-nginx	2025-12-25 10:47:30.177614163 +0700
++++ /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.ClusterRole..ingress-nginx	2025-12-25 10:47:30.177614163 +0700
+@@ -0,0 +1,82 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRole
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  labels:
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx
++  uid: 693cd72d-ddf0-44ba-9a95-6dd52db79968
++rules:
++- apiGroups:
++  - ""
++  resources:
++  - configmaps
++  - endpoints
++  - nodes
++  - pods
++  - secrets
++  - namespaces
++  verbs:
++  - list
++  - watch
++- apiGroups:
++  - coordination.k8s.io
++  resources:
++  - leases
++  verbs:
++  - list
++  - watch
++- apiGroups:
++  - ""
++  resources:
++  - nodes
++  verbs:
++  - get
++- apiGroups:
++  - ""
++  resources:
++  - services
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - networking.k8s.io
++  resources:
++  - ingresses
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - ""
++  resources:
++  - events
++  verbs:
++  - create
++  - patch
++- apiGroups:
++  - networking.k8s.io
++  resources:
++  - ingresses/status
++  verbs:
++  - update
++- apiGroups:
++  - networking.k8s.io
++  resources:
++  - ingressclasses
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - discovery.k8s.io
++  resources:
++  - endpointslices
++  verbs:
++  - list
++  - watch
++  - get
+diff -u -N /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.ClusterRole..ingress-nginx-admission /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.ClusterRole..ingress-nginx-admission
+--- /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.ClusterRole..ingress-nginx-admission	2025-12-25 10:47:30.185614291 +0700
++++ /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.ClusterRole..ingress-nginx-admission	2025-12-25 10:47:30.185614291 +0700
+@@ -0,0 +1,20 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRole
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  labels:
++    app.kubernetes.io/component: admission-webhook
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-admission
++  uid: 9b508286-5a88-44e7-bc55-90851f8169a6
++rules:
++- apiGroups:
++  - admissionregistration.k8s.io
++  resources:
++  - validatingwebhookconfigurations
++  verbs:
++  - get
++  - update
+diff -u -N /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.ClusterRoleBinding..ingress-nginx /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.ClusterRoleBinding..ingress-nginx
+--- /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.ClusterRoleBinding..ingress-nginx	2025-12-25 10:47:30.213614740 +0700
++++ /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.ClusterRoleBinding..ingress-nginx	2025-12-25 10:47:30.213614740 +0700
+@@ -0,0 +1,19 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRoleBinding
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  labels:
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx
++  uid: b234e0ca-4589-4cd2-acaa-e684650acddf
++roleRef:
++  apiGroup: rbac.authorization.k8s.io
++  kind: ClusterRole
++  name: ingress-nginx
++subjects:
++- kind: ServiceAccount
++  name: ingress-nginx
++  namespace: ingress-nginx
+diff -u -N /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.ClusterRoleBinding..ingress-nginx-admission /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.ClusterRoleBinding..ingress-nginx-admission
+--- /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.ClusterRoleBinding..ingress-nginx-admission	2025-12-25 10:47:30.221614868 +0700
++++ /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.ClusterRoleBinding..ingress-nginx-admission	2025-12-25 10:47:30.221614868 +0700
+@@ -0,0 +1,20 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRoleBinding
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  labels:
++    app.kubernetes.io/component: admission-webhook
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-admission
++  uid: c8419ac1-8635-4983-89df-5b1ed2483b02
++roleRef:
++  apiGroup: rbac.authorization.k8s.io
++  kind: ClusterRole
++  name: ingress-nginx-admission
++subjects:
++- kind: ServiceAccount
++  name: ingress-nginx-admission
++  namespace: ingress-nginx
+diff -u -N /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.Role.ingress-nginx.ingress-nginx /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.Role.ingress-nginx.ingress-nginx
+--- /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.Role.ingress-nginx.ingress-nginx	2025-12-25 10:47:30.157613842 +0700
++++ /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.Role.ingress-nginx.ingress-nginx	2025-12-25 10:47:30.157613842 +0700
+@@ -0,0 +1,91 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: Role
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  labels:
++    app.kubernetes.io/component: controller
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx
++  namespace: ingress-nginx
++  uid: 7eeb54ad-186e-4069-943c-8bb9f9920df4
++rules:
++- apiGroups:
++  - ""
++  resources:
++  - namespaces
++  verbs:
++  - get
++- apiGroups:
++  - ""
++  resources:
++  - configmaps
++  - pods
++  - secrets
++  - endpoints
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - ""
++  resources:
++  - services
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - networking.k8s.io
++  resources:
++  - ingresses
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - networking.k8s.io
++  resources:
++  - ingresses/status
++  verbs:
++  - update
++- apiGroups:
++  - networking.k8s.io
++  resources:
++  - ingressclasses
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - coordination.k8s.io
++  resourceNames:
++  - ingress-nginx-leader
++  resources:
++  - leases
++  verbs:
++  - get
++  - update
++- apiGroups:
++  - coordination.k8s.io
++  resources:
++  - leases
++  verbs:
++  - create
++- apiGroups:
++  - ""
++  resources:
++  - events
++  verbs:
++  - create
++  - patch
++- apiGroups:
++  - discovery.k8s.io
++  resources:
++  - endpointslices
++  verbs:
++  - list
++  - watch
++  - get
+diff -u -N /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.Role.ingress-nginx.ingress-nginx-admission /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.Role.ingress-nginx.ingress-nginx-admission
+--- /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.Role.ingress-nginx.ingress-nginx-admission	2025-12-25 10:47:30.169614035 +0700
++++ /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.Role.ingress-nginx.ingress-nginx-admission	2025-12-25 10:47:30.169614035 +0700
+@@ -0,0 +1,21 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: Role
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  labels:
++    app.kubernetes.io/component: admission-webhook
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-admission
++  namespace: ingress-nginx
++  uid: 1372d922-9ea9-4148-8c2b-75205cc7c9f0
++rules:
++- apiGroups:
++  - ""
++  resources:
++  - secrets
++  verbs:
++  - get
++  - create
+diff -u -N /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.RoleBinding.ingress-nginx.ingress-nginx /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.RoleBinding.ingress-nginx.ingress-nginx
+--- /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.RoleBinding.ingress-nginx.ingress-nginx	2025-12-25 10:47:30.193614420 +0700
++++ /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.RoleBinding.ingress-nginx.ingress-nginx	2025-12-25 10:47:30.193614420 +0700
+@@ -0,0 +1,21 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: RoleBinding
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  labels:
++    app.kubernetes.io/component: controller
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx
++  namespace: ingress-nginx
++  uid: c13a70db-e517-40a7-bc01-4526cacc3c3d
++roleRef:
++  apiGroup: rbac.authorization.k8s.io
++  kind: Role
++  name: ingress-nginx
++subjects:
++- kind: ServiceAccount
++  name: ingress-nginx
++  namespace: ingress-nginx
+diff -u -N /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.RoleBinding.ingress-nginx.ingress-nginx-admission /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.RoleBinding.ingress-nginx.ingress-nginx-admission
+--- /tmp/LIVE-1166821479/rbac.authorization.k8s.io.v1.RoleBinding.ingress-nginx.ingress-nginx-admission	2025-12-25 10:47:30.205614612 +0700
++++ /tmp/MERGED-2145832203/rbac.authorization.k8s.io.v1.RoleBinding.ingress-nginx.ingress-nginx-admission	2025-12-25 10:47:30.205614612 +0700
+@@ -0,0 +1,21 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: RoleBinding
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  labels:
++    app.kubernetes.io/component: admission-webhook
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-admission
++  namespace: ingress-nginx
++  uid: c388ca32-b0c4-4045-9529-e176000daf44
++roleRef:
++  apiGroup: rbac.authorization.k8s.io
++  kind: Role
++  name: ingress-nginx-admission
++subjects:
++- kind: ServiceAccount
++  name: ingress-nginx-admission
++  namespace: ingress-nginx
+diff -u -N /tmp/LIVE-1166821479/v1.ConfigMap.ingress-nginx.ingress-nginx-controller /tmp/MERGED-2145832203/v1.ConfigMap.ingress-nginx.ingress-nginx-controller
+--- /tmp/LIVE-1166821479/v1.ConfigMap.ingress-nginx.ingress-nginx-controller	2025-12-25 10:47:30.233615061 +0700
++++ /tmp/MERGED-2145832203/v1.ConfigMap.ingress-nginx.ingress-nginx-controller	2025-12-25 10:47:30.233615061 +0700
+@@ -0,0 +1,13 @@
++apiVersion: v1
++kind: ConfigMap
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  labels:
++    app.kubernetes.io/component: controller
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-controller
++  namespace: ingress-nginx
++  uid: 48b40234-9140-4cf5-bf7b-776f915f10c2
+diff -u -N /tmp/LIVE-1166821479/v1.Namespace..ingress-nginx /tmp/MERGED-2145832203/v1.Namespace..ingress-nginx
+--- /tmp/LIVE-1166821479/v1.Namespace..ingress-nginx	2025-12-25 10:47:30.117613201 +0700
++++ /tmp/MERGED-2145832203/v1.Namespace..ingress-nginx	2025-12-25 10:47:30.117613201 +0700
+@@ -6,6 +6,8 @@
+       {"apiVersion":"v1","kind":"Namespace","metadata":{"annotations":{},"name":"ingress-nginx"}}
+   creationTimestamp: "2025-12-25T03:39:06Z"
+   labels:
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
+     kubernetes.io/metadata.name: ingress-nginx
+   name: ingress-nginx
+   resourceVersion: "153073"
+diff -u -N /tmp/LIVE-1166821479/v1.Service.ingress-nginx.ingress-nginx-controller /tmp/MERGED-2145832203/v1.Service.ingress-nginx.ingress-nginx-controller
+--- /tmp/LIVE-1166821479/v1.Service.ingress-nginx.ingress-nginx-controller	2025-12-25 10:47:30.245615253 +0700
++++ /tmp/MERGED-2145832203/v1.Service.ingress-nginx.ingress-nginx-controller	2025-12-25 10:47:30.245615253 +0700
+@@ -0,0 +1,43 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  labels:
++    app.kubernetes.io/component: controller
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-controller
++  namespace: ingress-nginx
++  uid: d51dcb1f-9c64-4385-aa85-9f8731016254
++spec:
++  clusterIP: 10.96.0.0
++  clusterIPs:
++  - 10.96.0.0
++  externalTrafficPolicy: Local
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - appProtocol: http
++    name: http
++    nodePort: 32769
++    port: 80
++    protocol: TCP
++    targetPort: http
++  - appProtocol: https
++    name: https
++    nodePort: 32770
++    port: 443
++    protocol: TCP
++    targetPort: https
++  selector:
++    app.kubernetes.io/component: controller
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++  sessionAffinity: None
++  type: NodePort
++status:
++  loadBalancer: {}
+diff -u -N /tmp/LIVE-1166821479/v1.Service.ingress-nginx.ingress-nginx-controller-admission /tmp/MERGED-2145832203/v1.Service.ingress-nginx.ingress-nginx-controller-admission
+--- /tmp/LIVE-1166821479/v1.Service.ingress-nginx.ingress-nginx-controller-admission	2025-12-25 10:47:30.257615446 +0700
++++ /tmp/MERGED-2145832203/v1.Service.ingress-nginx.ingress-nginx-controller-admission	2025-12-25 10:47:30.257615446 +0700
+@@ -0,0 +1,35 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  labels:
++    app.kubernetes.io/component: controller
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-controller-admission
++  namespace: ingress-nginx
++  uid: b80c7a2f-ea02-4680-8b38-b1e1ce92c3a1
++spec:
++  clusterIP: 10.96.0.0
++  clusterIPs:
++  - 10.96.0.0
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - appProtocol: https
++    name: https-webhook
++    port: 443
++    protocol: TCP
++    targetPort: webhook
++  selector:
++    app.kubernetes.io/component: controller
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++  sessionAffinity: None
++  type: ClusterIP
++status:
++  loadBalancer: {}
+diff -u -N /tmp/LIVE-1166821479/v1.ServiceAccount.ingress-nginx.ingress-nginx /tmp/MERGED-2145832203/v1.ServiceAccount.ingress-nginx.ingress-nginx
+--- /tmp/LIVE-1166821479/v1.ServiceAccount.ingress-nginx.ingress-nginx	2025-12-25 10:47:30.133613457 +0700
++++ /tmp/MERGED-2145832203/v1.ServiceAccount.ingress-nginx.ingress-nginx	2025-12-25 10:47:30.133613457 +0700
+@@ -0,0 +1,14 @@
++apiVersion: v1
++automountServiceAccountToken: true
++kind: ServiceAccount
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  labels:
++    app.kubernetes.io/component: controller
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx
++  namespace: ingress-nginx
++  uid: d5d7c988-d6eb-4350-944e-590247f72a1e
+diff -u -N /tmp/LIVE-1166821479/v1.ServiceAccount.ingress-nginx.ingress-nginx-admission /tmp/MERGED-2145832203/v1.ServiceAccount.ingress-nginx.ingress-nginx-admission
+--- /tmp/LIVE-1166821479/v1.ServiceAccount.ingress-nginx.ingress-nginx-admission	2025-12-25 10:47:30.145613650 +0700
++++ /tmp/MERGED-2145832203/v1.ServiceAccount.ingress-nginx.ingress-nginx-admission	2025-12-25 10:47:30.145613650 +0700
+@@ -0,0 +1,14 @@
++apiVersion: v1
++automountServiceAccountToken: true
++kind: ServiceAccount
++metadata:
++  creationTimestamp: "2025-12-25T03:47:30Z"
++  labels:
++    app.kubernetes.io/component: admission-webhook
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-admission
++  namespace: ingress-nginx
++  uid: f749ab15-8b43-4380-948a-7f5b6c19cb3a

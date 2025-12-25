@@ -1,0 +1,212 @@
+diff -u -N /tmp/LIVE-1656195458/apps.v1.Deployment.ingress-nginx.ingress-nginx-controller /tmp/MERGED-1680702946/apps.v1.Deployment.ingress-nginx.ingress-nginx-controller
+--- /tmp/LIVE-1656195458/apps.v1.Deployment.ingress-nginx.ingress-nginx-controller	2025-12-25 11:46:08.927987912 +0700
++++ /tmp/MERGED-1680702946/apps.v1.Deployment.ingress-nginx.ingress-nginx-controller	2025-12-25 11:46:08.927987912 +0700
+@@ -6,7 +6,7 @@
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"ingress-nginx","app.kubernetes.io/name":"ingress-nginx","app.kubernetes.io/part-of":"ingress-nginx","app.kubernetes.io/version":"1.13.5"},"name":"ingress-nginx-controller","namespace":"ingress-nginx"},"spec":{"minReadySeconds":0,"revisionHistoryLimit":10,"selector":{"matchLabels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"ingress-nginx","app.kubernetes.io/name":"ingress-nginx"}},"strategy":{"rollingUpdate":{"maxUnavailable":1},"type":"RollingUpdate"},"template":{"metadata":{"labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"ingress-nginx","app.kubernetes.io/name":"ingress-nginx","app.kubernetes.io/part-of":"ingress-nginx","app.kubernetes.io/version":"1.13.5"}},"spec":{"affinity":{"nodeAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"preference":{"matchExpressions":[{"key":"node-role.kubernetes.io/control-plane","operator":"DoesNotExist"}]},"weight":100}]}},"automountServiceAccountToken":true,"containers":[{"args":["/nginx-ingress-controller","--election-id=ingress-nginx-leader","--controller-class=k8s.io/ingress-nginx","--ingress-class=nginx","--configmap=$(POD_NAMESPACE)/ingress-nginx-controller","--validating-webhook=:8443","--validating-webhook-certificate=/usr/local/certificates/cert","--validating-webhook-key=/usr/local/certificates/key"],"env":[{"name":"POD_NAME","valueFrom":{"fieldRef":{"fieldPath":"metadata.name"}}},{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}},{"name":"LD_PRELOAD","value":"/usr/local/lib/libmimalloc.so"}],"image":"registry.k8s.io/ingress-nginx/controller:v1.13.5@sha256:5b346855be6752fa2a40f91983fa35a0c004b41493f36be6068a3d4350e69db8","imagePullPolicy":"IfNotPresent","lifecycle":{"preStop":{"exec":{"command":["/wait-shutdown"]}}},"livenessProbe":{"failureThreshold":5,"httpGet":{"path":"/healthz","port":10254,"scheme":"HTTP"},"initialDelaySeconds":10,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":1},"name":"controller","ports":[{"containerPort":80,"name":"http","protocol":"TCP"},{"containerPort":443,"name":"https","protocol":"TCP"},{"containerPort":8443,"name":"webhook","protocol":"TCP"}],"readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/healthz","port":10254,"scheme":"HTTP"},"initialDelaySeconds":10,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":1},"resources":{"requests":{"cpu":"100m","memory":"90Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"add":["NET_BIND_SERVICE"],"drop":["ALL"]},"readOnlyRootFilesystem":false,"runAsGroup":82,"runAsNonRoot":true,"runAsUser":101,"seccompProfile":{"type":"RuntimeDefault"}},"volumeMounts":[{"mountPath":"/usr/local/certificates/","name":"webhook-cert","readOnly":true}]}],"dnsPolicy":"ClusterFirst","nodeSelector":{"kubernetes.io/os":"linux"},"serviceAccountName":"ingress-nginx","terminationGracePeriodSeconds":300,"volumes":[{"name":"webhook-cert","secret":{"secretName":"ingress-nginx-admission"}}]}}}}
+   creationTimestamp: "2025-12-25T04:07:34Z"
+-  generation: 1
++  generation: 2
+   labels:
+     app.kubernetes.io/component: controller
+     app.kubernetes.io/instance: ingress-nginx
+@@ -19,7 +19,7 @@
+   uid: 11b615a3-b595-475c-9b09-63286f480855
+ spec:
+   progressDeadlineSeconds: 600
+-  replicas: 1
++  replicas: 2
+   revisionHistoryLimit: 10
+   selector:
+     matchLabels:
+@@ -49,6 +49,18 @@
+               - key: node-role.kubernetes.io/control-plane
+                 operator: DoesNotExist
+             weight: 100
++          requiredDuringSchedulingIgnoredDuringExecution:
++            nodeSelectorTerms:
++            - matchExpressions:
++              - key: node-role.kubernetes.io/control-plane
++                operator: DoesNotExist
++        podAntiAffinity:
++          requiredDuringSchedulingIgnoredDuringExecution:
++          - labelSelector:
++              matchLabels:
++                app.kubernetes.io/component: controller
++                app.kubernetes.io/name: ingress-nginx
++            topologyKey: kubernetes.io/hostname
+       automountServiceAccountToken: true
+       containers:
+       - args:
+diff -u -N /tmp/LIVE-1656195458/batch.v1.Job.ingress-nginx.ingress-nginx-admission-create /tmp/MERGED-1680702946/batch.v1.Job.ingress-nginx.ingress-nginx-admission-create
+--- /tmp/LIVE-1656195458/batch.v1.Job.ingress-nginx.ingress-nginx-admission-create	2025-12-25 11:46:08.943988139 +0700
++++ /tmp/MERGED-1680702946/batch.v1.Job.ingress-nginx.ingress-nginx-admission-create	2025-12-25 11:46:08.943988139 +0700
+@@ -0,0 +1,81 @@
++apiVersion: batch/v1
++kind: Job
++metadata:
++  creationTimestamp: "2025-12-25T04:46:08Z"
++  generation: 1
++  labels:
++    app.kubernetes.io/component: admission-webhook
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-admission-create
++  namespace: ingress-nginx
++  uid: 83f82e9e-741b-4b8e-9897-a35483d7422b
++spec:
++  backoffLimit: 6
++  completionMode: NonIndexed
++  completions: 1
++  manualSelector: false
++  parallelism: 1
++  podReplacementPolicy: TerminatingOrFailed
++  selector:
++    matchLabels:
++      batch.kubernetes.io/controller-uid: 83f82e9e-741b-4b8e-9897-a35483d7422b
++  suspend: false
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app.kubernetes.io/component: admission-webhook
++        app.kubernetes.io/instance: ingress-nginx
++        app.kubernetes.io/name: ingress-nginx
++        app.kubernetes.io/part-of: ingress-nginx
++        app.kubernetes.io/version: 1.13.5
++        batch.kubernetes.io/controller-uid: 83f82e9e-741b-4b8e-9897-a35483d7422b
++        batch.kubernetes.io/job-name: ingress-nginx-admission-create
++        controller-uid: 83f82e9e-741b-4b8e-9897-a35483d7422b
++        job-name: ingress-nginx-admission-create
++      name: ingress-nginx-admission-create
++    spec:
++      automountServiceAccountToken: true
++      containers:
++      - args:
++        - create
++        - --host=ingress-nginx-controller-admission,ingress-nginx-controller-admission.$(POD_NAMESPACE).svc
++        - --namespace=$(POD_NAMESPACE)
++        - --secret-name=ingress-nginx-admission
++        env:
++        - name: POD_NAMESPACE
++          valueFrom:
++            fieldRef:
++              apiVersion: v1
++              fieldPath: metadata.namespace
++        image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.6.5@sha256:03a00eb0e255e8a25fa49926c24cde0f7e12e8d072c445cdf5136ec78b546285
++        imagePullPolicy: IfNotPresent
++        name: create
++        resources: {}
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++          runAsGroup: 65532
++          runAsNonRoot: true
++          runAsUser: 65532
++          seccompProfile:
++            type: RuntimeDefault
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      nodeSelector:
++        kubernetes.io/os: linux
++      restartPolicy: OnFailure
++      schedulerName: default-scheduler
++      securityContext: {}
++      serviceAccount: ingress-nginx-admission
++      serviceAccountName: ingress-nginx-admission
++      terminationGracePeriodSeconds: 30
++  ttlSecondsAfterFinished: 0
++status: {}
+diff -u -N /tmp/LIVE-1656195458/batch.v1.Job.ingress-nginx.ingress-nginx-admission-patch /tmp/MERGED-1680702946/batch.v1.Job.ingress-nginx.ingress-nginx-admission-patch
+--- /tmp/LIVE-1656195458/batch.v1.Job.ingress-nginx.ingress-nginx-admission-patch	2025-12-25 11:46:08.951988253 +0700
++++ /tmp/MERGED-1680702946/batch.v1.Job.ingress-nginx.ingress-nginx-admission-patch	2025-12-25 11:46:08.955988309 +0700
+@@ -0,0 +1,83 @@
++apiVersion: batch/v1
++kind: Job
++metadata:
++  creationTimestamp: "2025-12-25T04:46:08Z"
++  generation: 1
++  labels:
++    app.kubernetes.io/component: admission-webhook
++    app.kubernetes.io/instance: ingress-nginx
++    app.kubernetes.io/name: ingress-nginx
++    app.kubernetes.io/part-of: ingress-nginx
++    app.kubernetes.io/version: 1.13.5
++  name: ingress-nginx-admission-patch
++  namespace: ingress-nginx
++  uid: 927cdde2-f483-482a-a8c3-b9e166223f1e
++spec:
++  backoffLimit: 6
++  completionMode: NonIndexed
++  completions: 1
++  manualSelector: false
++  parallelism: 1
++  podReplacementPolicy: TerminatingOrFailed
++  selector:
++    matchLabels:
++      batch.kubernetes.io/controller-uid: 927cdde2-f483-482a-a8c3-b9e166223f1e
++  suspend: false
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app.kubernetes.io/component: admission-webhook
++        app.kubernetes.io/instance: ingress-nginx
++        app.kubernetes.io/name: ingress-nginx
++        app.kubernetes.io/part-of: ingress-nginx
++        app.kubernetes.io/version: 1.13.5
++        batch.kubernetes.io/controller-uid: 927cdde2-f483-482a-a8c3-b9e166223f1e
++        batch.kubernetes.io/job-name: ingress-nginx-admission-patch
++        controller-uid: 927cdde2-f483-482a-a8c3-b9e166223f1e
++        job-name: ingress-nginx-admission-patch
++      name: ingress-nginx-admission-patch
++    spec:
++      automountServiceAccountToken: true
++      containers:
++      - args:
++        - patch
++        - --webhook-name=ingress-nginx-admission
++        - --namespace=$(POD_NAMESPACE)
++        - --patch-mutating=false
++        - --secret-name=ingress-nginx-admission
++        - --patch-failure-policy=Fail
++        env:
++        - name: POD_NAMESPACE
++          valueFrom:
++            fieldRef:
++              apiVersion: v1
++              fieldPath: metadata.namespace
++        image: registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.6.5@sha256:03a00eb0e255e8a25fa49926c24cde0f7e12e8d072c445cdf5136ec78b546285
++        imagePullPolicy: IfNotPresent
++        name: patch
++        resources: {}
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++          runAsGroup: 65532
++          runAsNonRoot: true
++          runAsUser: 65532
++          seccompProfile:
++            type: RuntimeDefault
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      nodeSelector:
++        kubernetes.io/os: linux
++      restartPolicy: OnFailure
++      schedulerName: default-scheduler
++      securityContext: {}
++      serviceAccount: ingress-nginx-admission
++      serviceAccountName: ingress-nginx-admission
++      terminationGracePeriodSeconds: 30
++  ttlSecondsAfterFinished: 0
++status: {}

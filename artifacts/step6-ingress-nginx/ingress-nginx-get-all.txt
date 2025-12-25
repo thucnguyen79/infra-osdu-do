@@ -1,0 +1,12 @@
+NAME                                           READY   STATUS    RESTARTS   AGE   IP               NODE           NOMINATED NODE   READINESS GATES
+pod/ingress-nginx-controller-f7764945c-8dhtj   1/1     Running   0          69s   192.168.52.129   workernode01   <none>           <none>
+
+NAME                                         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)                      AGE   SELECTOR
+service/ingress-nginx-controller             NodePort    10.108.11.51   <none>        80:32356/TCP,443:31598/TCP   69s   app.kubernetes.io/component=controller,app.kubernetes.io/instance=ingress-nginx,app.kubernetes.io/name=ingress-nginx
+service/ingress-nginx-controller-admission   ClusterIP   10.96.176.7    <none>        443/TCP                      69s   app.kubernetes.io/component=controller,app.kubernetes.io/instance=ingress-nginx,app.kubernetes.io/name=ingress-nginx
+
+NAME                                       READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                                                                                                                     SELECTOR
+deployment.apps/ingress-nginx-controller   1/1     1            1           69s   controller   registry.k8s.io/ingress-nginx/controller:v1.13.5@sha256:5b346855be6752fa2a40f91983fa35a0c004b41493f36be6068a3d4350e69db8   app.kubernetes.io/component=controller,app.kubernetes.io/instance=ingress-nginx,app.kubernetes.io/name=ingress-nginx
+
+NAME                                                 DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES                                                                                                                     SELECTOR
+replicaset.apps/ingress-nginx-controller-f7764945c   1         1         1       69s   controller   registry.k8s.io/ingress-nginx/controller:v1.13.5@sha256:5b346855be6752fa2a40f91983fa35a0c004b41493f36be6068a3d4350e69db8   app.kubernetes.io/component=controller,app.kubernetes.io/instance=ingress-nginx,app.kubernetes.io/name=ingress-nginx,pod-template-hash=f7764945c
