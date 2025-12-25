@@ -1,0 +1,48 @@
+global
+  log /dev/log local0
+  log /dev/log local1 notice
+  daemon
+  maxconn 4096
+
+defaults
+  log global
+  option dontlognull
+  timeout connect 5s
+  timeout client  60s
+  timeout server  60s
+
+# -------------------------
+# HTTP 80 -> workers:30080
+# -------------------------
+frontend fe_http_80
+  bind *:80
+  mode http
+  option httplog
+  default_backend be_http_nodeport
+
+backend be_http_nodeport
+  mode http
+  balance roundrobin
+  option httpchk GET /
+  http-check expect status 200
+{% for w in lb_workers %}
+  server {{ w.name }} {{ w.ip }}:{{ http_nodeport }} check
+{% endfor %}
+
+# -------------------------
+# HTTPS 443 -> workers:30443 (TCP passthrough)
+# -------------------------
+frontend fe_https_443
+  bind *:443
+  mode tcp
+  option tcplog
+  default_backend be_https_nodeport
+
+backend be_https_nodeport
+  mode tcp
+  balance roundrobin
+  option tcp-check
+{% for w in lb_workers %}
+  server {{ w.name }} {{ w.ip }}:{{ https_nodeport }} check
+{% endfor %}
+

@@ -1,0 +1,4 @@
+HAProxy version 2.4.29-0ubuntu0.22.04.1 2025/10/10 - https://haproxy.org/
+Status: long-term supported branch - will stop receiving fixes around Q2 2026.
+Known bugs: http://www.haproxy.org/bugs/bugs-2.4.29.html
+Running on: Linux 5.15.0-113-generic #123-Ubuntu SMP Mon Jun 10 08:16:17 UTC 2024 x86_64

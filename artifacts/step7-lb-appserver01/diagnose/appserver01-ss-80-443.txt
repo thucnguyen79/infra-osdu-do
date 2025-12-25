@@ -1,0 +1,2 @@
+LISTEN 0      4096         0.0.0.0:80        0.0.0.0:*    users:(("haproxy",pid=110657,fd=6))        
+LISTEN 0      4096         0.0.0.0:443       0.0.0.0:*    users:(("haproxy",pid=110657,fd=7))        

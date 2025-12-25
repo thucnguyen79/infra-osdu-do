@@ -1,0 +1,89 @@
+---
+- name: Step 7 - AppServer01 self-managed LB (HAProxy) -> ingress-nginx NodePorts
+  hosts: all
+  become: true
+  vars:
+    outdir: "/opt/infra-osdu-do/artifacts/step7-lb-appserver01/{{ inventory_hostname }}"
+    # Backends: ingress-nginx NodePort on worker private IPs
+    lb_workers:
+      - { name: "workernode01", ip: "10.118.0.6" }
+      - { name: "workernode02", ip: "10.118.0.7" }
+    http_nodeport: 30080
+    https_nodeport: 30443
+
+  tasks:
+    - name: Create evidence directory on ToolServer01
+      file:
+        path: "{{ outdir }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      become: false
+
+    - name: Install HAProxy
+      apt:
+        name: haproxy
+        state: present
+        update_cache: true
+
+    - name: Deploy haproxy.cfg
+      template:
+        src: "{{ playbook_dir }}/../templates/haproxy.cfg.j2"
+        dest: "/etc/haproxy/haproxy.cfg"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart haproxy
+
+    - name: Enable + start haproxy
+      systemd:
+        name: haproxy
+        enabled: true
+        state: started
+
+    - name: Capture haproxy version
+      command: haproxy -v
+      register: haproxy_ver
+      changed_when: false
+
+    - name: Save haproxy version
+      copy:
+        dest: "{{ outdir }}/haproxy-version.txt"
+        content: "{{ haproxy_ver.stdout }}\n"
+      delegate_to: localhost
+      become: false
+
+    - name: Capture listening ports 80/443
+      shell: "ss -lntp | egrep ':(80|443)\\s' || true"
+      args:
+        executable: /bin/bash
+      register: ss_out
+      changed_when: false
+
+    - name: Save ss output
+      copy:
+        dest: "{{ outdir }}/ss-80-443-after.txt"
+        content: "{{ ss_out.stdout }}\n"
+      delegate_to: localhost
+      become: false
+
+    - name: Capture service status
+      shell: "systemctl is-active haproxy && systemctl is-enabled haproxy"
+      args:
+        executable: /bin/bash
+      register: svc_out
+      changed_when: false
+
+    - name: Save service status
+      copy:
+        dest: "{{ outdir }}/haproxy-service.txt"
+        content: "{{ svc_out.stdout }}\n"
+      delegate_to: localhost
+      become: false
+
+  handlers:
+    - name: Restart haproxy
+      systemd:
+        name: haproxy
+        state: restarted
+

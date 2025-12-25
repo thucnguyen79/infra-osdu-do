@@ -134,4 +134,14 @@
 - [x] 6.5 Deploy echo ingress (host echo.internal)
 - [x] 6.5 Verify routing via both workers (curl Host header) OK
 
+## Step 7 — AppServer01 self-managed LB
 
+- [ ] 7.1 Precheck: ports 80/443 free on AppServer01
+- [ ] 7.1 Precheck: AppServer01 can reach worker NodePorts 30080/30443
+- [ ] 7.2 Deploy HAProxy via Ansible (repo-first)
+- [ ] 7.3 Verify HAProxy listening on 80/443
+- [ ] 7.4 Verify LB TCP connect from ToolServer01
+- [ ] 7.4 Verify echo ingress via LB (Host header) works
+- [ ] 7.D Document Step 7 + commit evidence
+- [ ] 7.4 LB reachable on 80/443 from ToolServer01
+- [ ] 7.4 Echo via LB works

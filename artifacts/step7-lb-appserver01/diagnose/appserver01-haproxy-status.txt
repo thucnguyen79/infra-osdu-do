@@ -1,0 +1,24 @@
+● haproxy.service - HAProxy Load Balancer
+     Loaded: loaded (/lib/systemd/system/haproxy.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2025-12-25 07:12:25 UTC; 21min ago
+       Docs: man:haproxy(1)
+             file:/usr/share/doc/haproxy/configuration.txt.gz
+    Process: 110653 ExecStartPre=/usr/sbin/haproxy -Ws -f $CONFIG -c -q $EXTRAOPTS (code=exited, status=0/SUCCESS)
+   Main PID: 110655 (haproxy)
+      Tasks: 9 (limit: 38464)
+     Memory: 6.4M
+        CPU: 1.213s
+     CGroup: /system.slice/haproxy.service
+             ├─110655 /usr/sbin/haproxy -Ws -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -S /run/haproxy-master.sock
+             └─110657 /usr/sbin/haproxy -Ws -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -S /run/haproxy-master.sock
+
+Dec 25 07:12:26 AppServer01 haproxy[110657]: [WARNING]  (110657) : Server be_http_nodeport/workernode02 is DOWN, reason: Layer7 wrong status, code: 404, info: "Not Found", check duration: 3ms. 0 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 25 07:12:26 AppServer01 haproxy[110657]: [NOTICE]   (110657) : haproxy version is 2.4.29-0ubuntu0.22.04.1
+Dec 25 07:12:26 AppServer01 haproxy[110657]: [NOTICE]   (110657) : path to executable is /usr/sbin/haproxy
+Dec 25 07:12:26 AppServer01 haproxy[110657]: [ALERT]    (110657) : backend 'be_http_nodeport' has no server available!
+Dec 25 07:12:26 AppServer01 haproxy[110657]: Server be_http_nodeport/workernode02 is DOWN, reason: Layer7 wrong status, code: 404, info: "Not Found", check duration: 3ms. 0 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 25 07:12:26 AppServer01 haproxy[110657]: Server be_http_nodeport/workernode02 is DOWN, reason: Layer7 wrong status, code: 404, info: "Not Found", check duration: 3ms. 0 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 25 07:12:26 AppServer01 haproxy[110657]: backend be_http_nodeport has no server available!
+Dec 25 07:12:26 AppServer01 haproxy[110657]: backend be_http_nodeport has no server available!
+Dec 25 07:30:37 AppServer01 haproxy[110657]: 10.118.0.5:40058 [25/Dec/2025:07:30:37.699] fe_http_80 be_http_nodeport/<NOSRV> 0/-1/-1/-1/0 503 217 - - SC-- 1/1/0/0/0 0/0 "GET / HTTP/1.1"
+Dec 25 07:30:48 AppServer01 haproxy[110657]: 10.118.0.5:41984 [25/Dec/2025:07:30:48.677] fe_http_80 be_http_nodeport/<NOSRV> 0/-1/-1/-1/0 503 217 - - SC-- 1/1/0/0/0 0/0 "GET / HTTP/1.1"
