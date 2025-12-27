@@ -1,0 +1,4 @@
+NAME                        READY   SECRET                      ISSUER        STATUS                                          AGE
+alertmanager-internal-tls   True    alertmanager-internal-tls   internal-ca   Certificate is up to date and has not expired   133m
+grafana-internal-tls        True    grafana-internal-tls        internal-ca   Certificate is up to date and has not expired   133m
+prometheus-internal-tls     True    prometheus-internal-tls     internal-ca   Certificate is up to date and has not expired   133m

@@ -1,0 +1,179 @@
+diff -u -N /tmp/LIVE-1216891967/batch.v1.Job.observability.kps-kube-prometheus-stack-admission-create /tmp/MERGED-2691613649/batch.v1.Job.observability.kps-kube-prometheus-stack-admission-create
+--- /tmp/LIVE-1216891967/batch.v1.Job.observability.kps-kube-prometheus-stack-admission-create	2025-12-27 22:46:21.866621716 +0700
++++ /tmp/MERGED-2691613649/batch.v1.Job.observability.kps-kube-prometheus-stack-admission-create	2025-12-27 22:46:21.866621716 +0700
+@@ -0,0 +1,85 @@
++apiVersion: batch/v1
++kind: Job
++metadata:
++  annotations:
++    helm.sh/hook: pre-install,pre-upgrade
++    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
++  creationTimestamp: "2025-12-27T15:46:21Z"
++  generation: 1
++  labels:
++    app: kube-prometheus-stack-admission-create
++    app.kubernetes.io/component: prometheus-operator-webhook
++    app.kubernetes.io/instance: kps
++    app.kubernetes.io/managed-by: Helm
++    app.kubernetes.io/name: kube-prometheus-stack-prometheus-operator
++    app.kubernetes.io/part-of: kube-prometheus-stack
++    app.kubernetes.io/version: 80.7.0
++    chart: kube-prometheus-stack-80.7.0
++    heritage: Helm
++    release: kps
++  name: kps-kube-prometheus-stack-admission-create
++  namespace: observability
++  uid: 94782929-3104-4c48-909c-0418631a8372
++spec:
++  backoffLimit: 6
++  completionMode: NonIndexed
++  completions: 1
++  manualSelector: false
++  parallelism: 1
++  podReplacementPolicy: TerminatingOrFailed
++  selector:
++    matchLabels:
++      batch.kubernetes.io/controller-uid: 94782929-3104-4c48-909c-0418631a8372
++  suspend: false
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app: kube-prometheus-stack-admission-create
++        app.kubernetes.io/component: prometheus-operator-webhook
++        app.kubernetes.io/instance: kps
++        app.kubernetes.io/managed-by: Helm
++        app.kubernetes.io/name: kube-prometheus-stack-prometheus-operator
++        app.kubernetes.io/part-of: kube-prometheus-stack
++        app.kubernetes.io/version: 80.7.0
++        batch.kubernetes.io/controller-uid: 94782929-3104-4c48-909c-0418631a8372
++        batch.kubernetes.io/job-name: kps-kube-prometheus-stack-admission-create
++        chart: kube-prometheus-stack-80.7.0
++        controller-uid: 94782929-3104-4c48-909c-0418631a8372
++        heritage: Helm
++        job-name: kps-kube-prometheus-stack-admission-create
++        release: kps
++      name: kps-kube-prometheus-stack-admission-create
++    spec:
++      containers:
++      - args:
++        - create
++        - --host=kps-kube-prometheus-stack-operator,kps-kube-prometheus-stack-operator.observability.svc
++        - --namespace=observability
++        - --secret-name=kps-kube-prometheus-stack-admission
++        image: ghcr.io/jkroepke/kube-webhook-certgen:1.7.3
++        imagePullPolicy: IfNotPresent
++        name: create
++        resources: {}
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      restartPolicy: OnFailure
++      schedulerName: default-scheduler
++      securityContext:
++        runAsGroup: 2000
++        runAsNonRoot: true
++        runAsUser: 2000
++        seccompProfile:
++          type: RuntimeDefault
++      serviceAccount: kps-kube-prometheus-stack-admission
++      serviceAccountName: kps-kube-prometheus-stack-admission
++      terminationGracePeriodSeconds: 30
++  ttlSecondsAfterFinished: 60
++status: {}
+diff -u -N /tmp/LIVE-1216891967/batch.v1.Job.observability.kps-kube-prometheus-stack-admission-patch /tmp/MERGED-2691613649/batch.v1.Job.observability.kps-kube-prometheus-stack-admission-patch
+--- /tmp/LIVE-1216891967/batch.v1.Job.observability.kps-kube-prometheus-stack-admission-patch	2025-12-27 22:46:21.878621824 +0700
++++ /tmp/MERGED-2691613649/batch.v1.Job.observability.kps-kube-prometheus-stack-admission-patch	2025-12-27 22:46:21.878621824 +0700
+@@ -0,0 +1,86 @@
++apiVersion: batch/v1
++kind: Job
++metadata:
++  annotations:
++    helm.sh/hook: post-install,post-upgrade
++    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
++  creationTimestamp: "2025-12-27T15:46:21Z"
++  generation: 1
++  labels:
++    app: kube-prometheus-stack-admission-patch
++    app.kubernetes.io/component: prometheus-operator-webhook
++    app.kubernetes.io/instance: kps
++    app.kubernetes.io/managed-by: Helm
++    app.kubernetes.io/name: kube-prometheus-stack-prometheus-operator
++    app.kubernetes.io/part-of: kube-prometheus-stack
++    app.kubernetes.io/version: 80.7.0
++    chart: kube-prometheus-stack-80.7.0
++    heritage: Helm
++    release: kps
++  name: kps-kube-prometheus-stack-admission-patch
++  namespace: observability
++  uid: bd1cedf6-1735-4d32-bcc5-f54ffb8ef349
++spec:
++  backoffLimit: 6
++  completionMode: NonIndexed
++  completions: 1
++  manualSelector: false
++  parallelism: 1
++  podReplacementPolicy: TerminatingOrFailed
++  selector:
++    matchLabels:
++      batch.kubernetes.io/controller-uid: bd1cedf6-1735-4d32-bcc5-f54ffb8ef349
++  suspend: false
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app: kube-prometheus-stack-admission-patch
++        app.kubernetes.io/component: prometheus-operator-webhook
++        app.kubernetes.io/instance: kps
++        app.kubernetes.io/managed-by: Helm
++        app.kubernetes.io/name: kube-prometheus-stack-prometheus-operator
++        app.kubernetes.io/part-of: kube-prometheus-stack
++        app.kubernetes.io/version: 80.7.0
++        batch.kubernetes.io/controller-uid: bd1cedf6-1735-4d32-bcc5-f54ffb8ef349
++        batch.kubernetes.io/job-name: kps-kube-prometheus-stack-admission-patch
++        chart: kube-prometheus-stack-80.7.0
++        controller-uid: bd1cedf6-1735-4d32-bcc5-f54ffb8ef349
++        heritage: Helm
++        job-name: kps-kube-prometheus-stack-admission-patch
++        release: kps
++      name: kps-kube-prometheus-stack-admission-patch
++    spec:
++      containers:
++      - args:
++        - patch
++        - --webhook-name=kps-kube-prometheus-stack-admission
++        - --namespace=observability
++        - --secret-name=kps-kube-prometheus-stack-admission
++        - --patch-failure-policy=
++        image: ghcr.io/jkroepke/kube-webhook-certgen:1.7.3
++        imagePullPolicy: IfNotPresent
++        name: patch
++        resources: {}
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      restartPolicy: OnFailure
++      schedulerName: default-scheduler
++      securityContext:
++        runAsGroup: 2000
++        runAsNonRoot: true
++        runAsUser: 2000
++        seccompProfile:
++          type: RuntimeDefault
++      serviceAccount: kps-kube-prometheus-stack-admission
++      serviceAccountName: kps-kube-prometheus-stack-admission
++      terminationGracePeriodSeconds: 30
++  ttlSecondsAfterFinished: 60
++status: {}

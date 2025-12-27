@@ -1,0 +1,3 @@
+26:  - host: alertmanager.internal
+36:  tls:
+39:    secretName: alertmanager-internal-tls

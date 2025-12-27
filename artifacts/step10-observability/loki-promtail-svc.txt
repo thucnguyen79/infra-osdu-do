@@ -1,0 +1,6 @@
+loki                                     ClusterIP   10.97.135.96     <none>        3100/TCP,9095/TCP            27s    app.kubernetes.io/component=single-binary,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+loki-canary                              ClusterIP   10.96.107.251    <none>        3500/TCP                     27s    app.kubernetes.io/component=canary,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+loki-chunks-cache                        ClusterIP   None             <none>        11211/TCP,9150/TCP           27s    app.kubernetes.io/component=memcached-chunks-cache,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+loki-headless                            ClusterIP   None             <none>        3100/TCP                     27s    app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+loki-memberlist                          ClusterIP   None             <none>        7946/TCP                     27s    app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki,app.kubernetes.io/part-of=memberlist
+loki-results-cache                       ClusterIP   None             <none>        11211/TCP,9150/TCP           27s    app.kubernetes.io/component=memcached-results-cache,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki

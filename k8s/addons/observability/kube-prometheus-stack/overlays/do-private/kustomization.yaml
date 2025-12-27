@@ -1,0 +1,5 @@
+resources:
+  - ../../base
+  - grafana-admin-secret.yaml
+patchesStrategicMerge:
+  - patches/patch-alertmanager-ingress-tls.yaml

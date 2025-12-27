@@ -1,0 +1,1 @@
+73866 k8s/addons/observability/kube-prometheus-stack/base/vendor/crds.yaml

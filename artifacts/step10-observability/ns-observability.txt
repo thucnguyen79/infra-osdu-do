@@ -1,2 +1,2 @@
 NAME            STATUS   AGE
-observability   Active   12s
+observability   Active   62m

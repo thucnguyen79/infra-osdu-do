@@ -1,0 +1,11 @@
+loki-0                                                  0/2     ContainerCreating   0          10s    <none>            workernode02     <none>           <none>
+loki-canary-4dg7j                                       0/1     Running             0          10s    192.168.52.145    workernode01     <none>           <none>
+loki-canary-hntjp                                       0/1     Running             0          10s    192.168.246.213   workernode02     <none>           <none>
+loki-chunks-cache-0                                     0/2     Running             0          10s    192.168.52.144    workernode01     <none>           <none>
+loki-helm-test                                          1/1     Running             0          10s    192.168.52.146    workernode01     <none>           <none>
+loki-results-cache-0                                    1/2     Running             0          10s    192.168.246.212   workernode02     <none>           <none>
+promtail-648hr                                          0/1     Running             0          10s    192.168.246.214   workernode02     <none>           <none>
+promtail-6rqzj                                          0/1     Running             0          10s    192.168.198.193   controlplane03   <none>           <none>
+promtail-lx28k                                          0/1     Running             0          10s    192.168.52.147    workernode01     <none>           <none>
+promtail-tpxxw                                          0/1     Running             0          10s    192.168.232.1     controlplane02   <none>           <none>
+promtail-ts7jd                                          0/1     Running             0          10s    192.168.40.68     controlplane01   <none>           <none>

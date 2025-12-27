@@ -1,0 +1,11 @@
+NAME                  SHORTNAMES   APIVERSION                       NAMESPACED   KIND
+alertmanagerconfigs   amcfg        monitoring.coreos.com/v1alpha1   true         AlertmanagerConfig
+alertmanagers         am           monitoring.coreos.com/v1         true         Alertmanager
+podmonitors           pmon         monitoring.coreos.com/v1         true         PodMonitor
+probes                prb          monitoring.coreos.com/v1         true         Probe
+prometheusagents      promagent    monitoring.coreos.com/v1alpha1   true         PrometheusAgent
+prometheuses          prom         monitoring.coreos.com/v1         true         Prometheus
+prometheusrules       promrule     monitoring.coreos.com/v1         true         PrometheusRule
+scrapeconfigs         scfg         monitoring.coreos.com/v1alpha1   true         ScrapeConfig
+servicemonitors       smon         monitoring.coreos.com/v1         true         ServiceMonitor
+thanosrulers          ruler        monitoring.coreos.com/v1         true         ThanosRuler

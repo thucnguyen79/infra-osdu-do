@@ -1,0 +1,4 @@
+podmonitors.monitoring.coreos.com                       2025-12-27T14:49:08Z
+probes.monitoring.coreos.com                            2025-12-27T14:49:08Z
+prometheusrules.monitoring.coreos.com                   2025-12-27T14:49:08Z
+servicemonitors.monitoring.coreos.com                   2025-12-27T14:49:08Z

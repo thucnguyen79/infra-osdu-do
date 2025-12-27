@@ -1,0 +1,4 @@
+NAME                        READY   SECRET                      AGE
+alertmanager-internal-tls   True    alertmanager-internal-tls   118m
+grafana-internal-tls        True    grafana-internal-tls        118m
+prometheus-internal-tls     True    prometheus-internal-tls     118m

@@ -1,0 +1,10 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kps-kube-prometheus-stack-alertmanager
+  namespace: observability
+spec:
+  tls:
+  - hosts:
+    - alertmanager.internal
+    secretName: alertmanager-internal-tls

@@ -1,0 +1,24 @@
+== grafana.internal via LB HTTP ==
+HTTP/1.1 308 Permanent Redirect
+Date: Sat, 27 Dec 2025 17:26:26 GMT
+Content-Type: text/html
+Content-Length: 164
+Connection: keep-alive
+Location: https://grafana.internal
+
+== prometheus.internal via LB HTTP ==
+HTTP/1.1 308 Permanent Redirect
+Date: Sat, 27 Dec 2025 17:26:26 GMT
+Content-Type: text/html
+Content-Length: 164
+Connection: keep-alive
+Location: https://prometheus.internal
+
+== alertmanager.internal via LB HTTP ==
+HTTP/1.1 308 Permanent Redirect
+Date: Sat, 27 Dec 2025 17:26:26 GMT
+Content-Type: text/html
+Content-Length: 164
+Connection: keep-alive
+Location: https://alertmanager.internal
+

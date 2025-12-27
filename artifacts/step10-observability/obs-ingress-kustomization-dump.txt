@@ -1,0 +1,11 @@
+==== k8s/addons/observability/ingress/overlays/do-private/kustomization.yaml ====
+resources:
+  - ../../base
+==== k8s/addons/observability/ingress/base/kustomization.yaml ====
+resources:
+  - grafana-certificate.yaml
+  - grafana-ingress.yaml
+  - prometheus-certificate.yaml
+  - prometheus-ingress.yaml
+  - alertmanager-certificate.yaml
+  - alertmanager-ingress.yaml

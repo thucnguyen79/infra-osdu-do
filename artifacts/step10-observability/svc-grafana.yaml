@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2025-12-27T15:13:00Z"
+  labels:
+    app.kubernetes.io/instance: kps
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/version: 12.3.0
+    helm.sh/chart: grafana-10.4.0
+  name: kps-grafana
+  namespace: observability
+  resourceVersion: "576075"
+  uid: c8a53a2c-97cf-4ffa-983c-c3bde7bf21be
+spec:
+  clusterIP: 10.108.50.164
+  clusterIPs:
+  - 10.108.50.164
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http-web
+    port: 80
+    protocol: TCP
+    targetPort: grafana
+  selector:
+    app.kubernetes.io/instance: kps
+    app.kubernetes.io/name: grafana
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

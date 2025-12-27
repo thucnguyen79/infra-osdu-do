@@ -1,0 +1,14 @@
+NAME                                                    READY   STATUS      RESTARTS   AGE   IP                NODE             NOMINATED NODE   READINESS GATES
+alertmanager-kps-kube-prometheus-stack-alertmanager-0   2/2     Running     0          34m   192.168.52.141    workernode01     <none>           <none>
+kps-grafana-54f66c84b8-cs8lk                            3/3     Running     0          34m   192.168.52.138    workernode01     <none>           <none>
+kps-grafana-test                                        0/1     Error       0          34m   192.168.246.205   workernode02     <none>           <none>
+kps-kube-prometheus-stack-admission-create-wgxn5        0/1     Completed   0          53s   192.168.246.207   workernode02     <none>           <none>
+kps-kube-prometheus-stack-admission-patch-dz44v         0/1     Completed   0          53s   192.168.246.208   workernode02     <none>           <none>
+kps-kube-prometheus-stack-operator-5b47c57749-67qrs     1/1     Running     0          34m   192.168.52.140    workernode01     <none>           <none>
+kps-kube-state-metrics-5c9bb4b8c-qvtnd                  1/1     Running     0          34m   192.168.52.139    workernode01     <none>           <none>
+kps-prometheus-node-exporter-6n8h4                      1/1     Running     0          34m   10.118.0.2        controlplane01   <none>           <none>
+kps-prometheus-node-exporter-gj5hn                      1/1     Running     0          34m   10.118.0.4        controlplane03   <none>           <none>
+kps-prometheus-node-exporter-sk7p8                      1/1     Running     0          34m   10.118.0.3        controlplane02   <none>           <none>
+kps-prometheus-node-exporter-vbhk7                      1/1     Running     0          34m   10.118.0.6        workernode01     <none>           <none>
+kps-prometheus-node-exporter-wz9l2                      1/1     Running     0          34m   10.118.0.7        workernode02     <none>           <none>
+prometheus-kps-kube-prometheus-stack-prometheus-0       2/2     Running     0          34m   192.168.246.206   workernode02     <none>           <none>

@@ -235,3 +235,22 @@ Evidence:
 - [x] StorageClasses created (Delete/Retain, ext4/xfs); default class set
 - [x] Dynamic PV provisioning verified with test PVC/Pod (create/attach/detach/delete)
 - [x] Evidence stored in artifacts/step9-storage/ (secrets under artifacts-private/)
+
+## Step 10 - Observability
+###A) Monitoring Core
+-[x] Namespace observability tồn tại
+-[x] CRDs monitoring.coreos.com đầy đủ (có Alertmanager/Prometheus/ThanosRuler…)
+-[x] Pods Monitoring Running (Grafana/Prometheus/Alertmanager/Operator)
+
+###B) Ingress + TLS Internal CA
+-[x] Có 3 ingress đúng host: grafana/prometheus/alertmanager .internal
+-[x] Có 3 certificate READY=True
+-[x] HTTP 308 → HTTPS
+-[x] HTTPS verify CA OK (Grafana login 302; Prometheus/Alertmanager readiness nên 200)
+
+###C) Logging (Loki + Promtail)
+-[x] Loki Running
+-[x] PVC Loki Bound (retain SC)
+-[x] Promtail chạy đủ node
+-[x] Grafana query được log từ Loki
+-[x] values-loki.yaml đã fix đúng (schemaConfig…)

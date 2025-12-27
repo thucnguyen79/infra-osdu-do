@@ -1,0 +1,5 @@
+total 4984
+drwxrwxr-x 2 ops ops    4096 Dec 27 21:44 .
+drwxrwxr-x 3 ops ops    4096 Dec 27 21:46 ..
+-rw-rw-r-- 1 ops ops 4437564 Dec 27 21:43 crds.yaml
+-rw-rw-r-- 1 ops ops  654367 Dec 27 21:44 stack.yaml

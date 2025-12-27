@@ -1,0 +1,5 @@
+NAME                                                                    VERSION   DESIRED   READY   RECONCILED   AVAILABLE   AGE
+prometheus.monitoring.coreos.com/kps-kube-prometheus-stack-prometheus   v3.8.1    1         1       True         True        34m
+
+NAME                                                                        VERSION   REPLICAS   READY   RECONCILED   AVAILABLE   AGE
+alertmanager.monitoring.coreos.com/kps-kube-prometheus-stack-alertmanager   v0.30.0   1          1       True         True        34m

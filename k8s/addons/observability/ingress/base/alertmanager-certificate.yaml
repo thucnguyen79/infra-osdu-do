@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: alertmanager-internal-tls
+  namespace: observability
+spec:
+  secretName: alertmanager-internal-tls
+  issuerRef:
+    kind: ClusterIssuer
+    name: internal-ca
+  dnsNames:
+    - alertmanager.internal

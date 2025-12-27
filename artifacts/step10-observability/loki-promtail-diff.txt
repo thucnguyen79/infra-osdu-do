@@ -1,0 +1,1325 @@
+diff -u -N /tmp/LIVE-2673076592/apps.v1.DaemonSet.observability.loki-canary /tmp/MERGED-3208058819/apps.v1.DaemonSet.observability.loki-canary
+--- /tmp/LIVE-2673076592/apps.v1.DaemonSet.observability.loki-canary	2025-12-28 01:08:41.104131238 +0700
++++ /tmp/MERGED-3208058819/apps.v1.DaemonSet.observability.loki-canary	2025-12-28 01:08:41.104131238 +0700
+@@ -0,0 +1,91 @@
++apiVersion: apps/v1
++kind: DaemonSet
++metadata:
++  annotations:
++    deprecated.daemonset.template.generation: "1"
++  creationTimestamp: "2025-12-27T18:08:41Z"
++  generation: 1
++  labels:
++    app.kubernetes.io/component: canary
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki-canary
++  namespace: observability
++  uid: c0cf67fd-2693-421f-a1f4-df7b5403b2f4
++spec:
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app.kubernetes.io/component: canary
++      app.kubernetes.io/instance: loki
++      app.kubernetes.io/name: loki
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app.kubernetes.io/component: canary
++        app.kubernetes.io/instance: loki
++        app.kubernetes.io/name: loki
++    spec:
++      containers:
++      - args:
++        - -addr=loki.observability.svc.cluster.local.:3100
++        - -labelname=pod
++        - -labelvalue=$(POD_NAME)
++        - -push=true
++        env:
++        - name: POD_NAME
++          valueFrom:
++            fieldRef:
++              apiVersion: v1
++              fieldPath: metadata.name
++        image: docker.io/grafana/loki-canary:3.6.3
++        imagePullPolicy: IfNotPresent
++        name: loki-canary
++        ports:
++        - containerPort: 3500
++          name: http-metrics
++          protocol: TCP
++        readinessProbe:
++          failureThreshold: 3
++          httpGet:
++            path: /metrics
++            port: http-metrics
++            scheme: HTTP
++          initialDelaySeconds: 15
++          periodSeconds: 10
++          successThreshold: 1
++          timeoutSeconds: 1
++        resources: {}
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext:
++        fsGroup: 10001
++        fsGroupChangePolicy: OnRootMismatch
++        runAsGroup: 10001
++        runAsNonRoot: true
++        runAsUser: 10001
++      serviceAccount: loki-canary
++      serviceAccountName: loki-canary
++      terminationGracePeriodSeconds: 30
++  updateStrategy:
++    rollingUpdate:
++      maxSurge: 0
++      maxUnavailable: 1
++    type: RollingUpdate
++status:
++  currentNumberScheduled: 0
++  desiredNumberScheduled: 0
++  numberMisscheduled: 0
++  numberReady: 0
+diff -u -N /tmp/LIVE-2673076592/apps.v1.DaemonSet.observability.promtail /tmp/MERGED-3208058819/apps.v1.DaemonSet.observability.promtail
+--- /tmp/LIVE-2673076592/apps.v1.DaemonSet.observability.promtail	2025-12-28 01:08:41.116131407 +0700
++++ /tmp/MERGED-3208058819/apps.v1.DaemonSet.observability.promtail	2025-12-28 01:08:41.116131407 +0700
+@@ -0,0 +1,122 @@
++apiVersion: apps/v1
++kind: DaemonSet
++metadata:
++  annotations:
++    deprecated.daemonset.template.generation: "1"
++  creationTimestamp: "2025-12-27T18:08:41Z"
++  generation: 1
++  labels:
++    app.kubernetes.io/instance: promtail
++    app.kubernetes.io/managed-by: Helm
++    app.kubernetes.io/name: promtail
++    app.kubernetes.io/version: 3.5.1
++    helm.sh/chart: promtail-6.17.1
++  name: promtail
++  namespace: observability
++  uid: 26fbc489-b0cd-44be-9753-7cfaa84b972d
++spec:
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app.kubernetes.io/instance: promtail
++      app.kubernetes.io/name: promtail
++  template:
++    metadata:
++      annotations:
++        checksum/config: d015614887c8ec89f461b3621a886c15d96ec4dde87048ca77b4ea612efe745a
++      creationTimestamp: null
++      labels:
++        app.kubernetes.io/instance: promtail
++        app.kubernetes.io/name: promtail
++    spec:
++      automountServiceAccountToken: true
++      containers:
++      - args:
++        - -config.file=/etc/promtail/promtail.yaml
++        env:
++        - name: HOSTNAME
++          valueFrom:
++            fieldRef:
++              apiVersion: v1
++              fieldPath: spec.nodeName
++        image: docker.io/grafana/promtail:3.5.1
++        imagePullPolicy: IfNotPresent
++        name: promtail
++        ports:
++        - containerPort: 3101
++          name: http-metrics
++          protocol: TCP
++        readinessProbe:
++          failureThreshold: 5
++          httpGet:
++            path: /ready
++            port: http-metrics
++            scheme: HTTP
++          initialDelaySeconds: 10
++          periodSeconds: 10
++          successThreshold: 1
++          timeoutSeconds: 1
++        resources: {}
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /etc/promtail
++          name: config
++        - mountPath: /run/promtail
++          name: run
++        - mountPath: /var/lib/docker/containers
++          name: containers
++          readOnly: true
++        - mountPath: /var/log/pods
++          name: pods
++          readOnly: true
++      dnsPolicy: ClusterFirst
++      enableServiceLinks: true
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext:
++        runAsGroup: 0
++        runAsUser: 0
++      serviceAccount: promtail
++      serviceAccountName: promtail
++      terminationGracePeriodSeconds: 30
++      tolerations:
++      - effect: NoSchedule
++        key: node-role.kubernetes.io/control-plane
++        operator: Exists
++      - effect: NoSchedule
++        key: node-role.kubernetes.io/master
++        operator: Exists
++      volumes:
++      - name: config
++        secret:
++          defaultMode: 420
++          secretName: promtail
++      - hostPath:
++          path: /run/promtail
++          type: ""
++        name: run
++      - hostPath:
++          path: /var/lib/docker/containers
++          type: ""
++        name: containers
++      - hostPath:
++          path: /var/log/pods
++          type: ""
++        name: pods
++  updateStrategy:
++    rollingUpdate:
++      maxSurge: 0
++      maxUnavailable: 1
++    type: RollingUpdate
++status:
++  currentNumberScheduled: 0
++  desiredNumberScheduled: 0
++  numberMisscheduled: 0
++  numberReady: 0
+diff -u -N /tmp/LIVE-2673076592/apps.v1.StatefulSet.observability.loki /tmp/MERGED-3208058819/apps.v1.StatefulSet.observability.loki
+--- /tmp/LIVE-2673076592/apps.v1.StatefulSet.observability.loki	2025-12-28 01:08:41.068130729 +0700
++++ /tmp/MERGED-3208058819/apps.v1.StatefulSet.observability.loki	2025-12-28 01:08:41.072130785 +0700
+@@ -0,0 +1,180 @@
++apiVersion: apps/v1
++kind: StatefulSet
++metadata:
++  creationTimestamp: "2025-12-27T18:08:41Z"
++  generation: 1
++  labels:
++    app.kubernetes.io/component: single-binary
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/part-of: memberlist
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki
++  namespace: observability
++  uid: ab07ed54-6460-4df4-9c8f-94bffbeb6208
++spec:
++  persistentVolumeClaimRetentionPolicy:
++    whenDeleted: Delete
++    whenScaled: Delete
++  podManagementPolicy: Parallel
++  replicas: 1
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app.kubernetes.io/component: single-binary
++      app.kubernetes.io/instance: loki
++      app.kubernetes.io/name: loki
++  serviceName: loki-headless
++  template:
++    metadata:
++      annotations:
++        checksum/config: a5f95371f1147f4775c78a848f3fd77ab79998fc7ea2eea74b8dd7176586b32b
++        kubectl.kubernetes.io/default-container: loki
++        storage/size: 20Gi
++      creationTimestamp: null
++      labels:
++        app.kubernetes.io/component: single-binary
++        app.kubernetes.io/instance: loki
++        app.kubernetes.io/name: loki
++        app.kubernetes.io/part-of: memberlist
++    spec:
++      affinity:
++        podAntiAffinity:
++          requiredDuringSchedulingIgnoredDuringExecution:
++          - labelSelector:
++              matchLabels:
++                app.kubernetes.io/component: single-binary
++                app.kubernetes.io/instance: loki
++                app.kubernetes.io/name: loki
++            topologyKey: kubernetes.io/hostname
++      automountServiceAccountToken: true
++      containers:
++      - args:
++        - -config.file=/etc/loki/config/config.yaml
++        - -target=all
++        image: docker.io/grafana/loki:3.6.3
++        imagePullPolicy: IfNotPresent
++        name: loki
++        ports:
++        - containerPort: 3100
++          name: http-metrics
++          protocol: TCP
++        - containerPort: 9095
++          name: grpc
++          protocol: TCP
++        - containerPort: 7946
++          name: http-memberlist
++          protocol: TCP
++        readinessProbe:
++          failureThreshold: 3
++          httpGet:
++            path: /ready
++            port: http-metrics
++            scheme: HTTP
++          initialDelaySeconds: 15
++          periodSeconds: 10
++          successThreshold: 1
++          timeoutSeconds: 1
++        resources: {}
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /tmp
++          name: tmp
++        - mountPath: /etc/loki/config
++          name: config
++        - mountPath: /etc/loki/runtime-config
++          name: runtime-config
++        - mountPath: /var/loki
++          name: storage
++        - mountPath: /rules
++          name: sc-rules-volume
++      - env:
++        - name: METHOD
++          value: WATCH
++        - name: LABEL
++          value: loki_rule
++        - name: FOLDER
++          value: /rules
++        - name: RESOURCE
++          value: both
++        - name: WATCH_SERVER_TIMEOUT
++          value: "60"
++        - name: WATCH_CLIENT_TIMEOUT
++          value: "60"
++        - name: LOG_LEVEL
++          value: INFO
++        image: docker.io/kiwigrid/k8s-sidecar:1.30.9
++        imagePullPolicy: IfNotPresent
++        name: loki-sc-rules
++        resources: {}
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /rules
++          name: sc-rules-volume
++      dnsPolicy: ClusterFirst
++      enableServiceLinks: true
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext:
++        fsGroup: 10001
++        fsGroupChangePolicy: OnRootMismatch
++        runAsGroup: 10001
++        runAsNonRoot: true
++        runAsUser: 10001
++      serviceAccount: loki
++      serviceAccountName: loki
++      terminationGracePeriodSeconds: 30
++      volumes:
++      - emptyDir: {}
++        name: tmp
++      - configMap:
++          defaultMode: 420
++          items:
++          - key: config.yaml
++            path: config.yaml
++          name: loki
++        name: config
++      - configMap:
++          defaultMode: 420
++          name: loki-runtime
++        name: runtime-config
++      - emptyDir: {}
++        name: sc-rules-volume
++  updateStrategy:
++    rollingUpdate:
++      partition: 0
++    type: RollingUpdate
++  volumeClaimTemplates:
++  - apiVersion: v1
++    kind: PersistentVolumeClaim
++    metadata:
++      creationTimestamp: null
++      name: storage
++    spec:
++      accessModes:
++      - ReadWriteOnce
++      resources:
++        requests:
++          storage: 20Gi
++      storageClassName: do-block-storage-retain
++      volumeMode: Filesystem
++    status:
++      phase: Pending
++status:
++  availableReplicas: 0
++  replicas: 0
+diff -u -N /tmp/LIVE-2673076592/apps.v1.StatefulSet.observability.loki-chunks-cache /tmp/MERGED-3208058819/apps.v1.StatefulSet.observability.loki-chunks-cache
+--- /tmp/LIVE-2673076592/apps.v1.StatefulSet.observability.loki-chunks-cache	2025-12-28 01:08:41.080130898 +0700
++++ /tmp/MERGED-3208058819/apps.v1.StatefulSet.observability.loki-chunks-cache	2025-12-28 01:08:41.084130955 +0700
+@@ -0,0 +1,139 @@
++apiVersion: apps/v1
++kind: StatefulSet
++metadata:
++  creationTimestamp: "2025-12-27T18:08:41Z"
++  generation: 1
++  labels:
++    app.kubernetes.io/component: memcached-chunks-cache
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++    name: memcached-chunks-cache
++  name: loki-chunks-cache
++  namespace: observability
++  uid: 1d46bbda-75eb-4fb4-a4cb-de382996e0d6
++spec:
++  persistentVolumeClaimRetentionPolicy:
++    whenDeleted: Retain
++    whenScaled: Retain
++  podManagementPolicy: Parallel
++  replicas: 1
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app.kubernetes.io/component: memcached-chunks-cache
++      app.kubernetes.io/instance: loki
++      app.kubernetes.io/name: loki
++      name: memcached-chunks-cache
++  serviceName: loki-chunks-cache
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app.kubernetes.io/component: memcached-chunks-cache
++        app.kubernetes.io/instance: loki
++        app.kubernetes.io/name: loki
++        name: memcached-chunks-cache
++    spec:
++      affinity: {}
++      containers:
++      - args:
++        - -m 8192
++        - --extended=modern,track_sizes
++        - -I 5m
++        - -c 16384
++        - -v
++        - -u 11211
++        image: memcached:1.6.39-alpine
++        imagePullPolicy: IfNotPresent
++        livenessProbe:
++          failureThreshold: 3
++          initialDelaySeconds: 30
++          periodSeconds: 10
++          successThreshold: 1
++          tcpSocket:
++            port: client
++          timeoutSeconds: 5
++        name: memcached
++        ports:
++        - containerPort: 11211
++          name: client
++          protocol: TCP
++        readinessProbe:
++          failureThreshold: 6
++          initialDelaySeconds: 5
++          periodSeconds: 5
++          successThreshold: 1
++          tcpSocket:
++            port: client
++          timeoutSeconds: 3
++        resources:
++          limits:
++            memory: 9830Mi
++          requests:
++            cpu: 500m
++            memory: 9830Mi
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      - args:
++        - --memcached.address=localhost:11211
++        - --web.listen-address=0.0.0.0:9150
++        image: prom/memcached-exporter:v0.15.4
++        imagePullPolicy: IfNotPresent
++        livenessProbe:
++          failureThreshold: 3
++          httpGet:
++            path: /metrics
++            port: http-metrics
++            scheme: HTTP
++          initialDelaySeconds: 30
++          periodSeconds: 10
++          successThreshold: 1
++          timeoutSeconds: 5
++        name: exporter
++        ports:
++        - containerPort: 9150
++          name: http-metrics
++          protocol: TCP
++        readinessProbe:
++          failureThreshold: 3
++          httpGet:
++            path: /metrics
++            port: http-metrics
++            scheme: HTTP
++          initialDelaySeconds: 5
++          periodSeconds: 5
++          successThreshold: 1
++          timeoutSeconds: 3
++        resources: {}
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext:
++        fsGroup: 11211
++        runAsGroup: 11211
++        runAsNonRoot: true
++        runAsUser: 11211
++      serviceAccount: loki
++      serviceAccountName: loki
++      terminationGracePeriodSeconds: 60
++  updateStrategy:
++    type: RollingUpdate
++status:
++  availableReplicas: 0
++  replicas: 0
+diff -u -N /tmp/LIVE-2673076592/apps.v1.StatefulSet.observability.loki-results-cache /tmp/MERGED-3208058819/apps.v1.StatefulSet.observability.loki-results-cache
+--- /tmp/LIVE-2673076592/apps.v1.StatefulSet.observability.loki-results-cache	2025-12-28 01:08:41.092131068 +0700
++++ /tmp/MERGED-3208058819/apps.v1.StatefulSet.observability.loki-results-cache	2025-12-28 01:08:41.096131125 +0700
+@@ -0,0 +1,139 @@
++apiVersion: apps/v1
++kind: StatefulSet
++metadata:
++  creationTimestamp: "2025-12-27T18:08:41Z"
++  generation: 1
++  labels:
++    app.kubernetes.io/component: memcached-results-cache
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++    name: memcached-results-cache
++  name: loki-results-cache
++  namespace: observability
++  uid: 6fe22448-481b-4902-919f-174beb18ed2c
++spec:
++  persistentVolumeClaimRetentionPolicy:
++    whenDeleted: Retain
++    whenScaled: Retain
++  podManagementPolicy: Parallel
++  replicas: 1
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app.kubernetes.io/component: memcached-results-cache
++      app.kubernetes.io/instance: loki
++      app.kubernetes.io/name: loki
++      name: memcached-results-cache
++  serviceName: loki-results-cache
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app.kubernetes.io/component: memcached-results-cache
++        app.kubernetes.io/instance: loki
++        app.kubernetes.io/name: loki
++        name: memcached-results-cache
++    spec:
++      affinity: {}
++      containers:
++      - args:
++        - -m 1024
++        - --extended=modern,track_sizes
++        - -I 5m
++        - -c 16384
++        - -v
++        - -u 11211
++        image: memcached:1.6.39-alpine
++        imagePullPolicy: IfNotPresent
++        livenessProbe:
++          failureThreshold: 3
++          initialDelaySeconds: 30
++          periodSeconds: 10
++          successThreshold: 1
++          tcpSocket:
++            port: client
++          timeoutSeconds: 5
++        name: memcached
++        ports:
++        - containerPort: 11211
++          name: client
++          protocol: TCP
++        readinessProbe:
++          failureThreshold: 6
++          initialDelaySeconds: 5
++          periodSeconds: 5
++          successThreshold: 1
++          tcpSocket:
++            port: client
++          timeoutSeconds: 3
++        resources:
++          limits:
++            memory: 1229Mi
++          requests:
++            cpu: 500m
++            memory: 1229Mi
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      - args:
++        - --memcached.address=localhost:11211
++        - --web.listen-address=0.0.0.0:9150
++        image: prom/memcached-exporter:v0.15.4
++        imagePullPolicy: IfNotPresent
++        livenessProbe:
++          failureThreshold: 3
++          httpGet:
++            path: /metrics
++            port: http-metrics
++            scheme: HTTP
++          initialDelaySeconds: 30
++          periodSeconds: 10
++          successThreshold: 1
++          timeoutSeconds: 5
++        name: exporter
++        ports:
++        - containerPort: 9150
++          name: http-metrics
++          protocol: TCP
++        readinessProbe:
++          failureThreshold: 3
++          httpGet:
++            path: /metrics
++            port: http-metrics
++            scheme: HTTP
++          initialDelaySeconds: 5
++          periodSeconds: 5
++          successThreshold: 1
++          timeoutSeconds: 3
++        resources: {}
++        securityContext:
++          allowPrivilegeEscalation: false
++          capabilities:
++            drop:
++            - ALL
++          readOnlyRootFilesystem: true
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext:
++        fsGroup: 11211
++        runAsGroup: 11211
++        runAsNonRoot: true
++        runAsUser: 11211
++      serviceAccount: loki
++      serviceAccountName: loki
++      terminationGracePeriodSeconds: 60
++  updateStrategy:
++    type: RollingUpdate
++status:
++  availableReplicas: 0
++  replicas: 0
+diff -u -N /tmp/LIVE-2673076592/rbac.authorization.k8s.io.v1.ClusterRole..loki-clusterrole /tmp/MERGED-3208058819/rbac.authorization.k8s.io.v1.ClusterRole..loki-clusterrole
+--- /tmp/LIVE-2673076592/rbac.authorization.k8s.io.v1.ClusterRole..loki-clusterrole	2025-12-28 01:08:40.956129143 +0700
++++ /tmp/MERGED-3208058819/rbac.authorization.k8s.io.v1.ClusterRole..loki-clusterrole	2025-12-28 01:08:40.956129143 +0700
+@@ -0,0 +1,21 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRole
++metadata:
++  creationTimestamp: "2025-12-27T18:08:40Z"
++  labels:
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki-clusterrole
++  uid: 934da35a-6f5c-498e-b8fc-cf3f081d8e70
++rules:
++- apiGroups:
++  - ""
++  resources:
++  - configmaps
++  - secrets
++  verbs:
++  - get
++  - watch
++  - list
+diff -u -N /tmp/LIVE-2673076592/rbac.authorization.k8s.io.v1.ClusterRole..promtail /tmp/MERGED-3208058819/rbac.authorization.k8s.io.v1.ClusterRole..promtail
+--- /tmp/LIVE-2673076592/rbac.authorization.k8s.io.v1.ClusterRole..promtail	2025-12-28 01:08:40.964129256 +0700
++++ /tmp/MERGED-3208058819/rbac.authorization.k8s.io.v1.ClusterRole..promtail	2025-12-28 01:08:40.964129256 +0700
+@@ -0,0 +1,25 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRole
++metadata:
++  creationTimestamp: "2025-12-27T18:08:40Z"
++  labels:
++    app.kubernetes.io/instance: promtail
++    app.kubernetes.io/managed-by: Helm
++    app.kubernetes.io/name: promtail
++    app.kubernetes.io/version: 3.5.1
++    helm.sh/chart: promtail-6.17.1
++  name: promtail
++  uid: 9c0dc62b-8c79-4369-a2ab-99a3fd38a4cd
++rules:
++- apiGroups:
++  - ""
++  resources:
++  - nodes
++  - nodes/proxy
++  - services
++  - endpoints
++  - pods
++  verbs:
++  - get
++  - watch
++  - list
+diff -u -N /tmp/LIVE-2673076592/rbac.authorization.k8s.io.v1.ClusterRoleBinding..loki-clusterrolebinding /tmp/MERGED-3208058819/rbac.authorization.k8s.io.v1.ClusterRoleBinding..loki-clusterrolebinding
+--- /tmp/LIVE-2673076592/rbac.authorization.k8s.io.v1.ClusterRoleBinding..loki-clusterrolebinding	2025-12-28 01:08:40.968129313 +0700
++++ /tmp/MERGED-3208058819/rbac.authorization.k8s.io.v1.ClusterRoleBinding..loki-clusterrolebinding	2025-12-28 01:08:40.968129313 +0700
+@@ -0,0 +1,19 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRoleBinding
++metadata:
++  creationTimestamp: "2025-12-27T18:08:40Z"
++  labels:
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki-clusterrolebinding
++  uid: 3b61f052-5b71-4eca-9572-25e93d9437db
++roleRef:
++  apiGroup: rbac.authorization.k8s.io
++  kind: ClusterRole
++  name: loki-clusterrole
++subjects:
++- kind: ServiceAccount
++  name: loki
++  namespace: observability
+diff -u -N /tmp/LIVE-2673076592/rbac.authorization.k8s.io.v1.ClusterRoleBinding..promtail /tmp/MERGED-3208058819/rbac.authorization.k8s.io.v1.ClusterRoleBinding..promtail
+--- /tmp/LIVE-2673076592/rbac.authorization.k8s.io.v1.ClusterRoleBinding..promtail	2025-12-28 01:08:40.976129426 +0700
++++ /tmp/MERGED-3208058819/rbac.authorization.k8s.io.v1.ClusterRoleBinding..promtail	2025-12-28 01:08:40.976129426 +0700
+@@ -0,0 +1,20 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRoleBinding
++metadata:
++  creationTimestamp: "2025-12-27T18:08:40Z"
++  labels:
++    app.kubernetes.io/instance: promtail
++    app.kubernetes.io/managed-by: Helm
++    app.kubernetes.io/name: promtail
++    app.kubernetes.io/version: 3.5.1
++    helm.sh/chart: promtail-6.17.1
++  name: promtail
++  uid: e0491ec8-c955-4361-afe6-f1003c143f4f
++roleRef:
++  apiGroup: rbac.authorization.k8s.io
++  kind: ClusterRole
++  name: promtail
++subjects:
++- kind: ServiceAccount
++  name: promtail
++  namespace: observability
+diff -u -N /tmp/LIVE-2673076592/v1.ConfigMap.observability.loki /tmp/MERGED-3208058819/v1.ConfigMap.observability.loki
+--- /tmp/LIVE-2673076592/v1.ConfigMap.observability.loki	2025-12-28 01:08:40.984129540 +0700
++++ /tmp/MERGED-3208058819/v1.ConfigMap.observability.loki	2025-12-28 01:08:40.984129540 +0700
+@@ -0,0 +1,118 @@
++apiVersion: v1
++data:
++  config.yaml: |2
++
++    auth_enabled: false
++    bloom_build:
++      builder:
++        planner_address: ""
++      enabled: false
++    bloom_gateway:
++      client:
++        addresses: ""
++      enabled: false
++    chunk_store_config:
++      chunk_cache_config:
++        background:
++          writeback_buffer: 500000
++          writeback_goroutines: 1
++          writeback_size_limit: 500MB
++        default_validity: 0s
++        memcached:
++          batch_size: 4
++          parallelism: 5
++        memcached_client:
++          addresses: dnssrvnoa+_memcached-client._tcp.loki-chunks-cache.observability.svc.cluster.local
++          consistent_hash: true
++          max_idle_conns: 72
++          timeout: 2000ms
++    common:
++      compactor_grpc_address: 'loki.observability.svc.cluster.local:9095'
++      path_prefix: /var/loki
++      replication_factor: 1
++      storage:
++        filesystem:
++          chunks_directory: /var/loki/chunks
++          rules_directory: /var/loki/rules
++    frontend:
++      scheduler_address: ""
++      tail_proxy_url: ""
++    frontend_worker:
++      scheduler_address: ""
++    index_gateway:
++      mode: simple
++    limits_config:
++      max_cache_freshness_per_query: 10m
++      query_timeout: 300s
++      reject_old_samples: true
++      reject_old_samples_max_age: 168h
++      split_queries_by_interval: 15m
++      volume_enabled: true
++    memberlist:
++      join_members:
++      - loki-memberlist.observability.svc.cluster.local
++    pattern_ingester:
++      enabled: false
++    query_range:
++      align_queries_with_step: true
++      cache_results: true
++      results_cache:
++        cache:
++          background:
++            writeback_buffer: 500000
++            writeback_goroutines: 1
++            writeback_size_limit: 500MB
++          default_validity: 12h
++          memcached_client:
++            addresses: dnssrvnoa+_memcached-client._tcp.loki-results-cache.observability.svc.cluster.local
++            consistent_hash: true
++            timeout: 500ms
++            update_interval: 1m
++    ruler:
++      storage:
++        type: local
++      wal:
++        dir: /var/loki/ruler-wal
++    runtime_config:
++      file: /etc/loki/runtime-config/runtime-config.yaml
++    schema_config:
++      configs:
++      - from: "2024-01-01"
++        index:
++          period: 24h
++          prefix: index_
++        object_store: filesystem
++        schema: v13
++        store: tsdb
++    server:
++      grpc_listen_port: 9095
++      http_listen_port: 3100
++      http_server_read_timeout: 600s
++      http_server_write_timeout: 600s
++    storage_config:
++      bloom_shipper:
++        working_directory: /var/loki/data/bloomshipper
++      boltdb_shipper:
++        index_gateway_client:
++          server_address: ""
++      hedging:
++        at: 250ms
++        max_per_second: 20
++        up_to: 3
++      tsdb_shipper:
++        index_gateway_client:
++          server_address: ""
++      use_thanos_objstore: false
++    tracing:
++      enabled: false
++kind: ConfigMap
++metadata:
++  creationTimestamp: "2025-12-27T18:08:40Z"
++  labels:
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki
++  namespace: observability
++  uid: 59f8b0d6-35e2-4f8e-ad3f-78695d143337
+diff -u -N /tmp/LIVE-2673076592/v1.ConfigMap.observability.loki-runtime /tmp/MERGED-3208058819/v1.ConfigMap.observability.loki-runtime
+--- /tmp/LIVE-2673076592/v1.ConfigMap.observability.loki-runtime	2025-12-28 01:08:40.992129653 +0700
++++ /tmp/MERGED-3208058819/v1.ConfigMap.observability.loki-runtime	2025-12-28 01:08:40.992129653 +0700
+@@ -0,0 +1,15 @@
++apiVersion: v1
++data:
++  runtime-config.yaml: |
++    {}
++kind: ConfigMap
++metadata:
++  creationTimestamp: "2025-12-27T18:08:40Z"
++  labels:
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki-runtime
++  namespace: observability
++  uid: ac623ab0-4f83-4727-99f9-67b10b5bc483
+diff -u -N /tmp/LIVE-2673076592/v1.Pod.observability.loki-helm-test /tmp/MERGED-3208058819/v1.Pod.observability.loki-helm-test
+--- /tmp/LIVE-2673076592/v1.Pod.observability.loki-helm-test	2025-12-28 01:08:41.128131578 +0700
++++ /tmp/MERGED-3208058819/v1.Pod.observability.loki-helm-test	2025-12-28 01:08:41.128131578 +0700
+@@ -0,0 +1,76 @@
++apiVersion: v1
++kind: Pod
++metadata:
++  annotations:
++    helm.sh/hook: test
++  creationTimestamp: "2025-12-27T18:08:41Z"
++  labels:
++    app.kubernetes.io/component: helm-test
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki-helm-test
++  namespace: observability
++  uid: 492d6ecd-1e90-4103-8f45-3d1cb2790124
++spec:
++  containers:
++  - args:
++    - -test.v
++    env:
++    - name: CANARY_SERVICE_ADDRESS
++      value: http://loki-canary.observability.svc.cluster.local:3500/metrics
++    - name: CANARY_PROMETHEUS_ADDRESS
++    - name: CANARY_TEST_TIMEOUT
++      value: 1m
++    image: docker.io/grafana/loki-helm-test:latest
++    imagePullPolicy: Always
++    name: loki-helm-test
++    resources: {}
++    terminationMessagePath: /dev/termination-log
++    terminationMessagePolicy: File
++    volumeMounts:
++    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
++      name: kube-api-access-j4gbp
++      readOnly: true
++  dnsPolicy: ClusterFirst
++  enableServiceLinks: true
++  preemptionPolicy: PreemptLowerPriority
++  priority: 0
++  restartPolicy: Never
++  schedulerName: default-scheduler
++  securityContext: {}
++  serviceAccount: default
++  serviceAccountName: default
++  terminationGracePeriodSeconds: 30
++  tolerations:
++  - effect: NoExecute
++    key: node.kubernetes.io/not-ready
++    operator: Exists
++    tolerationSeconds: 300
++  - effect: NoExecute
++    key: node.kubernetes.io/unreachable
++    operator: Exists
++    tolerationSeconds: 300
++  volumes:
++  - name: kube-api-access-j4gbp
++    projected:
++      defaultMode: 420
++      sources:
++      - serviceAccountToken:
++          expirationSeconds: 3607
++          path: token
++      - configMap:
++          items:
++          - key: ca.crt
++            path: ca.crt
++          name: kube-root-ca.crt
++      - downwardAPI:
++          items:
++          - fieldRef:
++              apiVersion: v1
++              fieldPath: metadata.namespace
++            path: namespace
++status:
++  phase: Pending
++  qosClass: BestEffort
+diff -u -N /tmp/LIVE-2673076592/v1.Secret.observability.promtail /tmp/MERGED-3208058819/v1.Secret.observability.promtail
+--- /tmp/LIVE-2673076592/v1.Secret.observability.promtail	2025-12-28 01:08:41.000129766 +0700
++++ /tmp/MERGED-3208058819/v1.Secret.observability.promtail	2025-12-28 01:08:41.004129822 +0700
+@@ -1 +1,16 @@
+-null
++apiVersion: v1
++data:
++  promtail.yaml: '***'
++kind: Secret
++metadata:
++  creationTimestamp: "2025-12-27T18:08:41Z"
++  labels:
++    app.kubernetes.io/instance: promtail
++    app.kubernetes.io/managed-by: Helm
++    app.kubernetes.io/name: promtail
++    app.kubernetes.io/version: 3.5.1
++    helm.sh/chart: promtail-6.17.1
++  name: promtail
++  namespace: observability
++  uid: a56cf970-2473-4724-b707-92835acc5ce1
++type: Opaque
+diff -u -N /tmp/LIVE-2673076592/v1.Service.observability.loki /tmp/MERGED-3208058819/v1.Service.observability.loki
+--- /tmp/LIVE-2673076592/v1.Service.observability.loki	2025-12-28 01:08:41.012129936 +0700
++++ /tmp/MERGED-3208058819/v1.Service.observability.loki	2025-12-28 01:08:41.012129936 +0700
+@@ -0,0 +1,37 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-27T18:08:41Z"
++  labels:
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki
++  namespace: observability
++  uid: f646c83e-d785-4185-b79e-616dfd99602b
++spec:
++  clusterIP: 10.96.0.0
++  clusterIPs:
++  - 10.96.0.0
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - name: http-metrics
++    port: 3100
++    protocol: TCP
++    targetPort: http-metrics
++  - name: grpc
++    port: 9095
++    protocol: TCP
++    targetPort: grpc
++  selector:
++    app.kubernetes.io/component: single-binary
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++  sessionAffinity: None
++  type: ClusterIP
++status:
++  loadBalancer: {}
+diff -u -N /tmp/LIVE-2673076592/v1.Service.observability.loki-canary /tmp/MERGED-3208058819/v1.Service.observability.loki-canary
+--- /tmp/LIVE-2673076592/v1.Service.observability.loki-canary	2025-12-28 01:08:41.020130049 +0700
++++ /tmp/MERGED-3208058819/v1.Service.observability.loki-canary	2025-12-28 01:08:41.020130049 +0700
+@@ -0,0 +1,34 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-27T18:08:41Z"
++  labels:
++    app.kubernetes.io/component: canary
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki-canary
++  namespace: observability
++  uid: 39a06d94-0c6c-4700-b173-fd111e5195ce
++spec:
++  clusterIP: 10.96.0.0
++  clusterIPs:
++  - 10.96.0.0
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - name: http-metrics
++    port: 3500
++    protocol: TCP
++    targetPort: http-metrics
++  selector:
++    app.kubernetes.io/component: canary
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++  sessionAffinity: None
++  type: ClusterIP
++status:
++  loadBalancer: {}
+diff -u -N /tmp/LIVE-2673076592/v1.Service.observability.loki-chunks-cache /tmp/MERGED-3208058819/v1.Service.observability.loki-chunks-cache
+--- /tmp/LIVE-2673076592/v1.Service.observability.loki-chunks-cache	2025-12-28 01:08:41.028130163 +0700
++++ /tmp/MERGED-3208058819/v1.Service.observability.loki-chunks-cache	2025-12-28 01:08:41.032130219 +0700
+@@ -0,0 +1,38 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-27T18:08:41Z"
++  labels:
++    app.kubernetes.io/component: memcached-chunks-cache
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki-chunks-cache
++  namespace: observability
++  uid: d20294e4-4d19-4de3-921b-4ee98c0f89cf
++spec:
++  clusterIP: None
++  clusterIPs:
++  - None
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - name: memcached-client
++    port: 11211
++    protocol: TCP
++    targetPort: client
++  - name: http-metrics
++    port: 9150
++    protocol: TCP
++    targetPort: http-metrics
++  selector:
++    app.kubernetes.io/component: memcached-chunks-cache
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++  sessionAffinity: None
++  type: ClusterIP
++status:
++  loadBalancer: {}
+diff -u -N /tmp/LIVE-2673076592/v1.Service.observability.loki-headless /tmp/MERGED-3208058819/v1.Service.observability.loki-headless
+--- /tmp/LIVE-2673076592/v1.Service.observability.loki-headless	2025-12-28 01:08:41.036130275 +0700
++++ /tmp/MERGED-3208058819/v1.Service.observability.loki-headless	2025-12-28 01:08:41.036130275 +0700
+@@ -0,0 +1,34 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-27T18:08:41Z"
++  labels:
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++    prometheus.io/service-monitor: "false"
++    variant: headless
++  name: loki-headless
++  namespace: observability
++  uid: 2ed8ba7b-93ce-4eab-825c-93528422587f
++spec:
++  clusterIP: None
++  clusterIPs:
++  - None
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - name: http-metrics
++    port: 3100
++    protocol: TCP
++    targetPort: http-metrics
++  selector:
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++  sessionAffinity: None
++  type: ClusterIP
++status:
++  loadBalancer: {}
+diff -u -N /tmp/LIVE-2673076592/v1.Service.observability.loki-memberlist /tmp/MERGED-3208058819/v1.Service.observability.loki-memberlist
+--- /tmp/LIVE-2673076592/v1.Service.observability.loki-memberlist	2025-12-28 01:08:41.044130388 +0700
++++ /tmp/MERGED-3208058819/v1.Service.observability.loki-memberlist	2025-12-28 01:08:41.048130445 +0700
+@@ -0,0 +1,33 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-27T18:08:41Z"
++  labels:
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki-memberlist
++  namespace: observability
++  uid: e947ac2f-b8ca-493b-8c02-64ca04786b74
++spec:
++  clusterIP: None
++  clusterIPs:
++  - None
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - name: tcp
++    port: 7946
++    protocol: TCP
++    targetPort: http-memberlist
++  selector:
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/part-of: memberlist
++  sessionAffinity: None
++  type: ClusterIP
++status:
++  loadBalancer: {}
+diff -u -N /tmp/LIVE-2673076592/v1.Service.observability.loki-results-cache /tmp/MERGED-3208058819/v1.Service.observability.loki-results-cache
+--- /tmp/LIVE-2673076592/v1.Service.observability.loki-results-cache	2025-12-28 01:08:41.056130559 +0700
++++ /tmp/MERGED-3208058819/v1.Service.observability.loki-results-cache	2025-12-28 01:08:41.056130559 +0700
+@@ -0,0 +1,38 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-27T18:08:41Z"
++  labels:
++    app.kubernetes.io/component: memcached-results-cache
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki-results-cache
++  namespace: observability
++  uid: 2acfb9f5-e5e6-43d3-8c50-b6c90ca16c82
++spec:
++  clusterIP: None
++  clusterIPs:
++  - None
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - name: memcached-client
++    port: 11211
++    protocol: TCP
++    targetPort: client
++  - name: http-metrics
++    port: 9150
++    protocol: TCP
++    targetPort: http-metrics
++  selector:
++    app.kubernetes.io/component: memcached-results-cache
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++  sessionAffinity: None
++  type: ClusterIP
++status:
++  loadBalancer: {}
+diff -u -N /tmp/LIVE-2673076592/v1.ServiceAccount.observability.loki /tmp/MERGED-3208058819/v1.ServiceAccount.observability.loki
+--- /tmp/LIVE-2673076592/v1.ServiceAccount.observability.loki	2025-12-28 01:08:40.932128803 +0700
++++ /tmp/MERGED-3208058819/v1.ServiceAccount.observability.loki	2025-12-28 01:08:40.932128803 +0700
+@@ -0,0 +1,13 @@
++apiVersion: v1
++automountServiceAccountToken: true
++kind: ServiceAccount
++metadata:
++  creationTimestamp: "2025-12-27T18:08:40Z"
++  labels:
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki
++  namespace: observability
++  uid: d94cba35-989c-4e4b-9c30-ded77c5fcb88
+diff -u -N /tmp/LIVE-2673076592/v1.ServiceAccount.observability.loki-canary /tmp/MERGED-3208058819/v1.ServiceAccount.observability.loki-canary
+--- /tmp/LIVE-2673076592/v1.ServiceAccount.observability.loki-canary	2025-12-28 01:08:40.944128973 +0700
++++ /tmp/MERGED-3208058819/v1.ServiceAccount.observability.loki-canary	2025-12-28 01:08:40.944128973 +0700
+@@ -0,0 +1,14 @@
++apiVersion: v1
++automountServiceAccountToken: true
++kind: ServiceAccount
++metadata:
++  creationTimestamp: "2025-12-27T18:08:40Z"
++  labels:
++    app.kubernetes.io/component: canary
++    app.kubernetes.io/instance: loki
++    app.kubernetes.io/name: loki
++    app.kubernetes.io/version: 3.6.3
++    helm.sh/chart: loki-6.49.0
++  name: loki-canary
++  namespace: observability
++  uid: 5513bd5b-df61-4959-9eb1-9753cab78cd0
+diff -u -N /tmp/LIVE-2673076592/v1.ServiceAccount.observability.promtail /tmp/MERGED-3208058819/v1.ServiceAccount.observability.promtail
+--- /tmp/LIVE-2673076592/v1.ServiceAccount.observability.promtail	2025-12-28 01:08:40.952129087 +0700
++++ /tmp/MERGED-3208058819/v1.ServiceAccount.observability.promtail	2025-12-28 01:08:40.952129087 +0700
+@@ -0,0 +1,14 @@
++apiVersion: v1
++automountServiceAccountToken: true
++kind: ServiceAccount
++metadata:
++  creationTimestamp: "2025-12-27T18:08:40Z"
++  labels:
++    app.kubernetes.io/instance: promtail
++    app.kubernetes.io/managed-by: Helm
++    app.kubernetes.io/name: promtail
++    app.kubernetes.io/version: 3.5.1
++    helm.sh/chart: promtail-6.17.1
++  name: promtail
++  namespace: observability
++  uid: 557055b5-2fdd-48ff-81ac-38a2ecca56af

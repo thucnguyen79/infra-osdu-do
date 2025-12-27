@@ -1,0 +1,4 @@
+NAME                                     CLASS   HOSTS                   ADDRESS                 PORTS     AGE
+kps-grafana                              nginx   grafana.internal        10.118.0.6,10.118.0.7   80, 443   116m
+kps-kube-prometheus-stack-alertmanager   nginx   alertmanager.internal   10.118.0.6,10.118.0.7   80, 443   116m
+kps-kube-prometheus-stack-prometheus     nginx   prometheus.internal     10.118.0.6,10.118.0.7   80, 443   116m

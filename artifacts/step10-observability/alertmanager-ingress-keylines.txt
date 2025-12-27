@@ -1,0 +1,5 @@
+17:  name: kps-kube-prometheus-stack-alertmanager
+24:  - host: alertmanager.internal
+29:            name: kps-kube-prometheus-stack-alertmanager
+34:  tls:
+37:    secretName: alertmanager-internal-tls

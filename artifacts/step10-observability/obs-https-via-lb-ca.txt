@@ -1,0 +1,29 @@
+== grafana.internal via LB HTTPS (verify CA) ==
+HTTP/2 302 
+date: Sat, 27 Dec 2025 17:27:15 GMT
+content-type: text/html; charset=utf-8
+cache-control: no-store
+location: /login
+x-content-type-options: nosniff
+x-frame-options: deny
+x-xss-protection: 1; mode=block
+strict-transport-security: max-age=31536000; includeSubDomains
+
+== prometheus.internal via LB HTTPS (verify CA) ==
+HTTP/2 405 
+date: Sat, 27 Dec 2025 17:27:15 GMT
+content-type: text/plain; charset=utf-8
+content-length: 19
+allow: GET, OPTIONS
+x-content-type-options: nosniff
+strict-transport-security: max-age=31536000; includeSubDomains
+
+== alertmanager.internal via LB HTTPS (verify CA) ==
+HTTP/2 405 
+date: Sat, 27 Dec 2025 17:27:15 GMT
+content-type: text/plain; charset=utf-8
+content-length: 19
+allow: GET, OPTIONS
+x-content-type-options: nosniff
+strict-transport-security: max-age=31536000; includeSubDomains
+
