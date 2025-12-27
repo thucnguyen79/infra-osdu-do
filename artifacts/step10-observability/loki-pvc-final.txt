@@ -1,0 +1,1 @@
+storage-loki-0                                                                                                 Bound    pvc-7d904ff2-8451-4fac-9d79-33d182caba23   20Gi       RWO            do-block-storage-retain   <unset>                 74m
