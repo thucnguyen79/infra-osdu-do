@@ -1,0 +1,901 @@
+diff -u -N /tmp/LIVE-3730880818/apps.v1.DaemonSet.kube-system.csi-do-node /tmp/MERGED-3132281505/apps.v1.DaemonSet.kube-system.csi-do-node
+--- /tmp/LIVE-3730880818/apps.v1.DaemonSet.kube-system.csi-do-node	2025-12-27 14:33:36.476132281 +0700
++++ /tmp/MERGED-3132281505/apps.v1.DaemonSet.kube-system.csi-do-node	2025-12-27 14:33:36.476132281 +0700
+@@ -0,0 +1,132 @@
++apiVersion: apps/v1
++kind: DaemonSet
++metadata:
++  annotations:
++    deprecated.daemonset.template.generation: "1"
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  generation: 1
++  name: csi-do-node
++  namespace: kube-system
++  uid: 054d25ea-6822-48ed-8b55-a306bdcb6194
++spec:
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app: csi-do-node
++  template:
++    metadata:
++      annotations:
++        kubectl.kubernetes.io/default-container: csi-do-plugin
++      creationTimestamp: null
++      labels:
++        app: csi-do-node
++        role: csi-do
++    spec:
++      containers:
++      - args:
++        - --v=5
++        - --csi-address=$(ADDRESS)
++        - --kubelet-registration-path=$(DRIVER_REG_SOCK_PATH)
++        env:
++        - name: ADDRESS
++          value: /csi/csi.sock
++        - name: DRIVER_REG_SOCK_PATH
++          value: /var/lib/kubelet/plugins/dobs.csi.digitalocean.com/csi.sock
++        - name: KUBE_NODE_NAME
++          valueFrom:
++            fieldRef:
++              apiVersion: v1
++              fieldPath: spec.nodeName
++        image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.15.0
++        imagePullPolicy: IfNotPresent
++        name: csi-node-driver-registrar
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /csi/
++          name: plugin-dir
++        - mountPath: /registration/
++          name: registration-dir
++      - args:
++        - --endpoint=$(CSI_ENDPOINT)
++        - --url=$(DIGITALOCEAN_API_URL)
++        env:
++        - name: CSI_ENDPOINT
++          value: unix:///csi/csi.sock
++        - name: DIGITALOCEAN_API_URL
++          value: https://api.digitalocean.com/
++        image: digitalocean/do-csi-plugin:v4.15.0
++        imagePullPolicy: Always
++        name: csi-do-plugin
++        resources: {}
++        securityContext:
++          allowPrivilegeEscalation: true
++          capabilities:
++            add:
++            - SYS_ADMIN
++          privileged: true
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /csi
++          name: plugin-dir
++        - mountPath: /var/lib/kubelet
++          mountPropagation: Bidirectional
++          name: pods-mount-dir
++        - mountPath: /dev
++          name: device-dir
++      dnsPolicy: ClusterFirst
++      hostNetwork: true
++      initContainers:
++      - args:
++        - rm
++        - -f
++        - /etc/udev/rules.d/99-digitalocean-automount.rules
++        image: alpine:3
++        imagePullPolicy: IfNotPresent
++        name: automount-udev-deleter
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /etc/udev/rules.d/
++          name: udev-rules-dir
++      priorityClassName: system-node-critical
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext: {}
++      serviceAccount: csi-do-node-sa
++      serviceAccountName: csi-do-node-sa
++      terminationGracePeriodSeconds: 30
++      volumes:
++      - hostPath:
++          path: /var/lib/kubelet/plugins_registry/
++          type: DirectoryOrCreate
++        name: registration-dir
++      - hostPath:
++          path: /var/lib/kubelet/plugins/dobs.csi.digitalocean.com
++          type: DirectoryOrCreate
++        name: plugin-dir
++      - hostPath:
++          path: /var/lib/kubelet
++          type: Directory
++        name: pods-mount-dir
++      - hostPath:
++          path: /dev
++          type: ""
++        name: device-dir
++      - hostPath:
++          path: /etc/udev/rules.d/
++          type: ""
++        name: udev-rules-dir
++  updateStrategy:
++    rollingUpdate:
++      maxSurge: 0
++      maxUnavailable: 1
++    type: RollingUpdate
++status:
++  currentNumberScheduled: 0
++  desiredNumberScheduled: 0
++  numberMisscheduled: 0
++  numberReady: 0
+diff -u -N /tmp/LIVE-3730880818/apps.v1.StatefulSet.kube-system.csi-do-controller /tmp/MERGED-3132281505/apps.v1.StatefulSet.kube-system.csi-do-controller
+--- /tmp/LIVE-3730880818/apps.v1.StatefulSet.kube-system.csi-do-controller	2025-12-27 14:33:36.448131832 +0700
++++ /tmp/MERGED-3132281505/apps.v1.StatefulSet.kube-system.csi-do-controller	2025-12-27 14:33:36.448131832 +0700
+@@ -0,0 +1,136 @@
++apiVersion: apps/v1
++kind: StatefulSet
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  generation: 1
++  name: csi-do-controller
++  namespace: kube-system
++  uid: aeebfb7a-7025-40bb-b478-e19f32dd2c26
++spec:
++  persistentVolumeClaimRetentionPolicy:
++    whenDeleted: Retain
++    whenScaled: Retain
++  podManagementPolicy: OrderedReady
++  replicas: 1
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app: csi-do-controller
++  serviceName: csi-do
++  template:
++    metadata:
++      annotations:
++        kubectl.kubernetes.io/default-container: csi-do-plugin
++      creationTimestamp: null
++      labels:
++        app: csi-do-controller
++        role: csi-do
++    spec:
++      containers:
++      - args:
++        - --csi-address=$(ADDRESS)
++        - --default-fstype=ext4
++        - --v=5
++        env:
++        - name: ADDRESS
++          value: /var/lib/csi/sockets/pluginproxy/csi.sock
++        image: registry.k8s.io/sig-storage/csi-provisioner:v6.0.0
++        imagePullPolicy: IfNotPresent
++        name: csi-provisioner
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /var/lib/csi/sockets/pluginproxy/
++          name: socket-dir
++      - args:
++        - --csi-address=$(ADDRESS)
++        - --v=5
++        - --reconcile-sync=30m
++        - --timeout=2m
++        env:
++        - name: ADDRESS
++          value: /var/lib/csi/sockets/pluginproxy/csi.sock
++        image: registry.k8s.io/sig-storage/csi-attacher:v4.10.0
++        imagePullPolicy: IfNotPresent
++        name: csi-attacher
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /var/lib/csi/sockets/pluginproxy/
++          name: socket-dir
++      - args:
++        - --csi-address=$(ADDRESS)
++        - --v=5
++        env:
++        - name: ADDRESS
++          value: /var/lib/csi/sockets/pluginproxy/csi.sock
++        image: registry.k8s.io/sig-storage/csi-snapshotter:v8.4.0
++        imagePullPolicy: IfNotPresent
++        name: csi-snapshotter
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /var/lib/csi/sockets/pluginproxy/
++          name: socket-dir
++      - args:
++        - --csi-address=$(ADDRESS)
++        - --timeout=30s
++        - --v=5
++        - --handle-volume-inuse-error=false
++        env:
++        - name: ADDRESS
++          value: /var/lib/csi/sockets/pluginproxy/csi.sock
++        image: registry.k8s.io/sig-storage/csi-resizer:v2.0.0
++        imagePullPolicy: IfNotPresent
++        name: csi-resizer
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /var/lib/csi/sockets/pluginproxy/
++          name: socket-dir
++      - args:
++        - --endpoint=$(CSI_ENDPOINT)
++        - --token=$(DIGITALOCEAN_ACCESS_TOKEN)
++        - --url=$(DIGITALOCEAN_API_URL)
++        - --default-volumes-page-size=200
++        env:
++        - name: CSI_ENDPOINT
++          value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock
++        - name: DIGITALOCEAN_API_URL
++          value: https://api.digitalocean.com/
++        - name: DIGITALOCEAN_ACCESS_TOKEN
++          valueFrom:
++            secretKeyRef:
++              key: access-token
++              name: digitalocean
++        image: digitalocean/do-csi-plugin:v4.15.0
++        imagePullPolicy: Always
++        name: csi-do-plugin
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /var/lib/csi/sockets/pluginproxy/
++          name: socket-dir
++      dnsPolicy: ClusterFirst
++      priorityClassName: system-cluster-critical
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext: {}
++      serviceAccount: csi-do-controller-sa
++      serviceAccountName: csi-do-controller-sa
++      terminationGracePeriodSeconds: 30
++      volumes:
++      - emptyDir: {}
++        name: socket-dir
++  updateStrategy:
++    rollingUpdate:
++      partition: 0
++    type: RollingUpdate
++status:
++  availableReplicas: 0
++  replicas: 0
+diff -u -N /tmp/LIVE-3730880818/apps.v1.StatefulSet.kube-system.snapshot-controller /tmp/MERGED-3132281505/apps.v1.StatefulSet.kube-system.snapshot-controller
+--- /tmp/LIVE-3730880818/apps.v1.StatefulSet.kube-system.snapshot-controller	2025-12-27 14:33:36.460132024 +0700
++++ /tmp/MERGED-3132281505/apps.v1.StatefulSet.kube-system.snapshot-controller	2025-12-27 14:33:36.464132088 +0700
+@@ -0,0 +1,48 @@
++apiVersion: apps/v1
++kind: StatefulSet
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  generation: 1
++  name: snapshot-controller
++  namespace: kube-system
++  uid: dd0a309a-fcc9-4abf-badb-e5d1e7286f6f
++spec:
++  persistentVolumeClaimRetentionPolicy:
++    whenDeleted: Retain
++    whenScaled: Retain
++  podManagementPolicy: OrderedReady
++  replicas: 1
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app: snapshot-controller
++  serviceName: snapshot-controller
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app: snapshot-controller
++    spec:
++      containers:
++      - args:
++        - --v=5
++        image: registry.k8s.io/sig-storage/snapshot-controller:v8.2.0
++        imagePullPolicy: IfNotPresent
++        name: snapshot-controller
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext: {}
++      serviceAccount: snapshot-controller
++      serviceAccountName: snapshot-controller
++      terminationGracePeriodSeconds: 30
++  updateStrategy:
++    rollingUpdate:
++      partition: 0
++    type: RollingUpdate
++status:
++  availableReplicas: 0
++  replicas: 0
+diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-attacher-role /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-attacher-role
+--- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-attacher-role	2025-12-27 14:33:36.352130293 +0700
++++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-attacher-role	2025-12-27 14:33:36.352130293 +0700
+@@ -0,0 +1,49 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRole
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: csi-do-attacher-role
++  uid: 90cc6cb8-ec28-4aa2-b71e-86b962835456
++rules:
++- apiGroups:
++  - ""
++  resources:
++  - persistentvolumes
++  verbs:
++  - get
++  - list
++  - watch
++  - update
++  - patch
++- apiGroups:
++  - ""
++  resources:
++  - nodes
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - storage.k8s.io
++  resources:
++  - csinodes
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - storage.k8s.io
++  resources:
++  - volumeattachments
++  verbs:
++  - get
++  - list
++  - watch
++  - update
++  - patch
++- apiGroups:
++  - storage.k8s.io
++  resources:
++  - volumeattachments/status
++  verbs:
++  - patch
+diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-node-driver-registrar-role /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-node-driver-registrar-role
+--- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-node-driver-registrar-role	2025-12-27 14:33:36.344130165 +0700
++++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-node-driver-registrar-role	2025-12-27 14:33:36.344130165 +0700
+@@ -0,0 +1,18 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRole
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: csi-do-node-driver-registrar-role
++  uid: 918a817c-f7af-4dcd-840e-8296140f56a7
++rules:
++- apiGroups:
++  - ""
++  resources:
++  - events
++  verbs:
++  - get
++  - list
++  - watch
++  - create
++  - update
++  - patch
+diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-provisioner-role /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-provisioner-role
+--- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-provisioner-role	2025-12-27 14:33:36.360130422 +0700
++++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-provisioner-role	2025-12-27 14:33:36.360130422 +0700
+@@ -0,0 +1,82 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRole
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: csi-do-provisioner-role
++  uid: 55b815af-8dd6-400e-aeba-ff8f1f969291
++rules:
++- apiGroups:
++  - ""
++  resources:
++  - persistentvolumes
++  verbs:
++  - get
++  - list
++  - watch
++  - create
++  - delete
++- apiGroups:
++  - ""
++  resources:
++  - persistentvolumeclaims
++  verbs:
++  - get
++  - list
++  - watch
++  - update
++- apiGroups:
++  - storage.k8s.io
++  resources:
++  - storageclasses
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - ""
++  resources:
++  - events
++  verbs:
++  - list
++  - watch
++  - create
++  - update
++  - patch
++- apiGroups:
++  - snapshot.storage.k8s.io
++  resources:
++  - volumesnapshots
++  verbs:
++  - get
++  - list
++- apiGroups:
++  - snapshot.storage.k8s.io
++  resources:
++  - volumesnapshotcontents
++  verbs:
++  - get
++  - list
++- apiGroups:
++  - storage.k8s.io
++  resources:
++  - csinodes
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - ""
++  resources:
++  - nodes
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - storage.k8s.io
++  resources:
++  - volumeattachments
++  verbs:
++  - get
++  - list
++  - watch
+diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-resizer-role /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-resizer-role
+--- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-resizer-role	2025-12-27 14:33:36.372130614 +0700
++++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-resizer-role	2025-12-27 14:33:36.372130614 +0700
+@@ -0,0 +1,42 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRole
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: csi-do-resizer-role
++  uid: 9650c3fb-21ed-41ec-ab06-99835881b18b
++rules:
++- apiGroups:
++  - ""
++  resources:
++  - persistentvolumes
++  verbs:
++  - get
++  - list
++  - watch
++  - update
++  - patch
++- apiGroups:
++  - ""
++  resources:
++  - persistentvolumeclaims
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - ""
++  resources:
++  - persistentvolumeclaims/status
++  verbs:
++  - update
++  - patch
++- apiGroups:
++  - ""
++  resources:
++  - events
++  verbs:
++  - list
++  - watch
++  - create
++  - update
++  - patch
+diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-snapshotter-role /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-snapshotter-role
+--- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-snapshotter-role	2025-12-27 14:33:36.380130742 +0700
++++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-snapshotter-role	2025-12-27 14:33:36.380130742 +0700
+@@ -0,0 +1,42 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRole
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: csi-do-snapshotter-role
++  uid: e24641dd-89f5-4b31-b69e-592c7b4a8d8b
++rules:
++- apiGroups:
++  - ""
++  resources:
++  - events
++  verbs:
++  - list
++  - watch
++  - create
++  - update
++  - patch
++- apiGroups:
++  - snapshot.storage.k8s.io
++  resources:
++  - volumesnapshotclasses
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - snapshot.storage.k8s.io
++  resources:
++  - volumesnapshotcontents
++  verbs:
++  - get
++  - list
++  - watch
++  - update
++  - patch
++- apiGroups:
++  - snapshot.storage.k8s.io
++  resources:
++  - volumesnapshotcontents/status
++  verbs:
++  - update
++  - patch
+diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..snapshot-controller-role /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..snapshot-controller-role
+--- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..snapshot-controller-role	2025-12-27 14:33:36.388130870 +0700
++++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..snapshot-controller-role	2025-12-27 14:33:36.388130870 +0700
+@@ -0,0 +1,77 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRole
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: snapshot-controller-role
++  uid: adfd06a5-6d6b-44d2-babb-2196d877107b
++rules:
++- apiGroups:
++  - ""
++  resources:
++  - persistentvolumes
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - ""
++  resources:
++  - persistentvolumeclaims
++  verbs:
++  - get
++  - list
++  - watch
++  - update
++- apiGroups:
++  - ""
++  resources:
++  - events
++  verbs:
++  - list
++  - watch
++  - create
++  - update
++  - patch
++- apiGroups:
++  - snapshot.storage.k8s.io
++  resources:
++  - volumesnapshotclasses
++  verbs:
++  - get
++  - list
++  - watch
++- apiGroups:
++  - snapshot.storage.k8s.io
++  resources:
++  - volumesnapshotcontents
++  verbs:
++  - create
++  - get
++  - list
++  - watch
++  - update
++  - delete
++  - patch
++- apiGroups:
++  - snapshot.storage.k8s.io
++  resources:
++  - volumesnapshotcontents/status
++  verbs:
++  - patch
++- apiGroups:
++  - snapshot.storage.k8s.io
++  resources:
++  - volumesnapshots
++  verbs:
++  - get
++  - list
++  - watch
++  - update
++  - patch
++- apiGroups:
++  - snapshot.storage.k8s.io
++  resources:
++  - volumesnapshots/status
++  verbs:
++  - update
++  - patch
+diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-attacher-binding /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-attacher-binding
+--- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-attacher-binding	2025-12-27 14:33:36.396130999 +0700
++++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-attacher-binding	2025-12-27 14:33:36.396130999 +0700
+@@ -0,0 +1,14 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRoleBinding
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: csi-do-attacher-binding
++  uid: da7fd224-cdab-4462-97d7-de8b487eef16
++roleRef:
++  apiGroup: rbac.authorization.k8s.io
++  kind: ClusterRole
++  name: csi-do-attacher-role
++subjects:
++- kind: ServiceAccount
++  name: csi-do-controller-sa
++  namespace: kube-system
+diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-node-driver-registrar-binding /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-node-driver-registrar-binding
+--- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-node-driver-registrar-binding	2025-12-27 14:33:36.400131062 +0700
++++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-node-driver-registrar-binding	2025-12-27 14:33:36.400131062 +0700
+@@ -0,0 +1,14 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRoleBinding
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: csi-do-node-driver-registrar-binding
++  uid: 6a3acbd7-7935-4260-8f88-db8ef68683d2
++roleRef:
++  apiGroup: rbac.authorization.k8s.io
++  kind: ClusterRole
++  name: csi-do-node-driver-registrar-role
++subjects:
++- kind: ServiceAccount
++  name: csi-do-node-sa
++  namespace: kube-system
+diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-provisioner-binding /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-provisioner-binding
+--- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-provisioner-binding	2025-12-27 14:33:36.412131255 +0700
++++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-provisioner-binding	2025-12-27 14:33:36.412131255 +0700
+@@ -0,0 +1,14 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRoleBinding
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: csi-do-provisioner-binding
++  uid: 980fefb0-db56-4e73-a704-a85012467e89
++roleRef:
++  apiGroup: rbac.authorization.k8s.io
++  kind: ClusterRole
++  name: csi-do-provisioner-role
++subjects:
++- kind: ServiceAccount
++  name: csi-do-controller-sa
++  namespace: kube-system
+diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-resizer-binding /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-resizer-binding
+--- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-resizer-binding	2025-12-27 14:33:36.416131319 +0700
++++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-resizer-binding	2025-12-27 14:33:36.416131319 +0700
+@@ -0,0 +1,14 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRoleBinding
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: csi-do-resizer-binding
++  uid: 42399185-c0c7-4faf-b2fc-759341cb272c
++roleRef:
++  apiGroup: rbac.authorization.k8s.io
++  kind: ClusterRole
++  name: csi-do-resizer-role
++subjects:
++- kind: ServiceAccount
++  name: csi-do-controller-sa
++  namespace: kube-system
+diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-snapshotter-binding /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-snapshotter-binding
+--- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-snapshotter-binding	2025-12-27 14:33:36.424131447 +0700
++++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-snapshotter-binding	2025-12-27 14:33:36.424131447 +0700
+@@ -0,0 +1,14 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRoleBinding
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: csi-do-snapshotter-binding
++  uid: 7246491c-f941-4e1d-8bb8-5c918f12d0bd
++roleRef:
++  apiGroup: rbac.authorization.k8s.io
++  kind: ClusterRole
++  name: csi-do-snapshotter-role
++subjects:
++- kind: ServiceAccount
++  name: csi-do-controller-sa
++  namespace: kube-system
+diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..snapshot-controller-binding /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..snapshot-controller-binding
+--- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..snapshot-controller-binding	2025-12-27 14:33:36.432131576 +0700
++++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..snapshot-controller-binding	2025-12-27 14:33:36.432131576 +0700
+@@ -0,0 +1,14 @@
++apiVersion: rbac.authorization.k8s.io/v1
++kind: ClusterRoleBinding
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: snapshot-controller-binding
++  uid: 8fcadb8c-fc68-46ac-8221-b0113249d9c7
++roleRef:
++  apiGroup: rbac.authorization.k8s.io
++  kind: ClusterRole
++  name: snapshot-controller-role
++subjects:
++- kind: ServiceAccount
++  name: snapshot-controller
++  namespace: kube-system
+diff -u -N /tmp/LIVE-3730880818/snapshot.storage.k8s.io.v1.VolumeSnapshotClass..do-block-storage /tmp/MERGED-3132281505/snapshot.storage.k8s.io.v1.VolumeSnapshotClass..do-block-storage
+--- /tmp/LIVE-3730880818/snapshot.storage.k8s.io.v1.VolumeSnapshotClass..do-block-storage	2025-12-27 14:33:36.504132729 +0700
++++ /tmp/MERGED-3132281505/snapshot.storage.k8s.io.v1.VolumeSnapshotClass..do-block-storage	2025-12-27 14:33:36.504132729 +0700
+@@ -0,0 +1,11 @@
++apiVersion: snapshot.storage.k8s.io/v1
++deletionPolicy: Delete
++driver: dobs.csi.digitalocean.com
++kind: VolumeSnapshotClass
++metadata:
++  annotations:
++    snapshot.storage.kubernetes.io/is-default-class: "true"
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  generation: 1
++  name: do-block-storage
++  uid: 1b45aa68-220c-4662-88fb-a80646cd6e5b
+diff -u -N /tmp/LIVE-3730880818/storage.k8s.io.v1.CSIDriver..dobs.csi.digitalocean.com /tmp/MERGED-3132281505/storage.k8s.io.v1.CSIDriver..dobs.csi.digitalocean.com
+--- /tmp/LIVE-3730880818/storage.k8s.io.v1.CSIDriver..dobs.csi.digitalocean.com	2025-12-27 14:33:36.516132921 +0700
++++ /tmp/MERGED-3132281505/storage.k8s.io.v1.CSIDriver..dobs.csi.digitalocean.com	2025-12-27 14:33:36.516132921 +0700
+@@ -0,0 +1,15 @@
++apiVersion: storage.k8s.io/v1
++kind: CSIDriver
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: dobs.csi.digitalocean.com
++  uid: e62a96b8-4f78-4fef-9923-96e21ebafc61
++spec:
++  attachRequired: true
++  fsGroupPolicy: ReadWriteOnceWithFSType
++  podInfoOnMount: true
++  requiresRepublish: false
++  seLinuxMount: false
++  storageCapacity: false
++  volumeLifecycleModes:
++  - Persistent
+diff -u -N /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage
+--- /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage	2025-12-27 14:33:36.160127215 +0700
++++ /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage	2025-12-27 14:33:36.160127215 +0700
+@@ -0,0 +1,12 @@
++allowVolumeExpansion: true
++apiVersion: storage.k8s.io/v1
++kind: StorageClass
++metadata:
++  annotations:
++    storageclass.kubernetes.io/is-default-class: "true"
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: do-block-storage
++  uid: ae40dd7e-e424-4a04-bcdd-3d4c8fa5f3d8
++provisioner: dobs.csi.digitalocean.com
++reclaimPolicy: Delete
++volumeBindingMode: WaitForFirstConsumer
+diff -u -N /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage-retain /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage-retain
+--- /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage-retain	2025-12-27 14:33:36.164127279 +0700
++++ /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage-retain	2025-12-27 14:33:36.168127344 +0700
+@@ -0,0 +1,12 @@
++allowVolumeExpansion: true
++apiVersion: storage.k8s.io/v1
++kind: StorageClass
++metadata:
++  annotations:
++    storageclass.kubernetes.io/is-default-class: "true"
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: do-block-storage-retain
++  uid: b63b35c3-ca72-4c31-aeb9-6aff2195ca98
++provisioner: dobs.csi.digitalocean.com
++reclaimPolicy: Retain
++volumeBindingMode: WaitForFirstConsumer
+diff -u -N /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage-xfs /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage-xfs
+--- /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage-xfs	2025-12-27 14:33:36.176127472 +0700
++++ /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage-xfs	2025-12-27 14:33:36.176127472 +0700
+@@ -0,0 +1,12 @@
++allowVolumeExpansion: true
++apiVersion: storage.k8s.io/v1
++kind: StorageClass
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: do-block-storage-xfs
++  uid: a0050b43-4d3b-496b-90a5-dd36aa54644a
++parameters:
++  fstype: xfs
++provisioner: dobs.csi.digitalocean.com
++reclaimPolicy: Delete
++volumeBindingMode: Immediate
+diff -u -N /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage-xfs-retain /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage-xfs-retain
+--- /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage-xfs-retain	2025-12-27 14:33:36.184127600 +0700
++++ /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage-xfs-retain	2025-12-27 14:33:36.184127600 +0700
+@@ -0,0 +1,12 @@
++allowVolumeExpansion: true
++apiVersion: storage.k8s.io/v1
++kind: StorageClass
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: do-block-storage-xfs-retain
++  uid: 44362377-5b0e-4270-8451-fe239221e45e
++parameters:
++  fstype: xfs
++provisioner: dobs.csi.digitalocean.com
++reclaimPolicy: Retain
++volumeBindingMode: Immediate
+diff -u -N /tmp/LIVE-3730880818/v1.ServiceAccount.kube-system.csi-do-controller-sa /tmp/MERGED-3132281505/v1.ServiceAccount.kube-system.csi-do-controller-sa
+--- /tmp/LIVE-3730880818/v1.ServiceAccount.kube-system.csi-do-controller-sa	2025-12-27 14:33:36.316129716 +0700
++++ /tmp/MERGED-3132281505/v1.ServiceAccount.kube-system.csi-do-controller-sa	2025-12-27 14:33:36.316129716 +0700
+@@ -0,0 +1,7 @@
++apiVersion: v1
++kind: ServiceAccount
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: csi-do-controller-sa
++  namespace: kube-system
++  uid: 74934e01-fb42-467c-b56a-f7db69f68f2f
+diff -u -N /tmp/LIVE-3730880818/v1.ServiceAccount.kube-system.csi-do-node-sa /tmp/MERGED-3132281505/v1.ServiceAccount.kube-system.csi-do-node-sa
+--- /tmp/LIVE-3730880818/v1.ServiceAccount.kube-system.csi-do-node-sa	2025-12-27 14:33:36.328129909 +0700
++++ /tmp/MERGED-3132281505/v1.ServiceAccount.kube-system.csi-do-node-sa	2025-12-27 14:33:36.328129909 +0700
+@@ -0,0 +1,7 @@
++apiVersion: v1
++kind: ServiceAccount
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: csi-do-node-sa
++  namespace: kube-system
++  uid: ca41cb8a-f34d-49d9-afc3-0cc0c02d56c3
+diff -u -N /tmp/LIVE-3730880818/v1.ServiceAccount.kube-system.snapshot-controller /tmp/MERGED-3132281505/v1.ServiceAccount.kube-system.snapshot-controller
+--- /tmp/LIVE-3730880818/v1.ServiceAccount.kube-system.snapshot-controller	2025-12-27 14:33:36.340130101 +0700
++++ /tmp/MERGED-3132281505/v1.ServiceAccount.kube-system.snapshot-controller	2025-12-27 14:33:36.340130101 +0700
+@@ -0,0 +1,7 @@
++apiVersion: v1
++kind: ServiceAccount
++metadata:
++  creationTimestamp: "2025-12-27T07:33:36Z"
++  name: snapshot-controller
++  namespace: kube-system
++  uid: 86beaf4b-9a1c-4110-affb-ef359104e629

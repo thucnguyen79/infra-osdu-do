@@ -1,0 +1,4 @@
+WorkerNode02 | CHANGED | rc=0 >>
+inactive
+WorkerNode01 | CHANGED | rc=0 >>
+inactive

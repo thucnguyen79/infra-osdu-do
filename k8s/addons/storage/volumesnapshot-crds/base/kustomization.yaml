@@ -1,0 +1,4 @@
+resources:
+  - vendor/external-snapshotter/v8.2.0/snapshot.storage.k8s.io_volumesnapshotclasses.yaml
+  - vendor/external-snapshotter/v8.2.0/snapshot.storage.k8s.io_volumesnapshotcontents.yaml
+  - vendor/external-snapshotter/v8.2.0/snapshot.storage.k8s.io_volumesnapshots.yaml

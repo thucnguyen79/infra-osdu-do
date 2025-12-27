@@ -1,0 +1,6 @@
+k8s/addons/storage/do-csi/base/vendor/csi-digitalocean-v4.15.0/driver.yaml:40:kind: StorageClass
+k8s/addons/storage/do-csi/base/vendor/csi-digitalocean-v4.15.0/driver.yaml:51:kind: StorageClass
+k8s/addons/storage/do-csi/base/vendor/csi-digitalocean-v4.15.0/driver.yaml:61:kind: StorageClass
+k8s/addons/storage/do-csi/base/vendor/csi-digitalocean-v4.15.0/driver.yaml:72:kind: StorageClass
+k8s/addons/storage/do-csi/base/storageclass-delete.yaml:2:kind: StorageClass
+k8s/addons/storage/do-csi/base/storageclass-retain.yaml:2:kind: StorageClass

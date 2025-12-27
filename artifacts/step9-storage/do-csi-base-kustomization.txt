@@ -1,0 +1,7 @@
+resources:
+  - vendor/csi-digitalocean-v4.15.0/crds.yaml
+  - vendor/csi-digitalocean-v4.15.0/driver.yaml
+  - vendor/csi-digitalocean-v4.15.0/snapshot-controller.yaml
+  - storageclass-delete.yaml
+  - storageclass-retain.yaml
+

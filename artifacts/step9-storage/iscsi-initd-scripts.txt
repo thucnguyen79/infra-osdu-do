@@ -1,0 +1,6 @@
+WorkerNode02 | CHANGED | rc=0 >>
+-rwxr-xr-x 1 root root 1503 Jan 19  2022 /etc/init.d/iscsid
+-rwxr-xr-x 1 root root 2433 Jan 19  2022 /etc/init.d/open-iscsi
+WorkerNode01 | CHANGED | rc=0 >>
+-rwxr-xr-x 1 root root 1503 Jan 19  2022 /etc/init.d/iscsid
+-rwxr-xr-x 1 root root 2433 Jan 19  2022 /etc/init.d/open-iscsi

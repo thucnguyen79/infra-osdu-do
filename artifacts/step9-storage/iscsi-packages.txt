@@ -1,0 +1,4 @@
+WorkerNode02 | CHANGED | rc=0 >>
+ii  open-iscsi                       2.1.5-1ubuntu1                          amd64        iSCSI initiator tools
+WorkerNode01 | CHANGED | rc=0 >>
+ii  open-iscsi                       2.1.5-1ubuntu1                          amd64        iSCSI initiator tools

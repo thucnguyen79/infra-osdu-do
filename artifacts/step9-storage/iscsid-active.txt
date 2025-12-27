@@ -1,0 +1,8 @@
+WorkerNode02 | CHANGED | rc=0 >>
+activeSynchronizing state of iscsid.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable iscsid
+Created symlink /etc/systemd/system/sysinit.target.wants/iscsid.service → /lib/systemd/system/iscsid.service.
+WorkerNode01 | CHANGED | rc=0 >>
+activeSynchronizing state of iscsid.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable iscsid
+Created symlink /etc/systemd/system/sysinit.target.wants/iscsid.service → /lib/systemd/system/iscsid.service.

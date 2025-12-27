@@ -1,0 +1,7 @@
+k8s/addons/storage/do-csi/base/vendor/csi-digitalocean-v4.15.0/driver.yaml:32:  name: do-block-storage
+k8s/addons/storage/do-csi/base/vendor/csi-digitalocean-v4.15.0/driver.yaml:43:  name: do-block-storage
+k8s/addons/storage/do-csi/base/vendor/csi-digitalocean-v4.15.0/driver.yaml:54:  name: do-block-storage-retain
+k8s/addons/storage/do-csi/base/vendor/csi-digitalocean-v4.15.0/driver.yaml:64:  name: do-block-storage-xfs
+k8s/addons/storage/do-csi/base/vendor/csi-digitalocean-v4.15.0/driver.yaml:75:  name: do-block-storage-xfs-retain
+k8s/addons/storage/do-csi/base/storageclass-delete.yaml:4:  name: do-block-storage-delete
+k8s/addons/storage/do-csi/base/storageclass-retain.yaml:4:  name: do-block-storage-retain

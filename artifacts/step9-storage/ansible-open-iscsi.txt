@@ -1,0 +1,10 @@
+WorkerNode02 | SUCCESS => {
+    "cache_update_time": 1766814902,
+    "cache_updated": true,
+    "changed": false
+}
+WorkerNode01 | SUCCESS => {
+    "cache_update_time": 1766814903,
+    "cache_updated": true,
+    "changed": false
+}

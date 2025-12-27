@@ -1,0 +1,7 @@
+total 24
+drwxrwxr-x 3 ops ops 4096 Dec 27 13:17 .
+drwxrwxr-x 4 ops ops 4096 Dec 27 12:53 ..
+-rw-rw-r-- 1 ops ops  225 Dec 27 13:17 kustomization.yaml
+-rw-rw-r-- 1 ops ops  266 Dec 27 13:15 storageclass-delete.yaml
+-rw-rw-r-- 1 ops ops  337 Dec 27 13:16 storageclass-retain.yaml
+drwxrwxr-x 3 ops ops 4096 Dec 27 12:53 vendor
