@@ -1,0 +1,42 @@
+Name:         internal-root-ca
+Namespace:    cert-manager
+Labels:       <none>
+Annotations:  <none>
+API Version:  cert-manager.io/v1
+Kind:         Certificate
+Metadata:
+  Creation Timestamp:  2025-12-27T04:28:42Z
+  Generation:          1
+  Resource Version:    474621
+  UID:                 df1038ff-952b-4da0-a88b-e1ccc45e222c
+Spec:
+  Common Name:  internal-root-ca
+  Duration:     87600h
+  Is CA:        true
+  Issuer Ref:
+    Kind:  ClusterIssuer
+    Name:  internal-selfsigned
+  Private Key:
+    Algorithm:   RSA
+    Size:        4096
+  Renew Before:  720h
+  Secret Name:   internal-root-ca
+Status:
+  Conditions:
+    Last Transition Time:  2025-12-27T04:28:43Z
+    Message:               Certificate is up to date and has not expired
+    Observed Generation:   1
+    Reason:                Ready
+    Status:                True
+    Type:                  Ready
+  Not After:               2035-12-25T04:28:43Z
+  Not Before:              2025-12-27T04:28:43Z
+  Renewal Time:            2035-11-25T04:28:43Z
+  Revision:                1
+Events:
+  Type    Reason     Age   From                                       Message
+  ----    ------     ----  ----                                       -------
+  Normal  Issuing    80s   cert-manager-certificates-trigger          Issuing certificate as Secret does not exist
+  Normal  Generated  79s   cert-manager-certificates-key-manager      Stored new private key in temporary Secret resource "internal-root-ca-d8wbf"
+  Normal  Requested  79s   cert-manager-certificates-request-manager  Created new CertificateRequest resource "internal-root-ca-1"
+  Normal  Issuing    79s   cert-manager-certificates-issuing          The certificate has been successfully issued

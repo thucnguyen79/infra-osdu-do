@@ -1,0 +1,9 @@
+NAME                                      READY   UP-TO-DATE   AVAILABLE   AGE    CONTAINERS                IMAGES                                             SELECTOR
+deployment.apps/cert-manager              1/1     1            1           8m7s   cert-manager-controller   quay.io/jetstack/cert-manager-controller:v1.18.2   app.kubernetes.io/component=controller,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=cert-manager
+deployment.apps/cert-manager-cainjector   1/1     1            1           8m7s   cert-manager-cainjector   quay.io/jetstack/cert-manager-cainjector:v1.18.2   app.kubernetes.io/component=cainjector,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=cainjector
+deployment.apps/cert-manager-webhook      1/1     1            1           8m7s   cert-manager-webhook      quay.io/jetstack/cert-manager-webhook:v1.18.2      app.kubernetes.io/component=webhook,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=webhook
+
+NAME                              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)            AGE    SELECTOR
+service/cert-manager              ClusterIP   10.96.176.109   <none>        9402/TCP           8m8s   app.kubernetes.io/component=controller,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=cert-manager
+service/cert-manager-cainjector   ClusterIP   10.107.28.197   <none>        9402/TCP           8m8s   app.kubernetes.io/component=cainjector,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=cainjector
+service/cert-manager-webhook      ClusterIP   10.100.129.64   <none>        443/TCP,9402/TCP   8m7s   app.kubernetes.io/component=webhook,app.kubernetes.io/instance=cert-manager,app.kubernetes.io/name=webhook

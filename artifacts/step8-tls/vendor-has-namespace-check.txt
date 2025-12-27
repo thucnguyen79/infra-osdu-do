@@ -1,0 +1,54 @@
+16:kind: Namespace
+17:metadata:
+18:  name: cert-manager
+26:metadata:
+347:metadata:
+1144:metadata:
+4354:metadata:
+8096:metadata:
+11838:metadata:
+12113:metadata:
+12127:metadata:
+12128:  name: cert-manager
+12141:metadata:
+12154:metadata:
+12186:metadata:
+12212:metadata:
+12238:metadata:
+12273:metadata:
+12311:metadata:
+12371:metadata:
+12408:metadata:
+12425:metadata:
+12448:metadata:
+12473:metadata:
+12495:metadata:
+12521:metadata:
+12537:metadata:
+12557:metadata:
+12577:metadata:
+12597:metadata:
+12617:metadata:
+12637:metadata:
+12657:metadata:
+12677:metadata:
+12697:metadata:
+12717:metadata:
+12738:metadata:
+12764:metadata:
+12785:metadata:
+12803:metadata:
+12828:metadata:
+12851:metadata:
+12873:metadata:
+12894:metadata:
+12915:metadata:
+12938:metadata:
+12939:  name: cert-manager
+12962:metadata:
+12990:metadata:
+13053:metadata:
+13054:  name: cert-manager
+13135:metadata:
+13249:metadata:
+13288:metadata:

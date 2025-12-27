@@ -181,3 +181,50 @@ Evidence:
 - HTTP health-check to NodePort can fail with **404** (ingress default) ⇒ use **TCP check** for NodePort reachability, or point httpchk to a known host/path.
 - If Ansible says "No inventory was parsed" ⇒ missing `ANSIBLE_CONFIG` or wrong working dir.
 - If `kubectl` errors `connect: connection refused` to `k8s-api.internal:6443` ⇒ LB/API frontend not listening, firewall, or wrong `/etc/hosts` mapping.
+
+## Step 8 — TLS (Option A: Internal CA) with cert-manager
+**Goal:** Provide cluster-managed TLS (issuance + renewal) for internal services using an Internal Root CA.
+
+### 8.1 Deploy cert-manager (kustomize)
+- [x] Namespace `cert-manager` exists before diff/apply (or managed via vendor manifest)
+- [x] `kubectl diff -k k8s/addons/cert-manager/overlays/do-private` passes (or diff executed after ns fix)
+- [x] `kubectl apply -k ...` succeeded
+- [x] Pods Running: `cert-manager`, `cainjector`, `webhook`
+- [x] CRDs present
+
+Evidence:
+- `artifacts/step8-tls/ns-cert-manager.txt`
+- `artifacts/step8-tls/cert-manager-diff.txt`
+- `artifacts/step8-tls/cert-manager-apply.txt`
+- `artifacts/step8-tls/cert-manager-pods.txt`
+- `artifacts/step8-tls/cert-manager-crds.txt`
+
+### 8.2 Internal CA chain
+- [x] ClusterIssuer `internal-ca` READY=True
+- [x] Certificate `internal-root-ca` READY=True (Secret: `internal-root-ca`)
+
+Evidence:
+- `artifacts/step8-tls/clusterissuer-internal-ca.txt`
+- `artifacts/step8-tls/cert-internal-root-ca.txt`
+
+### 8.3 Workload cert (echo.internal)
+- [x] Certificate `echo-internal-tls` READY=True
+- [x] Ingress uses `secretName: echo-internal-tls`
+
+Evidence:
+- `artifacts/step8-tls/echo-cert-describe.txt`
+- `artifacts/step8-tls/echo-ingress-get.txt`
+
+### 8.4 Verify TLS end-to-end
+- [x] Export Root CA cert to `artifacts/step8-tls/internal-root-ca.crt` (public cert only)
+- [x] `curl --cacert ... https://echo.internal` works via LB `10.118.0.8:443`
+
+Evidence:
+- `artifacts/step8-tls/internal-root-ca.crt` (public)
+- (optional) capture curl output into `artifacts/step8-tls/echo-https-curl.txt`
+
+### Issues encountered (and fixes)
+- [x] Duplicate Namespace in kustomize (`cert-manager`) ⇒ remove duplicate or `$patch: delete` vendor Namespace.
+- [x] `kubectl diff` failed because namespace not found ⇒ create namespace first (or apply vendor NS first).
+- [x] `file is not directory` / path mismatch ⇒ fix `resources:` to point to correct file/dir.
+

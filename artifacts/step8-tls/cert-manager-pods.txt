@@ -1,0 +1,4 @@
+NAME                                     READY   STATUS    RESTARTS   AGE     IP                NODE           NOMINATED NODE   READINESS GATES
+cert-manager-5b98df59d6-8wwb9            1/1     Running   0          7m51s   192.168.246.199   workernode02   <none>           <none>
+cert-manager-cainjector-f48cd678-7vw7q   1/1     Running   0          7m51s   192.168.246.200   workernode02   <none>           <none>
+cert-manager-webhook-76cdf6c497-9xmnc    1/1     Running   0          7m51s   192.168.52.133    workernode01   <none>           <none>

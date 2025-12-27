@@ -1,0 +1,2 @@
+NAME                READY   SECRET              ISSUER        STATUS                                          AGE
+echo-internal-tls   True    echo-internal-tls   internal-ca   Certificate is up to date and has not expired   20s

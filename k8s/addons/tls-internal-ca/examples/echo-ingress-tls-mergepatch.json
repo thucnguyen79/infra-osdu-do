@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "annotations": {
+      "cert-manager.io/cluster-issuer": "internal-ca"
+    }
+  },
+  "spec": {
+    "tls": [
+      {
+        "hosts": ["echo.internal"],
+        "secretName": "echo-internal-tls"
+      }
+    ]
+  }
+}
+

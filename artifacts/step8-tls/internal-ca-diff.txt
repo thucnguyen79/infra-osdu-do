@@ -1,0 +1,51 @@
+diff -u -N /tmp/LIVE-1339948588/cert-manager.io.v1.Certificate.cert-manager.internal-root-ca /tmp/MERGED-2547011624/cert-manager.io.v1.Certificate.cert-manager.internal-root-ca
+--- /tmp/LIVE-1339948588/cert-manager.io.v1.Certificate.cert-manager.internal-root-ca	2025-12-27 11:28:27.281529299 +0700
++++ /tmp/MERGED-2547011624/cert-manager.io.v1.Certificate.cert-manager.internal-root-ca	2025-12-27 11:28:27.281529299 +0700
+@@ -0,0 +1,20 @@
++apiVersion: cert-manager.io/v1
++kind: Certificate
++metadata:
++  creationTimestamp: "2025-12-27T04:28:27Z"
++  generation: 1
++  name: internal-root-ca
++  namespace: cert-manager
++  uid: 2a9e72ca-924c-420f-ae15-0e20bb5363ba
++spec:
++  commonName: internal-root-ca
++  duration: 87600h
++  isCA: true
++  issuerRef:
++    kind: ClusterIssuer
++    name: internal-selfsigned
++  privateKey:
++    algorithm: RSA
++    size: 4096
++  renewBefore: 720h
++  secretName: internal-root-ca
+diff -u -N /tmp/LIVE-1339948588/cert-manager.io.v1.ClusterIssuer..internal-ca /tmp/MERGED-2547011624/cert-manager.io.v1.ClusterIssuer..internal-ca
+--- /tmp/LIVE-1339948588/cert-manager.io.v1.ClusterIssuer..internal-ca	2025-12-27 11:28:27.305529636 +0700
++++ /tmp/MERGED-2547011624/cert-manager.io.v1.ClusterIssuer..internal-ca	2025-12-27 11:28:27.305529636 +0700
+@@ -0,0 +1,10 @@
++apiVersion: cert-manager.io/v1
++kind: ClusterIssuer
++metadata:
++  creationTimestamp: "2025-12-27T04:28:27Z"
++  generation: 1
++  name: internal-ca
++  uid: 14acf370-5007-4726-b93e-cdd57772acb4
++spec:
++  ca:
++    secretName: internal-root-ca
+diff -u -N /tmp/LIVE-1339948588/cert-manager.io.v1.ClusterIssuer..internal-selfsigned /tmp/MERGED-2547011624/cert-manager.io.v1.ClusterIssuer..internal-selfsigned
+--- /tmp/LIVE-1339948588/cert-manager.io.v1.ClusterIssuer..internal-selfsigned	2025-12-27 11:28:27.317529804 +0700
++++ /tmp/MERGED-2547011624/cert-manager.io.v1.ClusterIssuer..internal-selfsigned	2025-12-27 11:28:27.317529804 +0700
+@@ -0,0 +1,9 @@
++apiVersion: cert-manager.io/v1
++kind: ClusterIssuer
++metadata:
++  creationTimestamp: "2025-12-27T04:28:27Z"
++  generation: 1
++  name: internal-selfsigned
++  uid: e005e501-56d2-4bd4-a774-c1a69b381363
++spec:
++  selfSigned: {}

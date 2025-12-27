@@ -1,0 +1,6 @@
+certificaterequests.cert-manager.io                     2025-12-27T04:08:38Z
+certificates.cert-manager.io                            2025-12-27T04:08:38Z
+challenges.acme.cert-manager.io                         2025-12-27T04:08:38Z
+clusterissuers.cert-manager.io                          2025-12-27T04:08:38Z
+issuers.cert-manager.io                                 2025-12-27T04:08:38Z
+orders.acme.cert-manager.io                             2025-12-27T04:08:38Z
