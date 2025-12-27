@@ -1,0 +1,2 @@
+persistentvolumeclaim "do-pvc-5g" deleted
+pod "pvc-tester" deleted

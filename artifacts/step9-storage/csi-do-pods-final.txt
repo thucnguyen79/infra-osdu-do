@@ -1,0 +1,4 @@
+NAME                  READY   STATUS    RESTARTS       AGE    IP                NODE           NOMINATED NODE   READINESS GATES
+csi-do-controller-0   5/5     Running   32 (65m ago)   80m    192.168.246.202   workernode02   <none>           <none>
+csi-do-node-c7s4h     2/2     Running   0              179m   10.118.0.7        workernode02   <none>           <none>
+csi-do-node-vj47r     2/2     Running   0              179m   10.118.0.6        workernode01   <none>           <none>

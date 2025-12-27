@@ -1,0 +1,1 @@
+daemon set "csi-do-node" successfully rolled out

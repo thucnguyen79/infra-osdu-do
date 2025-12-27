@@ -228,3 +228,10 @@ Evidence:
 - [x] `kubectl diff` failed because namespace not found ⇒ create namespace first (or apply vendor NS first).
 - [x] `file is not directory` / path mismatch ⇒ fix `resources:` to point to correct file/dir.
 
+## Step 9 - Storage (DigitalOcean CSI + Snapshots)
+- [x] Worker prereq installed (open-iscsi/iscsid)
+- [x] DO CSI driver deployed (csi-do-controller + csi-do-node Running)
+- [x] Snapshot CRDs + snapshot-controller deployed
+- [x] StorageClasses created (Delete/Retain, ext4/xfs); default class set
+- [x] Dynamic PV provisioning verified with test PVC/Pod (create/attach/detach/delete)
+- [x] Evidence stored in artifacts/step9-storage/ (secrets under artifacts-private/)

@@ -1,0 +1,2 @@
+persistentvolumeclaim/do-pvc-5g unchanged
+pod/pvc-tester created

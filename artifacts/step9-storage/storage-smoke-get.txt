@@ -1,0 +1,5 @@
+NAME                              STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS       VOLUMEATTRIBUTESCLASS   AGE   VOLUMEMODE
+persistentvolumeclaim/do-pvc-5g   Bound    pvc-5bb33491-a747-4092-bddb-4193853de19d   5Gi        RWO            do-block-storage   <unset>                 11s   Filesystem
+
+NAME             READY   STATUS    RESTARTS   AGE   IP               NODE           NOMINATED NODE   READINESS GATES
+pod/pvc-tester   1/1     Running   0          11s   192.168.52.136   workernode01   <none>           <none>

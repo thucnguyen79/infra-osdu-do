@@ -1,0 +1,2 @@
+NAME                        ATTACHREQUIRED   PODINFOONMOUNT   STORAGECAPACITY   TOKENREQUESTS   REQUIRESREPUBLISH   MODES        AGE
+dobs.csi.digitalocean.com   true             true             false             <unset>         false               Persistent   7m44s

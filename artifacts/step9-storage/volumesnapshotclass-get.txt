@@ -1,0 +1,2 @@
+NAME               DRIVER                      DELETIONPOLICY   AGE
+do-block-storage   dobs.csi.digitalocean.com   Delete           7m30s

@@ -1,17 +1,17 @@
-diff -u -N /tmp/LIVE-3730880818/apps.v1.DaemonSet.kube-system.csi-do-node /tmp/MERGED-3132281505/apps.v1.DaemonSet.kube-system.csi-do-node
---- /tmp/LIVE-3730880818/apps.v1.DaemonSet.kube-system.csi-do-node	2025-12-27 14:33:36.476132281 +0700
-+++ /tmp/MERGED-3132281505/apps.v1.DaemonSet.kube-system.csi-do-node	2025-12-27 14:33:36.476132281 +0700
+diff -u -N /tmp/LIVE-4111580007/apps.v1.DaemonSet.kube-system.csi-do-node /tmp/MERGED-1540485564/apps.v1.DaemonSet.kube-system.csi-do-node
+--- /tmp/LIVE-4111580007/apps.v1.DaemonSet.kube-system.csi-do-node	2025-12-27 14:56:50.404774633 +0700
++++ /tmp/MERGED-1540485564/apps.v1.DaemonSet.kube-system.csi-do-node	2025-12-27 14:56:50.404774633 +0700
 @@ -0,0 +1,132 @@
 +apiVersion: apps/v1
 +kind: DaemonSet
 +metadata:
 +  annotations:
 +    deprecated.daemonset.template.generation: "1"
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  generation: 1
 +  name: csi-do-node
 +  namespace: kube-system
-+  uid: 054d25ea-6822-48ed-8b55-a306bdcb6194
++  uid: e20e6976-9bd9-4ca2-8fc7-6a3e4250d65b
 +spec:
 +  revisionHistoryLimit: 10
 +  selector:
@@ -134,18 +134,18 @@ diff -u -N /tmp/LIVE-3730880818/apps.v1.DaemonSet.kube-system.csi-do-node /tmp/M
 +  desiredNumberScheduled: 0
 +  numberMisscheduled: 0
 +  numberReady: 0
-diff -u -N /tmp/LIVE-3730880818/apps.v1.StatefulSet.kube-system.csi-do-controller /tmp/MERGED-3132281505/apps.v1.StatefulSet.kube-system.csi-do-controller
---- /tmp/LIVE-3730880818/apps.v1.StatefulSet.kube-system.csi-do-controller	2025-12-27 14:33:36.448131832 +0700
-+++ /tmp/MERGED-3132281505/apps.v1.StatefulSet.kube-system.csi-do-controller	2025-12-27 14:33:36.448131832 +0700
+diff -u -N /tmp/LIVE-4111580007/apps.v1.StatefulSet.kube-system.csi-do-controller /tmp/MERGED-1540485564/apps.v1.StatefulSet.kube-system.csi-do-controller
+--- /tmp/LIVE-4111580007/apps.v1.StatefulSet.kube-system.csi-do-controller	2025-12-27 14:56:50.380774290 +0700
++++ /tmp/MERGED-1540485564/apps.v1.StatefulSet.kube-system.csi-do-controller	2025-12-27 14:56:50.384774347 +0700
 @@ -0,0 +1,136 @@
 +apiVersion: apps/v1
 +kind: StatefulSet
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  generation: 1
 +  name: csi-do-controller
 +  namespace: kube-system
-+  uid: aeebfb7a-7025-40bb-b478-e19f32dd2c26
++  uid: fc3036ce-86f9-49f1-b737-50630933ac6f
 +spec:
 +  persistentVolumeClaimRetentionPolicy:
 +    whenDeleted: Retain
@@ -274,18 +274,18 @@ diff -u -N /tmp/LIVE-3730880818/apps.v1.StatefulSet.kube-system.csi-do-controlle
 +status:
 +  availableReplicas: 0
 +  replicas: 0
-diff -u -N /tmp/LIVE-3730880818/apps.v1.StatefulSet.kube-system.snapshot-controller /tmp/MERGED-3132281505/apps.v1.StatefulSet.kube-system.snapshot-controller
---- /tmp/LIVE-3730880818/apps.v1.StatefulSet.kube-system.snapshot-controller	2025-12-27 14:33:36.460132024 +0700
-+++ /tmp/MERGED-3132281505/apps.v1.StatefulSet.kube-system.snapshot-controller	2025-12-27 14:33:36.464132088 +0700
+diff -u -N /tmp/LIVE-4111580007/apps.v1.StatefulSet.kube-system.snapshot-controller /tmp/MERGED-1540485564/apps.v1.StatefulSet.kube-system.snapshot-controller
+--- /tmp/LIVE-4111580007/apps.v1.StatefulSet.kube-system.snapshot-controller	2025-12-27 14:56:50.392774462 +0700
++++ /tmp/MERGED-1540485564/apps.v1.StatefulSet.kube-system.snapshot-controller	2025-12-27 14:56:50.392774462 +0700
 @@ -0,0 +1,48 @@
 +apiVersion: apps/v1
 +kind: StatefulSet
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  generation: 1
 +  name: snapshot-controller
 +  namespace: kube-system
-+  uid: dd0a309a-fcc9-4abf-badb-e5d1e7286f6f
++  uid: 2fbed6ab-9844-4c10-afca-83f7d35d62fe
 +spec:
 +  persistentVolumeClaimRetentionPolicy:
 +    whenDeleted: Retain
@@ -326,16 +326,16 @@ diff -u -N /tmp/LIVE-3730880818/apps.v1.StatefulSet.kube-system.snapshot-control
 +status:
 +  availableReplicas: 0
 +  replicas: 0
-diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-attacher-role /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-attacher-role
---- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-attacher-role	2025-12-27 14:33:36.352130293 +0700
-+++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-attacher-role	2025-12-27 14:33:36.352130293 +0700
+diff -u -N /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-attacher-role /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-attacher-role
+--- /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-attacher-role	2025-12-27 14:56:50.300773147 +0700
++++ /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-attacher-role	2025-12-27 14:56:50.300773147 +0700
 @@ -0,0 +1,49 @@
 +apiVersion: rbac.authorization.k8s.io/v1
 +kind: ClusterRole
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: csi-do-attacher-role
-+  uid: 90cc6cb8-ec28-4aa2-b71e-86b962835456
++  uid: ee0593ad-c110-4e26-a1d1-a1e2cbce1f72
 +rules:
 +- apiGroups:
 +  - ""
@@ -379,16 +379,16 @@ diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do
 +  - volumeattachments/status
 +  verbs:
 +  - patch
-diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-node-driver-registrar-role /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-node-driver-registrar-role
---- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-node-driver-registrar-role	2025-12-27 14:33:36.344130165 +0700
-+++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-node-driver-registrar-role	2025-12-27 14:33:36.344130165 +0700
+diff -u -N /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-node-driver-registrar-role /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-node-driver-registrar-role
+--- /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-node-driver-registrar-role	2025-12-27 14:56:50.292773032 +0700
++++ /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-node-driver-registrar-role	2025-12-27 14:56:50.292773032 +0700
 @@ -0,0 +1,18 @@
 +apiVersion: rbac.authorization.k8s.io/v1
 +kind: ClusterRole
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: csi-do-node-driver-registrar-role
-+  uid: 918a817c-f7af-4dcd-840e-8296140f56a7
++  uid: 0ef9459c-c5da-463a-b9f7-82c6422c89e9
 +rules:
 +- apiGroups:
 +  - ""
@@ -401,16 +401,16 @@ diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do
 +  - create
 +  - update
 +  - patch
-diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-provisioner-role /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-provisioner-role
---- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-provisioner-role	2025-12-27 14:33:36.360130422 +0700
-+++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-provisioner-role	2025-12-27 14:33:36.360130422 +0700
+diff -u -N /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-provisioner-role /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-provisioner-role
+--- /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-provisioner-role	2025-12-27 14:56:50.308773261 +0700
++++ /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-provisioner-role	2025-12-27 14:56:50.308773261 +0700
 @@ -0,0 +1,82 @@
 +apiVersion: rbac.authorization.k8s.io/v1
 +kind: ClusterRole
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: csi-do-provisioner-role
-+  uid: 55b815af-8dd6-400e-aeba-ff8f1f969291
++  uid: ec60c8bb-b404-494f-a745-4e4ff481d0e7
 +rules:
 +- apiGroups:
 +  - ""
@@ -487,16 +487,16 @@ diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do
 +  - get
 +  - list
 +  - watch
-diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-resizer-role /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-resizer-role
---- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-resizer-role	2025-12-27 14:33:36.372130614 +0700
-+++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-resizer-role	2025-12-27 14:33:36.372130614 +0700
+diff -u -N /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-resizer-role /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-resizer-role
+--- /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-resizer-role	2025-12-27 14:56:50.316773375 +0700
++++ /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-resizer-role	2025-12-27 14:56:50.316773375 +0700
 @@ -0,0 +1,42 @@
 +apiVersion: rbac.authorization.k8s.io/v1
 +kind: ClusterRole
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: csi-do-resizer-role
-+  uid: 9650c3fb-21ed-41ec-ab06-99835881b18b
++  uid: 158437db-50f3-4d01-bfbf-6be8376bbfb5
 +rules:
 +- apiGroups:
 +  - ""
@@ -533,16 +533,16 @@ diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do
 +  - create
 +  - update
 +  - patch
-diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-snapshotter-role /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-snapshotter-role
---- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-snapshotter-role	2025-12-27 14:33:36.380130742 +0700
-+++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-snapshotter-role	2025-12-27 14:33:36.380130742 +0700
+diff -u -N /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-snapshotter-role /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-snapshotter-role
+--- /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-snapshotter-role	2025-12-27 14:56:50.324773490 +0700
++++ /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRole..csi-do-snapshotter-role	2025-12-27 14:56:50.324773490 +0700
 @@ -0,0 +1,42 @@
 +apiVersion: rbac.authorization.k8s.io/v1
 +kind: ClusterRole
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: csi-do-snapshotter-role
-+  uid: e24641dd-89f5-4b31-b69e-592c7b4a8d8b
++  uid: d7f1ad26-d9c3-487b-9792-7bcb23fcb860
 +rules:
 +- apiGroups:
 +  - ""
@@ -579,16 +579,16 @@ diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..csi-do
 +  verbs:
 +  - update
 +  - patch
-diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..snapshot-controller-role /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..snapshot-controller-role
---- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..snapshot-controller-role	2025-12-27 14:33:36.388130870 +0700
-+++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRole..snapshot-controller-role	2025-12-27 14:33:36.388130870 +0700
+diff -u -N /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRole..snapshot-controller-role /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRole..snapshot-controller-role
+--- /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRole..snapshot-controller-role	2025-12-27 14:56:50.328773547 +0700
++++ /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRole..snapshot-controller-role	2025-12-27 14:56:50.332773604 +0700
 @@ -0,0 +1,77 @@
 +apiVersion: rbac.authorization.k8s.io/v1
 +kind: ClusterRole
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: snapshot-controller-role
-+  uid: adfd06a5-6d6b-44d2-babb-2196d877107b
++  uid: 8bc785f2-8860-4e28-9025-d70b80bf3f98
 +rules:
 +- apiGroups:
 +  - ""
@@ -660,16 +660,16 @@ diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRole..snapsh
 +  verbs:
 +  - update
 +  - patch
-diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-attacher-binding /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-attacher-binding
---- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-attacher-binding	2025-12-27 14:33:36.396130999 +0700
-+++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-attacher-binding	2025-12-27 14:33:36.396130999 +0700
+diff -u -N /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-attacher-binding /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-attacher-binding
+--- /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-attacher-binding	2025-12-27 14:56:50.336773661 +0700
++++ /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-attacher-binding	2025-12-27 14:56:50.336773661 +0700
 @@ -0,0 +1,14 @@
 +apiVersion: rbac.authorization.k8s.io/v1
 +kind: ClusterRoleBinding
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: csi-do-attacher-binding
-+  uid: da7fd224-cdab-4462-97d7-de8b487eef16
++  uid: f93dc8b3-6e96-4e89-a6c7-bfbbbcb008c9
 +roleRef:
 +  apiGroup: rbac.authorization.k8s.io
 +  kind: ClusterRole
@@ -678,16 +678,16 @@ diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding.
 +- kind: ServiceAccount
 +  name: csi-do-controller-sa
 +  namespace: kube-system
-diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-node-driver-registrar-binding /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-node-driver-registrar-binding
---- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-node-driver-registrar-binding	2025-12-27 14:33:36.400131062 +0700
-+++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-node-driver-registrar-binding	2025-12-27 14:33:36.400131062 +0700
+diff -u -N /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-node-driver-registrar-binding /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-node-driver-registrar-binding
+--- /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-node-driver-registrar-binding	2025-12-27 14:56:50.344773776 +0700
++++ /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-node-driver-registrar-binding	2025-12-27 14:56:50.344773776 +0700
 @@ -0,0 +1,14 @@
 +apiVersion: rbac.authorization.k8s.io/v1
 +kind: ClusterRoleBinding
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: csi-do-node-driver-registrar-binding
-+  uid: 6a3acbd7-7935-4260-8f88-db8ef68683d2
++  uid: 7d88f359-fb47-4c50-a232-f1e83e046420
 +roleRef:
 +  apiGroup: rbac.authorization.k8s.io
 +  kind: ClusterRole
@@ -696,16 +696,16 @@ diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding.
 +- kind: ServiceAccount
 +  name: csi-do-node-sa
 +  namespace: kube-system
-diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-provisioner-binding /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-provisioner-binding
---- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-provisioner-binding	2025-12-27 14:33:36.412131255 +0700
-+++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-provisioner-binding	2025-12-27 14:33:36.412131255 +0700
+diff -u -N /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-provisioner-binding /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-provisioner-binding
+--- /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-provisioner-binding	2025-12-27 14:56:50.352773890 +0700
++++ /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-provisioner-binding	2025-12-27 14:56:50.352773890 +0700
 @@ -0,0 +1,14 @@
 +apiVersion: rbac.authorization.k8s.io/v1
 +kind: ClusterRoleBinding
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: csi-do-provisioner-binding
-+  uid: 980fefb0-db56-4e73-a704-a85012467e89
++  uid: 5a59c260-8596-4e42-9b8f-ac8ef5d71b05
 +roleRef:
 +  apiGroup: rbac.authorization.k8s.io
 +  kind: ClusterRole
@@ -714,16 +714,16 @@ diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding.
 +- kind: ServiceAccount
 +  name: csi-do-controller-sa
 +  namespace: kube-system
-diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-resizer-binding /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-resizer-binding
---- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-resizer-binding	2025-12-27 14:33:36.416131319 +0700
-+++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-resizer-binding	2025-12-27 14:33:36.416131319 +0700
+diff -u -N /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-resizer-binding /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-resizer-binding
+--- /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-resizer-binding	2025-12-27 14:56:50.360774004 +0700
++++ /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-resizer-binding	2025-12-27 14:56:50.360774004 +0700
 @@ -0,0 +1,14 @@
 +apiVersion: rbac.authorization.k8s.io/v1
 +kind: ClusterRoleBinding
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: csi-do-resizer-binding
-+  uid: 42399185-c0c7-4faf-b2fc-759341cb272c
++  uid: d5a9bbbf-d06c-4900-ab50-381e1ba6e7d7
 +roleRef:
 +  apiGroup: rbac.authorization.k8s.io
 +  kind: ClusterRole
@@ -732,16 +732,16 @@ diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding.
 +- kind: ServiceAccount
 +  name: csi-do-controller-sa
 +  namespace: kube-system
-diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-snapshotter-binding /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-snapshotter-binding
---- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-snapshotter-binding	2025-12-27 14:33:36.424131447 +0700
-+++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-snapshotter-binding	2025-12-27 14:33:36.424131447 +0700
+diff -u -N /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-snapshotter-binding /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-snapshotter-binding
+--- /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-snapshotter-binding	2025-12-27 14:56:50.364774062 +0700
++++ /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRoleBinding..csi-do-snapshotter-binding	2025-12-27 14:56:50.364774062 +0700
 @@ -0,0 +1,14 @@
 +apiVersion: rbac.authorization.k8s.io/v1
 +kind: ClusterRoleBinding
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: csi-do-snapshotter-binding
-+  uid: 7246491c-f941-4e1d-8bb8-5c918f12d0bd
++  uid: 2b955690-4d81-4b6a-a76c-991a853006b4
 +roleRef:
 +  apiGroup: rbac.authorization.k8s.io
 +  kind: ClusterRole
@@ -750,16 +750,16 @@ diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding.
 +- kind: ServiceAccount
 +  name: csi-do-controller-sa
 +  namespace: kube-system
-diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..snapshot-controller-binding /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..snapshot-controller-binding
---- /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding..snapshot-controller-binding	2025-12-27 14:33:36.432131576 +0700
-+++ /tmp/MERGED-3132281505/rbac.authorization.k8s.io.v1.ClusterRoleBinding..snapshot-controller-binding	2025-12-27 14:33:36.432131576 +0700
+diff -u -N /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRoleBinding..snapshot-controller-binding /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRoleBinding..snapshot-controller-binding
+--- /tmp/LIVE-4111580007/rbac.authorization.k8s.io.v1.ClusterRoleBinding..snapshot-controller-binding	2025-12-27 14:56:50.372774176 +0700
++++ /tmp/MERGED-1540485564/rbac.authorization.k8s.io.v1.ClusterRoleBinding..snapshot-controller-binding	2025-12-27 14:56:50.372774176 +0700
 @@ -0,0 +1,14 @@
 +apiVersion: rbac.authorization.k8s.io/v1
 +kind: ClusterRoleBinding
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: snapshot-controller-binding
-+  uid: 8fcadb8c-fc68-46ac-8221-b0113249d9c7
++  uid: 8f9ab7d5-543a-46bb-a711-ec32ae979dba
 +roleRef:
 +  apiGroup: rbac.authorization.k8s.io
 +  kind: ClusterRole
@@ -768,9 +768,9 @@ diff -u -N /tmp/LIVE-3730880818/rbac.authorization.k8s.io.v1.ClusterRoleBinding.
 +- kind: ServiceAccount
 +  name: snapshot-controller
 +  namespace: kube-system
-diff -u -N /tmp/LIVE-3730880818/snapshot.storage.k8s.io.v1.VolumeSnapshotClass..do-block-storage /tmp/MERGED-3132281505/snapshot.storage.k8s.io.v1.VolumeSnapshotClass..do-block-storage
---- /tmp/LIVE-3730880818/snapshot.storage.k8s.io.v1.VolumeSnapshotClass..do-block-storage	2025-12-27 14:33:36.504132729 +0700
-+++ /tmp/MERGED-3132281505/snapshot.storage.k8s.io.v1.VolumeSnapshotClass..do-block-storage	2025-12-27 14:33:36.504132729 +0700
+diff -u -N /tmp/LIVE-4111580007/snapshot.storage.k8s.io.v1.VolumeSnapshotClass..do-block-storage /tmp/MERGED-1540485564/snapshot.storage.k8s.io.v1.VolumeSnapshotClass..do-block-storage
+--- /tmp/LIVE-4111580007/snapshot.storage.k8s.io.v1.VolumeSnapshotClass..do-block-storage	2025-12-27 14:56:50.412774748 +0700
++++ /tmp/MERGED-1540485564/snapshot.storage.k8s.io.v1.VolumeSnapshotClass..do-block-storage	2025-12-27 14:56:50.412774748 +0700
 @@ -0,0 +1,11 @@
 +apiVersion: snapshot.storage.k8s.io/v1
 +deletionPolicy: Delete
@@ -779,20 +779,20 @@ diff -u -N /tmp/LIVE-3730880818/snapshot.storage.k8s.io.v1.VolumeSnapshotClass..
 +metadata:
 +  annotations:
 +    snapshot.storage.kubernetes.io/is-default-class: "true"
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  generation: 1
 +  name: do-block-storage
-+  uid: 1b45aa68-220c-4662-88fb-a80646cd6e5b
-diff -u -N /tmp/LIVE-3730880818/storage.k8s.io.v1.CSIDriver..dobs.csi.digitalocean.com /tmp/MERGED-3132281505/storage.k8s.io.v1.CSIDriver..dobs.csi.digitalocean.com
---- /tmp/LIVE-3730880818/storage.k8s.io.v1.CSIDriver..dobs.csi.digitalocean.com	2025-12-27 14:33:36.516132921 +0700
-+++ /tmp/MERGED-3132281505/storage.k8s.io.v1.CSIDriver..dobs.csi.digitalocean.com	2025-12-27 14:33:36.516132921 +0700
++  uid: 30fe5538-c075-4171-a99c-60cf3b1dd906
+diff -u -N /tmp/LIVE-4111580007/storage.k8s.io.v1.CSIDriver..dobs.csi.digitalocean.com /tmp/MERGED-1540485564/storage.k8s.io.v1.CSIDriver..dobs.csi.digitalocean.com
+--- /tmp/LIVE-4111580007/storage.k8s.io.v1.CSIDriver..dobs.csi.digitalocean.com	2025-12-27 14:56:50.420774862 +0700
++++ /tmp/MERGED-1540485564/storage.k8s.io.v1.CSIDriver..dobs.csi.digitalocean.com	2025-12-27 14:56:50.420774862 +0700
 @@ -0,0 +1,15 @@
 +apiVersion: storage.k8s.io/v1
 +kind: CSIDriver
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: dobs.csi.digitalocean.com
-+  uid: e62a96b8-4f78-4fef-9923-96e21ebafc61
++  uid: 57f974a2-f837-4093-9872-00404b7ddac4
 +spec:
 +  attachRequired: true
 +  fsGroupPolicy: ReadWriteOnceWithFSType
@@ -802,9 +802,9 @@ diff -u -N /tmp/LIVE-3730880818/storage.k8s.io.v1.CSIDriver..dobs.csi.digitaloce
 +  storageCapacity: false
 +  volumeLifecycleModes:
 +  - Persistent
-diff -u -N /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage
---- /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage	2025-12-27 14:33:36.160127215 +0700
-+++ /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage	2025-12-27 14:33:36.160127215 +0700
+diff -u -N /tmp/LIVE-4111580007/storage.k8s.io.v1.StorageClass..do-block-storage /tmp/MERGED-1540485564/storage.k8s.io.v1.StorageClass..do-block-storage
+--- /tmp/LIVE-4111580007/storage.k8s.io.v1.StorageClass..do-block-storage	2025-12-27 14:56:50.100770286 +0700
++++ /tmp/MERGED-1540485564/storage.k8s.io.v1.StorageClass..do-block-storage	2025-12-27 14:56:50.100770286 +0700
 @@ -0,0 +1,12 @@
 +allowVolumeExpansion: true
 +apiVersion: storage.k8s.io/v1
@@ -812,90 +812,88 @@ diff -u -N /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage
 +metadata:
 +  annotations:
 +    storageclass.kubernetes.io/is-default-class: "true"
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: do-block-storage
-+  uid: ae40dd7e-e424-4a04-bcdd-3d4c8fa5f3d8
++  uid: a34bf7f9-7fe3-49e0-9f46-4557dac6dcf5
 +provisioner: dobs.csi.digitalocean.com
 +reclaimPolicy: Delete
 +volumeBindingMode: WaitForFirstConsumer
-diff -u -N /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage-retain /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage-retain
---- /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage-retain	2025-12-27 14:33:36.164127279 +0700
-+++ /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage-retain	2025-12-27 14:33:36.168127344 +0700
-@@ -0,0 +1,12 @@
+diff -u -N /tmp/LIVE-4111580007/storage.k8s.io.v1.StorageClass..do-block-storage-retain /tmp/MERGED-1540485564/storage.k8s.io.v1.StorageClass..do-block-storage-retain
+--- /tmp/LIVE-4111580007/storage.k8s.io.v1.StorageClass..do-block-storage-retain	2025-12-27 14:56:50.108770400 +0700
++++ /tmp/MERGED-1540485564/storage.k8s.io.v1.StorageClass..do-block-storage-retain	2025-12-27 14:56:50.108770400 +0700
+@@ -0,0 +1,10 @@
 +allowVolumeExpansion: true
 +apiVersion: storage.k8s.io/v1
 +kind: StorageClass
 +metadata:
-+  annotations:
-+    storageclass.kubernetes.io/is-default-class: "true"
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: do-block-storage-retain
-+  uid: b63b35c3-ca72-4c31-aeb9-6aff2195ca98
++  uid: c6aba0d6-d2a2-4da8-9c1f-f70aa89bc1d6
 +provisioner: dobs.csi.digitalocean.com
 +reclaimPolicy: Retain
 +volumeBindingMode: WaitForFirstConsumer
-diff -u -N /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage-xfs /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage-xfs
---- /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage-xfs	2025-12-27 14:33:36.176127472 +0700
-+++ /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage-xfs	2025-12-27 14:33:36.176127472 +0700
+diff -u -N /tmp/LIVE-4111580007/storage.k8s.io.v1.StorageClass..do-block-storage-xfs /tmp/MERGED-1540485564/storage.k8s.io.v1.StorageClass..do-block-storage-xfs
+--- /tmp/LIVE-4111580007/storage.k8s.io.v1.StorageClass..do-block-storage-xfs	2025-12-27 14:56:50.116770514 +0700
++++ /tmp/MERGED-1540485564/storage.k8s.io.v1.StorageClass..do-block-storage-xfs	2025-12-27 14:56:50.116770514 +0700
 @@ -0,0 +1,12 @@
 +allowVolumeExpansion: true
 +apiVersion: storage.k8s.io/v1
 +kind: StorageClass
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: do-block-storage-xfs
-+  uid: a0050b43-4d3b-496b-90a5-dd36aa54644a
++  uid: a8f07a3b-16b5-49c7-95a1-58bf0c2377b4
 +parameters:
 +  fstype: xfs
 +provisioner: dobs.csi.digitalocean.com
 +reclaimPolicy: Delete
 +volumeBindingMode: Immediate
-diff -u -N /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage-xfs-retain /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage-xfs-retain
---- /tmp/LIVE-3730880818/storage.k8s.io.v1.StorageClass..do-block-storage-xfs-retain	2025-12-27 14:33:36.184127600 +0700
-+++ /tmp/MERGED-3132281505/storage.k8s.io.v1.StorageClass..do-block-storage-xfs-retain	2025-12-27 14:33:36.184127600 +0700
+diff -u -N /tmp/LIVE-4111580007/storage.k8s.io.v1.StorageClass..do-block-storage-xfs-retain /tmp/MERGED-1540485564/storage.k8s.io.v1.StorageClass..do-block-storage-xfs-retain
+--- /tmp/LIVE-4111580007/storage.k8s.io.v1.StorageClass..do-block-storage-xfs-retain	2025-12-27 14:56:50.124770629 +0700
++++ /tmp/MERGED-1540485564/storage.k8s.io.v1.StorageClass..do-block-storage-xfs-retain	2025-12-27 14:56:50.124770629 +0700
 @@ -0,0 +1,12 @@
 +allowVolumeExpansion: true
 +apiVersion: storage.k8s.io/v1
 +kind: StorageClass
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: do-block-storage-xfs-retain
-+  uid: 44362377-5b0e-4270-8451-fe239221e45e
++  uid: b6a863d7-1ec3-4ff6-b01d-394bcb1f7759
 +parameters:
 +  fstype: xfs
 +provisioner: dobs.csi.digitalocean.com
 +reclaimPolicy: Retain
 +volumeBindingMode: Immediate
-diff -u -N /tmp/LIVE-3730880818/v1.ServiceAccount.kube-system.csi-do-controller-sa /tmp/MERGED-3132281505/v1.ServiceAccount.kube-system.csi-do-controller-sa
---- /tmp/LIVE-3730880818/v1.ServiceAccount.kube-system.csi-do-controller-sa	2025-12-27 14:33:36.316129716 +0700
-+++ /tmp/MERGED-3132281505/v1.ServiceAccount.kube-system.csi-do-controller-sa	2025-12-27 14:33:36.316129716 +0700
+diff -u -N /tmp/LIVE-4111580007/v1.ServiceAccount.kube-system.csi-do-controller-sa /tmp/MERGED-1540485564/v1.ServiceAccount.kube-system.csi-do-controller-sa
+--- /tmp/LIVE-4111580007/v1.ServiceAccount.kube-system.csi-do-controller-sa	2025-12-27 14:56:50.264772632 +0700
++++ /tmp/MERGED-1540485564/v1.ServiceAccount.kube-system.csi-do-controller-sa	2025-12-27 14:56:50.264772632 +0700
 @@ -0,0 +1,7 @@
 +apiVersion: v1
 +kind: ServiceAccount
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: csi-do-controller-sa
 +  namespace: kube-system
-+  uid: 74934e01-fb42-467c-b56a-f7db69f68f2f
-diff -u -N /tmp/LIVE-3730880818/v1.ServiceAccount.kube-system.csi-do-node-sa /tmp/MERGED-3132281505/v1.ServiceAccount.kube-system.csi-do-node-sa
---- /tmp/LIVE-3730880818/v1.ServiceAccount.kube-system.csi-do-node-sa	2025-12-27 14:33:36.328129909 +0700
-+++ /tmp/MERGED-3132281505/v1.ServiceAccount.kube-system.csi-do-node-sa	2025-12-27 14:33:36.328129909 +0700
++  uid: 1a2b9000-c088-44a6-9216-3d1c01b184ff
+diff -u -N /tmp/LIVE-4111580007/v1.ServiceAccount.kube-system.csi-do-node-sa /tmp/MERGED-1540485564/v1.ServiceAccount.kube-system.csi-do-node-sa
+--- /tmp/LIVE-4111580007/v1.ServiceAccount.kube-system.csi-do-node-sa	2025-12-27 14:56:50.276772803 +0700
++++ /tmp/MERGED-1540485564/v1.ServiceAccount.kube-system.csi-do-node-sa	2025-12-27 14:56:50.276772803 +0700
 @@ -0,0 +1,7 @@
 +apiVersion: v1
 +kind: ServiceAccount
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: csi-do-node-sa
 +  namespace: kube-system
-+  uid: ca41cb8a-f34d-49d9-afc3-0cc0c02d56c3
-diff -u -N /tmp/LIVE-3730880818/v1.ServiceAccount.kube-system.snapshot-controller /tmp/MERGED-3132281505/v1.ServiceAccount.kube-system.snapshot-controller
---- /tmp/LIVE-3730880818/v1.ServiceAccount.kube-system.snapshot-controller	2025-12-27 14:33:36.340130101 +0700
-+++ /tmp/MERGED-3132281505/v1.ServiceAccount.kube-system.snapshot-controller	2025-12-27 14:33:36.340130101 +0700
++  uid: de4bfb5c-ec97-4588-8c18-b60f027c2c0f
+diff -u -N /tmp/LIVE-4111580007/v1.ServiceAccount.kube-system.snapshot-controller /tmp/MERGED-1540485564/v1.ServiceAccount.kube-system.snapshot-controller
+--- /tmp/LIVE-4111580007/v1.ServiceAccount.kube-system.snapshot-controller	2025-12-27 14:56:50.288772975 +0700
++++ /tmp/MERGED-1540485564/v1.ServiceAccount.kube-system.snapshot-controller	2025-12-27 14:56:50.288772975 +0700
 @@ -0,0 +1,7 @@
 +apiVersion: v1
 +kind: ServiceAccount
 +metadata:
-+  creationTimestamp: "2025-12-27T07:33:36Z"
++  creationTimestamp: "2025-12-27T07:56:50Z"
 +  name: snapshot-controller
 +  namespace: kube-system
-+  uid: 86beaf4b-9a1c-4110-affb-ef359104e629
++  uid: f6dd979a-fda9-470b-9669-13975b8e3a17

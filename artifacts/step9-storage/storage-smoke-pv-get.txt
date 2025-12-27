@@ -1,0 +1,2 @@
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                     STORAGECLASS       VOLUMEATTRIBUTESCLASS   REASON   AGE
+pvc-5bb33491-a747-4092-bddb-4193853de19d   5Gi        RWO            Delete           Bound    storage-smoke/do-pvc-5g   do-block-storage   <unset>                          48s

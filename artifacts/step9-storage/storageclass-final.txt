@@ -1,0 +1,5 @@
+NAME                          PROVISIONER                 RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+do-block-storage (default)    dobs.csi.digitalocean.com   Delete          WaitForFirstConsumer   true                   179m
+do-block-storage-retain       dobs.csi.digitalocean.com   Retain          WaitForFirstConsumer   true                   179m
+do-block-storage-xfs          dobs.csi.digitalocean.com   Delete          Immediate              true                   179m
+do-block-storage-xfs-retain   dobs.csi.digitalocean.com   Retain          Immediate              true                   179m

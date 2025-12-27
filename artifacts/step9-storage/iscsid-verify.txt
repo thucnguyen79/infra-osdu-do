@@ -1,0 +1,16 @@
+WorkerNode02 | CHANGED | rc=0 >>
+active
+/usr/sbin/iscsiadm
+scsi_transport_iscsi   139264  1
+scsi_dh_rdac           20480  0
+scsi_dh_emc            16384  0
+scsi_dh_alua           20480  0
+virtio_scsi            24576  0
+WorkerNode01 | CHANGED | rc=0 >>
+active
+/usr/sbin/iscsiadm
+scsi_transport_iscsi   139264  1
+scsi_dh_rdac           20480  0
+scsi_dh_emc            16384  0
+scsi_dh_alua           20480  0
+virtio_scsi            24576  0

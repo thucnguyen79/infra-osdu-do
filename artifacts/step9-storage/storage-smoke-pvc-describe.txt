@@ -1,0 +1,23 @@
+Name:          do-pvc-5g
+Namespace:     storage-smoke
+StorageClass:  do-block-storage
+Status:        Bound
+Volume:        pvc-5bb33491-a747-4092-bddb-4193853de19d
+Labels:        <none>
+Annotations:   pv.kubernetes.io/bind-completed: yes
+               pv.kubernetes.io/bound-by-controller: yes
+               volume.beta.kubernetes.io/storage-provisioner: dobs.csi.digitalocean.com
+               volume.kubernetes.io/selected-node: workernode01
+               volume.kubernetes.io/storage-provisioner: dobs.csi.digitalocean.com
+Finalizers:    [kubernetes.io/pvc-protection]
+Capacity:      5Gi
+Access Modes:  RWO
+VolumeMode:    Filesystem
+Used By:       pvc-tester
+Events:
+  Type    Reason                 Age                From                                                                                Message
+  ----    ------                 ----               ----                                                                                -------
+  Normal  WaitForFirstConsumer   23s                persistentvolume-controller                                                         waiting for first consumer to be created before binding
+  Normal  ExternalProvisioning   23s (x2 over 23s)  persistentvolume-controller                                                         Waiting for a volume to be created either by the external provisioner 'dobs.csi.digitalocean.com' or manually by the system administrator. If volume creation is delayed, please verify that the provisioner is running and correctly registered.
+  Normal  Provisioning           23s                dobs.csi.digitalocean.com_csi-do-controller-0_2b8acb20-4064-4930-b1ab-4a08325a151c  External provisioner is provisioning volume for claim "storage-smoke/do-pvc-5g"
+  Normal  ProvisioningSucceeded  22s                dobs.csi.digitalocean.com_csi-do-controller-0_2b8acb20-4064-4930-b1ab-4a08325a151c  Successfully provisioned volume pvc-5bb33491-a747-4092-bddb-4193853de19d

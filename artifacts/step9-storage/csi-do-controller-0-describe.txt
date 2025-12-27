@@ -1,0 +1,173 @@
+Name:                 csi-do-controller-0
+Namespace:            kube-system
+Priority:             2000000000
+Priority Class Name:  system-cluster-critical
+Service Account:      csi-do-controller-sa
+Node:                 workernode02/10.118.0.7
+Start Time:           Sat, 27 Dec 2025 14:57:09 +0700
+Labels:               app=csi-do-controller
+                      apps.kubernetes.io/pod-index=0
+                      controller-revision-hash=csi-do-controller-84b6b96585
+                      role=csi-do
+                      statefulset.kubernetes.io/pod-name=csi-do-controller-0
+Annotations:          cni.projectcalico.org/containerID: 41f3a0cee79327aae0314cc4d98cf211e3c3e418fd5d893288dacfad8e4f7012
+                      cni.projectcalico.org/podIP: 192.168.246.201/32
+                      cni.projectcalico.org/podIPs: 192.168.246.201/32
+                      kubectl.kubernetes.io/default-container: csi-do-plugin
+Status:               Running
+IP:                   192.168.246.201
+IPs:
+  IP:           192.168.246.201
+Controlled By:  StatefulSet/csi-do-controller
+Containers:
+  csi-provisioner:
+    Container ID:  containerd://bde533fd174b78ed26e43e0db79b92df22cf6d8f8b6ce2cb2bf41572d44dcfd2
+    Image:         registry.k8s.io/sig-storage/csi-provisioner:v6.0.0
+    Image ID:      registry.k8s.io/sig-storage/csi-provisioner@sha256:0c537015fe9cf9d53d79d0181e17a78ee784303cd46bf957016605488f212327
+    Port:          <none>
+    Host Port:     <none>
+    Args:
+      --csi-address=$(ADDRESS)
+      --default-fstype=ext4
+      --v=5
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Sat, 27 Dec 2025 15:56:22 +0700
+      Finished:     Sat, 27 Dec 2025 15:56:52 +0700
+    Ready:          False
+    Restart Count:  15
+    Environment:
+      ADDRESS:  /var/lib/csi/sockets/pluginproxy/csi.sock
+    Mounts:
+      /var/lib/csi/sockets/pluginproxy/ from socket-dir (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-lhkx4 (ro)
+  csi-attacher:
+    Container ID:  containerd://1fd92035cd83d28ae3d4c4666332bcef65b7de7c05c87bad6534b8bf24d53b90
+    Image:         registry.k8s.io/sig-storage/csi-attacher:v4.10.0
+    Image ID:      registry.k8s.io/sig-storage/csi-attacher@sha256:be59d0556508d3dd419cc34c53062f170a28902ef36e832b947c7796458a083d
+    Port:          <none>
+    Host Port:     <none>
+    Args:
+      --csi-address=$(ADDRESS)
+      --v=5
+      --reconcile-sync=30m
+      --timeout=2m
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Sat, 27 Dec 2025 15:56:22 +0700
+      Finished:     Sat, 27 Dec 2025 15:56:52 +0700
+    Ready:          False
+    Restart Count:  15
+    Environment:
+      ADDRESS:  /var/lib/csi/sockets/pluginproxy/csi.sock
+    Mounts:
+      /var/lib/csi/sockets/pluginproxy/ from socket-dir (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-lhkx4 (ro)
+  csi-snapshotter:
+    Container ID:  containerd://1dee40abcca7decaf5617ae174a42245de506d92a26b96de655f69fec1ab838d
+    Image:         registry.k8s.io/sig-storage/csi-snapshotter:v8.4.0
+    Image ID:      registry.k8s.io/sig-storage/csi-snapshotter@sha256:c7e0a3718832b6197ce8b29fefb3fed3d84f4fbcdf08f4606140dbec2566501d
+    Port:          <none>
+    Host Port:     <none>
+    Args:
+      --csi-address=$(ADDRESS)
+      --v=5
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Sat, 27 Dec 2025 15:56:22 +0700
+      Finished:     Sat, 27 Dec 2025 15:56:52 +0700
+    Ready:          False
+    Restart Count:  15
+    Environment:
+      ADDRESS:  /var/lib/csi/sockets/pluginproxy/csi.sock
+    Mounts:
+      /var/lib/csi/sockets/pluginproxy/ from socket-dir (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-lhkx4 (ro)
+  csi-resizer:
+    Container ID:  containerd://fe72aad21c34911b6a005184a665061c2913f0d6d657b8e45925bcc067a56439
+    Image:         registry.k8s.io/sig-storage/csi-resizer:v2.0.0
+    Image ID:      registry.k8s.io/sig-storage/csi-resizer@sha256:4a95d94e57ad82f6977cd8d4fdcfcfc0b83f02d990e4e7715b688c20970a906d
+    Port:          <none>
+    Host Port:     <none>
+    Args:
+      --csi-address=$(ADDRESS)
+      --timeout=30s
+      --v=5
+      --handle-volume-inuse-error=false
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Sat, 27 Dec 2025 15:56:46 +0700
+      Finished:     Sat, 27 Dec 2025 15:57:16 +0700
+    Ready:          False
+    Restart Count:  15
+    Environment:
+      ADDRESS:  /var/lib/csi/sockets/pluginproxy/csi.sock
+    Mounts:
+      /var/lib/csi/sockets/pluginproxy/ from socket-dir (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-lhkx4 (ro)
+  csi-do-plugin:
+    Container ID:  containerd://bf96cf6acbd260499c0199d95185ef3d475d31e9418e0a9cdcd048f419402ea5
+    Image:         digitalocean/do-csi-plugin:v4.15.0
+    Image ID:      docker.io/digitalocean/do-csi-plugin@sha256:5aab8f0e0fe80cc835e977aec0242b99223ba0082a31a2bd038aeb74ab28423b
+    Port:          <none>
+    Host Port:     <none>
+    Args:
+      --endpoint=$(CSI_ENDPOINT)
+      --token=$(DIGITALOCEAN_ACCESS_TOKEN)
+      --url=$(DIGITALOCEAN_API_URL)
+      --default-volumes-page-size=200
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Sat, 27 Dec 2025 15:59:01 +0700
+      Finished:     Sat, 27 Dec 2025 15:59:01 +0700
+    Ready:          False
+    Restart Count:  17
+    Environment:
+      CSI_ENDPOINT:               unix:///var/lib/csi/sockets/pluginproxy/csi.sock
+      DIGITALOCEAN_API_URL:       https://api.digitalocean.com/
+      DIGITALOCEAN_ACCESS_TOKEN:  <set to the key 'access-token' in secret 'digitalocean'>  Optional: false
+    Mounts:
+      /var/lib/csi/sockets/pluginproxy/ from socket-dir (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-lhkx4 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  socket-dir:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  kube-api-access-lhkx4:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason   Age                   From     Message
+  ----     ------   ----                  ----     -------
+  Normal   Pulled   43m (x7 over 61m)     kubelet  Container image "registry.k8s.io/sig-storage/csi-resizer:v2.0.0" already present on machine
+  Warning  BackOff  3m9s (x269 over 62m)  kubelet  Back-off restarting failed container csi-provisioner in pod csi-do-controller-0_kube-system(d31acf2e-a614-4a52-8e23-8c0c4acec651)
