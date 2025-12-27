@@ -1,0 +1,17 @@
+● haproxy.service - HAProxy Load Balancer
+     Loaded: loaded (/lib/systemd/system/haproxy.service; enabled; vendor preset: enabled)
+     Active: active (running) since Fri 2025-12-26 05:22:41 UTC; 59s ago
+       Docs: man:haproxy(1)
+             file:/usr/share/doc/haproxy/configuration.txt.gz
+    Process: 114142 ExecStartPre=/usr/sbin/haproxy -Ws -f $CONFIG -c -q $EXTRAOPTS (code=exited, status=0/SUCCESS)
+   Main PID: 114144 (haproxy)
+      Tasks: 9 (limit: 38464)
+     Memory: 6.2M
+        CPU: 82ms
+     CGroup: /system.slice/haproxy.service
+             ├─114144 /usr/sbin/haproxy -Ws -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -S /run/haproxy-master.sock
+             └─114146 /usr/sbin/haproxy -Ws -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -S /run/haproxy-master.sock
+
+Dec 26 05:22:40 AppServer01 systemd[1]: Starting HAProxy Load Balancer...
+Dec 26 05:22:41 AppServer01 haproxy[114144]: [NOTICE]   (114144) : New worker #1 (114146) forked
+Dec 26 05:22:41 AppServer01 systemd[1]: Started HAProxy Load Balancer.

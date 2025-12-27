@@ -14,20 +14,38 @@ defaults
 # -------------------------
 # HTTP 80 -> workers:30080
 # -------------------------
+#frontend fe_http_80
+#  bind *:80
+#  mode http
+#  option httplog
+#  default_backend be_http_nodeport
+#
+#backend be_http_nodeport
+#  mode http
+#  balance roundrobin
+#  option httpchk GET /
+#  http-check expect rstatus (200|301|302|308|404)
+#{% for w in lb_workers %}
+#  server {{ w.name }} {{ w.ip }}:{{ http_nodeport }} check
+#{% endfor %}
+
+# -------------------------
+# HTTP 80 -> workers:30080  (TCP check để tránh fail do 404)
+# -------------------------
 frontend fe_http_80
   bind *:80
-  mode http
-  option httplog
+  mode tcp
+  option tcplog
   default_backend be_http_nodeport
 
 backend be_http_nodeport
-  mode http
+  mode tcp
   balance roundrobin
-  option httpchk GET /
-  http-check expect status 200
+  option tcp-check
 {% for w in lb_workers %}
   server {{ w.name }} {{ w.ip }}:{{ http_nodeport }} check
 {% endfor %}
+
 
 # -------------------------
 # HTTPS 443 -> workers:30443 (TCP passthrough)
@@ -44,5 +62,22 @@ backend be_https_nodeport
   option tcp-check
 {% for w in lb_workers %}
   server {{ w.name }} {{ w.ip }}:{{ https_nodeport }} check
+{% endfor %}
+
+# -------------------------
+# K8S API 6443 -> controlplanes:6443
+# -------------------------
+frontend fe_k8s_api_6443
+  bind *:6443
+  mode tcp
+  option tcplog
+  default_backend be_k8s_api_6443
+
+backend be_k8s_api_6443
+  mode tcp
+  balance roundrobin
+  option tcp-check
+{% for cp in lb_controlplanes %}
+  server {{ cp.name }} {{ cp.ip }}:6443 check
 {% endfor %}
 

@@ -135,13 +135,49 @@
 - [x] 6.5 Verify routing via both workers (curl Host header) OK
 
 ## Step 7 — AppServer01 self-managed LB
+tep 7 — Self-managed Load Balancer on AppServer01 (HAProxy)
+**Goal:** expose stable, private-only endpoints:
+- Kubernetes API: `k8s-api.internal:6443` ➜ control planes (6443)
+- Ingress HTTP/HTTPS: `AppServer01:80/443` ➜ workers NodePorts (30080/30443)
 
-- [ ] 7.1 Precheck: ports 80/443 free on AppServer01
-- [ ] 7.1 Precheck: AppServer01 can reach worker NodePorts 30080/30443
-- [ ] 7.2 Deploy HAProxy via Ansible (repo-first)
-- [ ] 7.3 Verify HAProxy listening on 80/443
-- [ ] 7.4 Verify LB TCP connect from ToolServer01
-- [ ] 7.4 Verify echo ingress via LB (Host header) works
-- [ ] 7.D Document Step 7 + commit evidence
-- [ ] 7.4 LB reachable on 80/443 from ToolServer01
-- [ ] 7.4 Echo via LB works
+### 7.1 Firewall (DO)
+- [x] Allow inbound to **AppServer01** (private-only):
+  - TCP `6443`, `80`, `443` from `10.118.0.0/20` (and/or WireGuard subnet as needed)
+
+### 7.2 Deploy HAProxy via Ansible (repo-first)
+- [x] Playbook: `ansible/playbooks/31-appserver01-lb-haproxy.yml`
+- [x] Template: `ansible/templates/haproxy.cfg.j2`
+- [x] Must run with correct Ansible config/inventory:
+  - `source .venv/bin/activate`
+  - `export ANSIBLE_CONFIG=/opt/infra-osdu-do/ansible/ansible.cfg`
+
+Evidence:
+- `artifacts/step7-lb-appserver01/run-appserver01-haproxy-fix6443.log`
+
+### 7.3 Verify LB is listening and config valid
+- [x] `ss -lntp` shows HAProxy listening on `:6443`, `:80`, `:443`
+- [x] `haproxy -c -f /etc/haproxy/haproxy.cfg` returns **Configuration file is valid**
+
+Evidence:
+- `artifacts/step7-lb-appserver01/haproxy-ss.txt`
+- `artifacts/step7-lb-appserver01/haproxy-config-check.txt`
+- `artifacts/step7-lb-appserver01/haproxy-status.txt`
+
+### 7.4 Verify API reachability via control-plane endpoint
+- [x] `timeout 2 bash -c "</dev/tcp/k8s-api.internal/6443"` returns OK
+- [x] `kubectl get nodes -o wide` works from ToolServer01
+
+Evidence:
+- `artifacts/step7-lb-appserver01/api-6443-after-fix.txt`
+- `artifacts/step7-lb-appserver01/kubectl-get-nodes-after-fix.txt`
+
+### 7.5 Verify ingress via LB
+- [x] `curl -H "Host: echo.internal" http://10.118.0.8/` returns echo JSON
+
+Evidence:
+- `artifacts/step7-lb-appserver01/echo-via-lb-after-fix.txt` (or command output captured)
+
+### 7.6 Troubleshooting notes (what we hit)
+- HTTP health-check to NodePort can fail with **404** (ingress default) ⇒ use **TCP check** for NodePort reachability, or point httpchk to a known host/path.
+- If Ansible says "No inventory was parsed" ⇒ missing `ANSIBLE_CONFIG` or wrong working dir.
+- If `kubectl` errors `connect: connection refused` to `k8s-api.internal:6443` ⇒ LB/API frontend not listening, firewall, or wrong `/etc/hosts` mapping.

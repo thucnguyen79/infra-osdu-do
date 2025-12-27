@@ -1,0 +1,200 @@
+Dec 24 09:45:52 AppServer01 haproxy[105946]: [WARNING]  (105946) : Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 1ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:45:52 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 1ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:45:52 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 1ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:46:14 AppServer01 haproxy[105946]: [WARNING]  (105946) : Server k8s_api_back/cp2 is DOWN, reason: Layer4 connection problem, info: "Connection refused at initial connection step of tcp-check", check duration: 0ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 24 09:46:14 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is DOWN, reason: Layer4 connection problem, info: "Connection refused at initial connection step of tcp-check", check duration: 0ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 24 09:46:14 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is DOWN, reason: Layer4 connection problem, info: "Connection refused at initial connection step of tcp-check", check duration: 0ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 24 09:47:02 AppServer01 haproxy[105946]: [WARNING]  (105946) : Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 1ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:47:02 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 1ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:47:02 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 1ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:47:22 AppServer01 haproxy[105946]: [WARNING]  (105946) : Server k8s_api_back/cp2 is DOWN, reason: Layer4 connection problem, info: "Connection refused at initial connection step of tcp-check", check duration: 1ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 24 09:47:22 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is DOWN, reason: Layer4 connection problem, info: "Connection refused at initial connection step of tcp-check", check duration: 1ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 24 09:47:22 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is DOWN, reason: Layer4 connection problem, info: "Connection refused at initial connection step of tcp-check", check duration: 1ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 24 09:48:54 AppServer01 haproxy[105946]: [WARNING]  (105946) : Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 1ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:48:54 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 1ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:48:54 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 1ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:49:14 AppServer01 haproxy[105946]: [WARNING]  (105946) : Server k8s_api_back/cp2 is DOWN, reason: Layer4 connection problem, info: "Connection refused at initial connection step of tcp-check", check duration: 1ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 24 09:49:14 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is DOWN, reason: Layer4 connection problem, info: "Connection refused at initial connection step of tcp-check", check duration: 1ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 24 09:49:14 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is DOWN, reason: Layer4 connection problem, info: "Connection refused at initial connection step of tcp-check", check duration: 1ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 24 09:52:00 AppServer01 haproxy[105946]: [WARNING]  (105946) : Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 0ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:52:00 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 0ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:52:00 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 0ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:52:20 AppServer01 haproxy[105946]: [WARNING]  (105946) : Server k8s_api_back/cp2 is DOWN, reason: Layer4 connection problem, info: "Connection refused at initial connection step of tcp-check", check duration: 1ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 24 09:52:20 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is DOWN, reason: Layer4 connection problem, info: "Connection refused at initial connection step of tcp-check", check duration: 1ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 24 09:52:20 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is DOWN, reason: Layer4 connection problem, info: "Connection refused at initial connection step of tcp-check", check duration: 1ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 24 09:53:14 AppServer01 haproxy[105946]: 10.118.0.3:46422 [24/Dec/2025:09:44:02.971] k8s_api k8s_api_back/cp1 1/1/551824 1225693 -- 5/5/4/4/0 0/0
+Dec 24 09:53:14 AppServer01 haproxy[105946]: 10.118.0.3:50444 [24/Dec/2025:09:44:04.520] k8s_api k8s_api_back/cp1 1/0/550330 28547 -- 4/4/3/3/0 0/0
+Dec 24 09:53:15 AppServer01 haproxy[105946]: 10.118.0.3:38344 [24/Dec/2025:09:53:14.644] k8s_api k8s_api_back/cp1 1/0/927 37948 -- 3/3/2/2/0 0/0
+Dec 24 09:54:10 AppServer01 haproxy[105946]: 10.118.0.5:44458 [24/Dec/2025:09:54:10.751] k8s_api k8s_api_back/cp1 1/0/82 2973 SD 4/4/3/3/0 0/0
+Dec 24 09:54:10 AppServer01 haproxy[105946]: 10.118.0.5:44452 [24/Dec/2025:09:54:10.737] k8s_api k8s_api_back/cp1 1/0/99 9086 -- 3/3/2/2/0 0/0
+Dec 24 09:55:20 AppServer01 haproxy[105946]: 10.118.0.5:32960 [24/Dec/2025:09:55:20.144] k8s_api k8s_api_back/cp1 1/0/81 2871 SD 4/4/3/3/0 0/0
+Dec 24 09:55:20 AppServer01 haproxy[105946]: 10.118.0.5:32956 [24/Dec/2025:09:55:20.132] k8s_api k8s_api_back/cp1 1/0/96 9086 -- 3/3/2/2/0 0/0
+Dec 24 09:56:55 AppServer01 haproxy[105946]: 10.118.0.3:42406 [24/Dec/2025:09:56:55.054] k8s_api k8s_api_back/cp1 1/0/7 4604 -- 3/3/2/2/0 0/0
+Dec 24 09:56:55 AppServer01 haproxy[105946]: 10.118.0.3:42422 [24/Dec/2025:09:56:55.063] k8s_api k8s_api_back/cp1 1/0/6 4603 -- 3/3/2/2/0 0/0
+Dec 24 09:56:57 AppServer01 haproxy[105946]: 10.118.0.3:42488 [24/Dec/2025:09:56:57.975] k8s_api k8s_api_back/cp1 1/0/3 1654 -- 10/10/9/9/0 0/0
+Dec 24 09:56:57 AppServer01 haproxy[105946]: 10.118.0.3:42472 [24/Dec/2025:09:56:57.974] k8s_api k8s_api_back/cp1 1/0/5 1654 -- 9/9/8/8/0 0/0
+Dec 24 09:56:57 AppServer01 haproxy[105946]: 10.118.0.3:42480 [24/Dec/2025:09:56:57.974] k8s_api k8s_api_back/cp1 1/0/6 3947 -- 8/8/7/7/0 0/0
+Dec 24 09:56:57 AppServer01 haproxy[105946]: 10.118.0.3:42504 [24/Dec/2025:09:56:57.976] k8s_api k8s_api_back/cp1 1/0/5 1654 -- 7/7/6/6/0 0/0
+Dec 24 09:56:57 AppServer01 haproxy[105946]: 10.118.0.3:42516 [24/Dec/2025:09:56:57.979] k8s_api k8s_api_back/cp1 1/0/12 1654 CD 7/7/5/5/0 0/0
+Dec 24 09:56:57 AppServer01 haproxy[105946]: 10.118.0.3:42524 [24/Dec/2025:09:56:57.981] k8s_api k8s_api_back/cp1 1/0/10 2315 CD 7/7/5/5/0 0/0
+Dec 24 09:56:58 AppServer01 haproxy[105946]: 10.118.0.3:42548 [24/Dec/2025:09:56:57.996] k8s_api k8s_api_back/cp1 1/0/5 1654 -- 7/7/6/6/0 0/0
+Dec 24 09:56:58 AppServer01 haproxy[105946]: 10.118.0.3:42532 [24/Dec/2025:09:56:57.993] k8s_api k8s_api_back/cp1 1/0/971 53629 -- 7/7/6/6/0 0/0
+Dec 24 09:57:01 AppServer01 haproxy[105946]: [WARNING]  (105946) : Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 1ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:57:01 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 1ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:57:01 AppServer01 haproxy[105946]: Server k8s_api_back/cp2 is UP, reason: Layer4 check passed, check duration: 1ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 09:57:05 AppServer01 haproxy[105946]: 10.118.0.3:42450 [24/Dec/2025:09:56:57.025] k8s_api k8s_api_back/cp1 1/0/8972 43413 -- 8/8/7/7/0 0/0
+Dec 24 09:57:05 AppServer01 haproxy[105946]: 10.118.0.3:42436 [24/Dec/2025:09:56:55.070] k8s_api k8s_api_back/cp1 1/0/10926 28932 -- 7/7/5/5/0 0/0
+Dec 24 09:57:05 AppServer01 haproxy[105946]: 10.118.0.3:42562 [24/Dec/2025:09:56:58.273] k8s_api k8s_api_back/cp1 1/0/7723 13307 -- 7/7/5/5/0 0/0
+Dec 24 09:58:27 AppServer01 haproxy[105946]: 10.118.0.3:42456 [24/Dec/2025:09:56:57.964] k8s_api k8s_api_back/cp1 1/0/90028 7837 CD 5/5/4/4/0 0/0
+Dec 24 10:07:09 AppServer01 haproxy[105946]: 10.118.0.4:42648 [24/Dec/2025:10:07:09.086] k8s_api k8s_api_back/cp1 1/0/1 0 -- 5/5/4/4/0 0/0
+Dec 24 10:08:27 AppServer01 haproxy[105946]: 10.118.0.4:59456 [24/Dec/2025:10:08:27.148] k8s_api k8s_api_back/cp2 1/0/8 4603 -- 5/5/4/0/0 0/0
+Dec 24 10:08:27 AppServer01 haproxy[105946]: 10.118.0.4:59472 [24/Dec/2025:10:08:27.158] k8s_api k8s_api_back/cp1 1/0/7 4603 -- 5/5/4/4/0 0/0
+Dec 24 10:08:46 AppServer01 haproxy[105946]: 10.118.0.4:49646 [24/Dec/2025:10:08:46.584] k8s_api k8s_api_back/cp2 1/0/7 1654 -- 12/12/11/3/0 0/0
+Dec 24 10:08:46 AppServer01 haproxy[105946]: 10.118.0.4:49642 [24/Dec/2025:10:08:46.583] k8s_api k8s_api_back/cp2 1/0/10 1654 -- 13/13/12/3/0 0/0
+Dec 24 10:08:46 AppServer01 haproxy[105946]: 10.118.0.4:49650 [24/Dec/2025:10:08:46.584] k8s_api k8s_api_back/cp1 1/0/9 3142 -- 12/12/11/8/0 0/0
+Dec 24 10:08:46 AppServer01 haproxy[105946]: 10.118.0.4:49634 [24/Dec/2025:10:08:46.582] k8s_api k8s_api_back/cp1 1/0/11 2756 -- 11/11/10/7/0 0/0
+Dec 24 10:08:46 AppServer01 haproxy[105946]: 10.118.0.4:49664 [24/Dec/2025:10:08:46.593] k8s_api k8s_api_back/cp2 1/0/9 1654 -- 11/11/10/3/0 0/0
+Dec 24 10:08:46 AppServer01 haproxy[105946]: 10.118.0.4:49658 [24/Dec/2025:10:08:46.591] k8s_api k8s_api_back/cp1 1/0/12 1654 -- 10/10/9/6/0 0/0
+Dec 24 10:08:46 AppServer01 haproxy[105946]: 10.118.0.4:49678 [24/Dec/2025:10:08:46.593] k8s_api k8s_api_back/cp1 1/0/11 2293 -- 9/9/8/5/0 0/0
+Dec 24 10:08:46 AppServer01 haproxy[105946]: 10.118.0.4:49684 [24/Dec/2025:10:08:46.595] k8s_api k8s_api_back/cp2 1/0/11 2293 -- 9/9/8/2/0 0/0
+Dec 24 10:08:46 AppServer01 haproxy[105946]: 10.118.0.4:49706 [24/Dec/2025:10:08:46.607] k8s_api k8s_api_back/cp2 1/0/4 1654 -- 9/9/8/2/0 0/0
+Dec 24 10:08:47 AppServer01 haproxy[105946]: 10.118.0.4:49696 [24/Dec/2025:10:08:46.605] k8s_api k8s_api_back/cp1 1/0/969 40402 -- 9/9/8/6/0 0/0
+Dec 24 10:08:48 AppServer01 haproxy[105946]: 10.118.0.4:49620 [24/Dec/2025:10:08:46.021] k8s_api k8s_api_back/cp1 1/0/2894 40423 -- 10/10/8/5/0 0/0
+Dec 24 10:08:48 AppServer01 haproxy[105946]: 10.118.0.4:49714 [24/Dec/2025:10:08:46.785] k8s_api k8s_api_back/cp1 1/0/2129 11183 -- 10/10/8/5/0 0/0
+Dec 24 10:08:48 AppServer01 haproxy[105946]: 10.118.0.4:59482 [24/Dec/2025:10:08:27.167] k8s_api k8s_api_back/cp2 1/0/21747 23393 -- 10/10/7/2/0 0/0
+Dec 24 10:08:51 AppServer01 haproxy[105946]: [WARNING]  (105946) : Server k8s_api_back/cp3 is UP, reason: Layer4 check passed, check duration: 1ms. 3 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 10:08:51 AppServer01 haproxy[105946]: Server k8s_api_back/cp3 is UP, reason: Layer4 check passed, check duration: 1ms. 3 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 10:08:51 AppServer01 haproxy[105946]: Server k8s_api_back/cp3 is UP, reason: Layer4 check passed, check duration: 1ms. 3 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+Dec 24 10:10:16 AppServer01 haproxy[105946]: 10.118.0.4:49632 [24/Dec/2025:10:08:46.574] k8s_api k8s_api_back/cp2 1/0/90033 6868 -- 7/7/6/1/0 0/0
+Dec 24 10:15:00 AppServer01 haproxy[105946]: 10.118.0.5:38454 [24/Dec/2025:10:15:00.614] k8s_api k8s_api_back/cp2 1/0/14 12762 -- 7/7/6/1/0 0/0
+Dec 24 10:18:59 AppServer01 haproxy[105946]: 10.118.0.6:45856 [24/Dec/2025:10:18:59.340] k8s_api k8s_api_back/cp1 1/0/1 0 -- 7/7/6/5/0 0/0
+Dec 24 10:18:59 AppServer01 haproxy[105946]: 10.118.0.7:60694 [24/Dec/2025:10:18:59.996] k8s_api k8s_api_back/cp3 1/0/1 0 -- 7/7/6/0/0 0/0
+Dec 24 10:19:15 AppServer01 haproxy[105946]: 10.118.0.6:37700 [24/Dec/2025:10:19:15.785] k8s_api k8s_api_back/cp2 1/0/1 0 -- 7/7/6/1/0 0/0
+Dec 24 10:19:16 AppServer01 haproxy[105946]: 10.118.0.7:59842 [24/Dec/2025:10:19:16.076] k8s_api k8s_api_back/cp1 1/0/1 0 -- 7/7/6/5/0 0/0
+Dec 24 10:19:48 AppServer01 haproxy[105946]: 10.118.0.6:60214 [24/Dec/2025:10:19:48.718] k8s_api k8s_api_back/cp3 1/0/8 4603 -- 7/7/6/0/0 0/0
+Dec 24 10:19:48 AppServer01 haproxy[105946]: 10.118.0.6:60224 [24/Dec/2025:10:19:48.729] k8s_api k8s_api_back/cp2 1/0/8 4603 -- 7/7/6/1/0 0/0
+Dec 24 10:19:49 AppServer01 haproxy[105946]: 10.118.0.6:60276 [24/Dec/2025:10:19:49.253] k8s_api k8s_api_back/cp2 1/0/4 1654 -- 17/17/13/2/0 0/0
+Dec 24 10:19:49 AppServer01 haproxy[105946]: 10.118.0.6:60246 [24/Dec/2025:10:19:49.251] k8s_api k8s_api_back/cp1 1/0/33 3393 -- 15/15/14/8/0 0/0
+Dec 24 10:19:49 AppServer01 haproxy[105946]: 10.118.0.6:60268 [24/Dec/2025:10:19:49.252] k8s_api k8s_api_back/cp3 1/0/33 1691 -- 14/14/13/2/0 0/0
+Dec 24 10:19:49 AppServer01 haproxy[105946]: 10.118.0.6:60252 [24/Dec/2025:10:19:49.251] k8s_api k8s_api_back/cp2 1/0/35 2859 -- 13/13/12/2/0 0/0
+Dec 24 10:19:49 AppServer01 haproxy[105946]: 10.118.0.6:60316 [24/Dec/2025:10:19:49.254] k8s_api k8s_api_back/cp1 1/30/35 1654 -- 13/13/12/7/0 0/0
+Dec 24 10:19:49 AppServer01 haproxy[105946]: 10.118.0.6:60304 [24/Dec/2025:10:19:49.254] k8s_api k8s_api_back/cp2 1/30/35 1654 -- 12/12/11/1/0 0/0
+Dec 24 10:19:49 AppServer01 haproxy[105946]: 10.118.0.6:60296 [24/Dec/2025:10:19:49.254] k8s_api k8s_api_back/cp3 1/30/35 1654 -- 11/11/10/2/0 0/0
+Dec 24 10:19:49 AppServer01 haproxy[105946]: 10.118.0.6:60318 [24/Dec/2025:10:19:49.287] k8s_api k8s_api_back/cp3 1/0/4 1691 -- 10/10/9/1/0 0/0
+Dec 24 10:19:49 AppServer01 haproxy[105946]: 10.118.0.6:60334 [24/Dec/2025:10:19:49.496] k8s_api k8s_api_back/cp2 1/0/19 9093 -- 10/10/9/1/0 0/0
+Dec 24 10:19:49 AppServer01 haproxy[105946]: 10.118.0.6:60228 [24/Dec/2025:10:19:48.739] k8s_api k8s_api_back/cp1 1/0/778 7946 -- 9/9/8/6/0 0/0
+Dec 24 10:19:50 AppServer01 haproxy[105946]: 10.118.0.6:60288 [24/Dec/2025:10:19:49.254] k8s_api k8s_api_back/cp1 1/30/982 16378 -- 8/8/7/5/0 0/0
+Dec 24 10:20:08 AppServer01 haproxy[105946]: 10.118.0.5:41462 [24/Dec/2025:10:20:08.701] k8s_api k8s_api_back/cp2 1/0/14 14851 -- 10/10/9/1/0 0/0
+Dec 24 10:20:35 AppServer01 haproxy[105946]: 10.118.0.7:59066 [24/Dec/2025:10:20:35.426] k8s_api k8s_api_back/cp1 1/0/7 4625 -- 10/10/9/6/0 0/0
+Dec 24 10:20:35 AppServer01 haproxy[105946]: 10.118.0.7:59074 [24/Dec/2025:10:20:35.437] k8s_api k8s_api_back/cp3 1/0/10 4603 -- 10/10/9/2/0 0/0
+Dec 24 10:20:36 AppServer01 haproxy[105946]: 10.118.0.7:59098 [24/Dec/2025:10:20:36.176] k8s_api k8s_api_back/cp2 1/1/4 1691 -- 15/15/14/2/0 0/0
+Dec 24 10:20:36 AppServer01 haproxy[105946]: 10.118.0.7:59114 [24/Dec/2025:10:20:36.178] k8s_api k8s_api_back/cp1 1/0/4 1654 -- 14/14/13/7/0 0/0
+Dec 24 10:20:36 AppServer01 haproxy[105946]: 10.118.0.7:59096 [24/Dec/2025:10:20:36.176] k8s_api k8s_api_back/cp3 1/1/7 3223 -- 15/15/14/3/0 0/0
+Dec 24 10:20:36 AppServer01 haproxy[105946]: 10.118.0.7:59130 [24/Dec/2025:10:20:36.179] k8s_api k8s_api_back/cp3 1/0/9 3028 -- 15/15/14/3/0 0/0
+Dec 24 10:20:36 AppServer01 haproxy[105946]: 10.118.0.7:59162 [24/Dec/2025:10:20:36.184] k8s_api k8s_api_back/cp3 1/0/5 1715 -- 14/14/13/2/0 0/0
+Dec 24 10:20:36 AppServer01 haproxy[105946]: 10.118.0.7:59148 [24/Dec/2025:10:20:36.183] k8s_api k8s_api_back/cp2 1/0/6 1654 -- 13/13/12/2/0 0/0
+Dec 24 10:20:36 AppServer01 haproxy[105946]: 10.118.0.7:59176 [24/Dec/2025:10:20:36.201] k8s_api k8s_api_back/cp2 1/0/516 8944 -- 13/13/12/2/0 0/0
+Dec 24 10:20:36 AppServer01 haproxy[105946]: 10.118.0.7:59076 [24/Dec/2025:10:20:35.448] k8s_api k8s_api_back/cp2 1/0/1270 7969 -- 12/12/11/1/0 0/0
+Dec 24 10:20:37 AppServer01 haproxy[105946]: 10.118.0.7:59146 [24/Dec/2025:10:20:36.183] k8s_api k8s_api_back/cp1 1/0/977 18592 -- 11/11/10/7/0 0/0
+Dec 24 10:20:46 AppServer01 haproxy[105946]: 10.118.0.5:34982 [24/Dec/2025:10:20:46.449] k8s_api k8s_api_back/cp2 1/0/15 16960 -- 13/13/12/1/0 0/0
+Dec 24 10:20:59 AppServer01 haproxy[105946]: 10.118.0.5:36050 [24/Dec/2025:10:20:59.253] k8s_api k8s_api_back/cp1 1/0/14 16960 -- 13/13/12/8/0 0/0
+Dec 24 10:21:03 AppServer01 haproxy[105946]: 10.118.0.5:36052 [24/Dec/2025:10:21:03.947] k8s_api k8s_api_back/cp3 1/0/27 77244 -- 13/13/12/3/0 0/0
+Dec 24 10:21:19 AppServer01 haproxy[105946]: 10.118.0.6:60232 [24/Dec/2025:10:19:49.237] k8s_api k8s_api_back/cp3 1/0/90049 8726 -- 12/12/11/2/0 0/0
+Dec 24 10:21:29 AppServer01 haproxy[105946]: 10.118.0.5:53218 [24/Dec/2025:10:21:29.929] k8s_api k8s_api_back/cp2 1/0/15 16975 -- 12/12/11/1/0 0/0
+Dec 24 10:21:30 AppServer01 haproxy[105946]: 10.118.0.5:53220 [24/Dec/2025:10:21:29.990] k8s_api k8s_api_back/cp1 1/0/23 77245 -- 12/12/11/8/0 0/0
+Dec 24 10:22:06 AppServer01 haproxy[105946]: 10.118.0.7:59086 [24/Dec/2025:10:20:36.161] k8s_api k8s_api_back/cp1 1/0/90024 8688 -- 11/11/10/7/0 0/0
+Dec 24 15:57:29 AppServer01 haproxy[105946]: 10.118.0.5:46976 [24/Dec/2025:15:57:29.890] k8s_api k8s_api_back/cp3 1/0/25 17307 -- 11/11/10/2/0 0/0
+Dec 24 15:57:43 AppServer01 haproxy[105946]: 10.118.0.5:59310 [24/Dec/2025:15:57:43.049] k8s_api k8s_api_back/cp2 1/0/14 5315 -- 11/11/10/1/0 0/0
+Dec 24 16:25:04 AppServer01 haproxy[105946]: 10.118.0.5:47254 [24/Dec/2025:16:25:04.578] k8s_api k8s_api_back/cp1 1/1/15 3030 -- 11/11/10/7/0 0/0
+Dec 24 16:37:01 AppServer01 haproxy[105946]: 10.118.0.5:57632 [24/Dec/2025:16:36:59.872] k8s_api k8s_api_back/cp3 1/0/1278 3016624 -- 11/11/10/2/0 0/0
+Dec 24 16:42:32 AppServer01 haproxy[105946]: 10.118.0.5:48892 [24/Dec/2025:16:37:32.017] k8s_api k8s_api_back/cp2 1/1/300018 46456 -- 11/11/10/1/0 0/0
+Dec 24 16:48:44 AppServer01 haproxy[105946]: 10.118.0.5:47984 [24/Dec/2025:16:43:44.040] k8s_api k8s_api_back/cp1 1/0/300016 46037 -- 11/11/10/7/0 0/0
+Dec 24 16:49:38 AppServer01 haproxy[105946]: 10.118.0.5:53356 [24/Dec/2025:16:49:38.152] k8s_api k8s_api_back/cp3 1/0/35 126359 -- 11/11/10/2/0 0/0
+Dec 24 16:49:38 AppServer01 haproxy[105946]: 10.118.0.5:53358 [24/Dec/2025:16:49:38.239] k8s_api k8s_api_back/cp2 1/1/19 20922 -- 11/11/10/1/0 0/0
+Dec 24 17:00:01 AppServer01 haproxy[105946]: 10.118.0.5:46524 [24/Dec/2025:17:00:01.062] k8s_api k8s_api_back/cp1 1/0/22 47644 -- 11/11/10/7/0 0/0
+Dec 24 17:00:35 AppServer01 haproxy[105946]: 10.118.0.5:47534 [24/Dec/2025:17:00:35.609] k8s_api k8s_api_back/cp3 1/0/31 60179 -- 11/11/10/2/0 0/0
+Dec 24 17:00:35 AppServer01 haproxy[105946]: 10.118.0.5:47540 [24/Dec/2025:17:00:35.688] k8s_api k8s_api_back/cp2 1/0/39 55348 -- 11/11/10/1/0 0/0
+Dec 24 17:00:35 AppServer01 haproxy[105946]: 10.118.0.5:47544 [24/Dec/2025:17:00:35.783] k8s_api k8s_api_back/cp1 1/0/33 55349 -- 11/11/10/7/0 0/0
+Dec 24 17:00:35 AppServer01 haproxy[105946]: 10.118.0.5:47546 [24/Dec/2025:17:00:35.864] k8s_api k8s_api_back/cp3 1/0/29 59916 -- 11/11/10/2/0 0/0
+Dec 24 17:00:35 AppServer01 haproxy[105946]: 10.118.0.5:47562 [24/Dec/2025:17:00:35.942] k8s_api k8s_api_back/cp2 1/0/35 58805 -- 11/11/10/1/0 0/0
+Dec 24 17:00:36 AppServer01 haproxy[105946]: 10.118.0.5:47574 [24/Dec/2025:17:00:36.025] k8s_api k8s_api_back/cp1 1/0/30 56601 -- 11/11/10/7/0 0/0
+Dec 24 17:09:46 AppServer01 haproxy[105946]: 10.118.0.5:60590 [24/Dec/2025:17:09:45.261] k8s_api k8s_api_back/cp3 1/0/1709 880975 -- 11/11/10/2/0 0/0
+Dec 24 17:19:55 AppServer01 haproxy[105946]: 10.118.0.5:51670 [24/Dec/2025:17:09:55.054] k8s_api k8s_api_back/cp2 1/0/600017 50085 -- 11/11/10/1/0 0/0
+Dec 24 17:20:17 AppServer01 haproxy[105946]: 10.118.0.5:33550 [24/Dec/2025:17:20:17.294] k8s_api k8s_api_back/cp1 1/0/20 48026 -- 11/11/10/7/0 0/0
+Dec 24 17:35:02 AppServer01 haproxy[105946]: 10.118.0.5:54616 [24/Dec/2025:17:35:02.489] k8s_api k8s_api_back/cp3 1/0/67 23082 -- 11/11/10/2/0 0/0
+Dec 24 17:36:33 AppServer01 haproxy[105946]: 10.118.0.5:40462 [24/Dec/2025:17:36:33.914] k8s_api k8s_api_back/cp2 1/0/17 2836 -- 11/11/10/1/0 0/0
+Dec 24 17:36:57 AppServer01 haproxy[105946]: 10.118.0.5:59482 [24/Dec/2025:17:36:57.402] k8s_api k8s_api_back/cp1 1/0/49 55516 -- 11/11/10/7/0 0/0
+Dec 24 17:37:45 AppServer01 haproxy[105946]: 10.118.0.5:43852 [24/Dec/2025:17:37:44.996] k8s_api k8s_api_back/cp3 1/0/29 59217 -- 11/11/10/2/0 0/0
+Dec 24 17:57:19 AppServer01 haproxy[105946]: 10.118.0.5:39870 [24/Dec/2025:17:57:19.487] k8s_api k8s_api_back/cp2 1/0/20 48007 -- 11/11/10/1/0 0/0
+Dec 24 17:58:18 AppServer01 haproxy[105946]: 10.118.0.5:34458 [24/Dec/2025:17:58:18.536] k8s_api k8s_api_back/cp1 1/0/33 99278 -- 11/11/10/7/0 0/0
+Dec 24 17:58:48 AppServer01 haproxy[105946]: 10.118.0.5:41432 [24/Dec/2025:17:58:48.704] k8s_api k8s_api_back/cp3 1/0/29 59027 -- 11/11/10/2/0 0/0
+Dec 24 17:59:25 AppServer01 haproxy[105946]: 10.118.0.5:42434 [24/Dec/2025:17:59:25.143] k8s_api k8s_api_back/cp2 1/1/34 55776 -- 11/11/10/1/0 0/0
+Dec 24 17:59:56 AppServer01 haproxy[105946]: 10.118.0.5:36902 [24/Dec/2025:17:59:56.911] k8s_api k8s_api_back/cp1 1/0/31 55775 -- 11/11/10/7/0 0/0
+Dec 24 18:00:19 AppServer01 haproxy[105946]: 10.118.0.5:43404 [24/Dec/2025:18:00:19.769] k8s_api k8s_api_back/cp3 1/1/30 23060 -- 11/11/10/2/0 0/0
+Dec 24 18:10:04 AppServer01 haproxy[105946]: 10.118.0.5:56096 [24/Dec/2025:18:10:03.101] k8s_api k8s_api_back/cp2 1/1/1876 881119 -- 11/11/10/1/0 0/0
+Dec 24 18:10:26 AppServer01 haproxy[105946]: 10.118.0.5:53454 [24/Dec/2025:18:10:26.952] k8s_api k8s_api_back/cp1 1/0/29 44216 -- 11/11/10/7/0 0/0
+Dec 24 18:10:38 AppServer01 haproxy[105946]: 10.118.0.5:56410 [24/Dec/2025:18:10:38.932] k8s_api k8s_api_back/cp3 1/0/23 47648 -- 11/11/10/2/0 0/0
+Dec 25 03:29:02 AppServer01 haproxy[105946]: 10.118.0.5:34692 [25/Dec/2025:03:29:02.673] k8s_api k8s_api_back/cp2 1/0/93 28275 -- 11/11/10/1/0 0/0
+Dec 25 03:30:19 AppServer01 haproxy[105946]: 10.118.0.5:33670 [25/Dec/2025:03:30:19.552] k8s_api k8s_api_back/cp1 1/0/80 3920 -- 11/11/10/7/0 0/0
+Dec 25 03:39:06 AppServer01 haproxy[105946]: 10.118.0.5:56778 [25/Dec/2025:03:39:06.247] k8s_api k8s_api_back/cp3 1/0/71 14050 -- 11/11/10/2/0 0/0
+Dec 25 03:39:16 AppServer01 haproxy[105946]: 10.118.0.5:48982 [25/Dec/2025:03:39:16.618] k8s_api k8s_api_back/cp2 1/0/12 3993 -- 11/11/10/1/0 0/0
+Dec 25 03:47:07 AppServer01 haproxy[105946]: 10.118.0.5:51920 [25/Dec/2025:03:47:07.069] k8s_api k8s_api_back/cp1 1/0/143 13739 -- 11/11/10/7/0 0/0
+Dec 25 03:47:16 AppServer01 haproxy[105946]: 10.118.0.5:43890 [25/Dec/2025:03:47:16.953] k8s_api k8s_api_back/cp3 1/0/12 3995 -- 11/11/10/2/0 0/0
+Dec 25 03:47:30 AppServer01 haproxy[105946]: 10.118.0.5:56438 [25/Dec/2025:03:47:30.020] k8s_api k8s_api_back/cp2 1/0/313 66529 -- 11/11/10/1/0 0/0
+Dec 25 04:07:34 AppServer01 haproxy[105946]: 10.118.0.5:60418 [25/Dec/2025:04:07:34.261] k8s_api k8s_api_back/cp1 1/0/700 1040452 -- 11/11/10/7/0 0/0
+Dec 25 04:07:59 AppServer01 haproxy[105946]: 10.118.0.5:33754 [25/Dec/2025:04:07:59.292] k8s_api k8s_api_back/cp3 1/0/26 25280 -- 11/11/10/2/0 0/0
+Dec 25 04:08:12 AppServer01 haproxy[105946]: 10.118.0.5:36018 [25/Dec/2025:04:08:12.422] k8s_api k8s_api_back/cp2 1/0/45 52115 -- 11/11/10/1/0 0/0
+Dec 25 04:08:43 AppServer01 haproxy[105946]: 10.118.0.5:58542 [25/Dec/2025:04:08:43.072] k8s_api k8s_api_back/cp1 1/0/38 52137 -- 11/11/10/7/0 0/0
+Dec 25 04:08:59 AppServer01 haproxy[105946]: 10.118.0.5:34000 [25/Dec/2025:04:08:59.160] k8s_api k8s_api_back/cp3 1/0/13 4924 -- 11/11/10/2/0 0/0
+Dec 25 04:09:59 AppServer01 haproxy[105946]: 10.118.0.5:34570 [25/Dec/2025:04:09:59.452] k8s_api k8s_api_back/cp2 1/0/13 4924 -- 11/11/10/1/0 0/0
+Dec 25 04:13:18 AppServer01 haproxy[105946]: 10.118.0.5:47946 [25/Dec/2025:04:13:18.090] k8s_api k8s_api_back/cp1 1/0/26 25279 -- 11/11/10/7/0 0/0
+Dec 25 04:13:34 AppServer01 haproxy[105946]: 10.118.0.5:54914 [25/Dec/2025:04:13:34.087] k8s_api k8s_api_back/cp3 1/0/48 52110 -- 11/11/10/2/0 0/0
+Dec 25 04:13:44 AppServer01 haproxy[105946]: 10.118.0.5:43370 [25/Dec/2025:04:13:44.563] k8s_api k8s_api_back/cp2 1/0/14 9983 -- 11/11/10/1/0 0/0
+Dec 25 04:13:57 AppServer01 haproxy[105946]: 10.118.0.5:50388 [25/Dec/2025:04:13:57.946] k8s_api k8s_api_back/cp1 1/0/12 11244 -- 11/11/10/7/0 0/0
+Dec 25 04:14:27 AppServer01 haproxy[105946]: 10.118.0.5:33802 [25/Dec/2025:04:14:27.680] k8s_api k8s_api_back/cp3 1/0/14 4924 -- 11/11/10/2/0 0/0
+Dec 25 04:14:49 AppServer01 haproxy[105946]: 10.118.0.5:49468 [25/Dec/2025:04:14:49.605] k8s_api k8s_api_back/cp2 1/0/14 4924 -- 11/11/10/1/0 0/0
+Dec 25 04:23:56 AppServer01 haproxy[105946]: 10.118.0.5:60102 [25/Dec/2025:04:23:55.453] k8s_api k8s_api_back/cp1 1/0/770 90372 -- 11/11/10/7/0 0/0
+Dec 25 04:24:09 AppServer01 haproxy[105946]: 10.118.0.5:49916 [25/Dec/2025:04:24:08.398] k8s_api k8s_api_back/cp3 1/0/1105 94310 -- 11/11/10/2/0 0/0
+Dec 25 04:24:16 AppServer01 haproxy[105946]: 10.118.0.5:42094 [25/Dec/2025:04:24:16.020] k8s_api k8s_api_back/cp2 1/0/12 4993 -- 11/11/10/1/0 0/0
+Dec 25 04:24:36 AppServer01 haproxy[105946]: 10.118.0.5:50604 [25/Dec/2025:04:24:36.170] k8s_api k8s_api_back/cp1 1/0/30 25281 -- 11/11/10/7/0 0/0
+Dec 25 04:43:19 AppServer01 haproxy[105946]: 10.118.0.5:41084 [25/Dec/2025:04:43:19.713] k8s_api k8s_api_back/cp3 1/0/12 4994 -- 11/11/10/2/0 0/0
+Dec 25 04:43:30 AppServer01 haproxy[105946]: 10.118.0.5:39834 [25/Dec/2025:04:43:30.635] k8s_api k8s_api_back/cp2 1/0/12 9981 -- 11/11/10/1/0 0/0
+Dec 25 04:43:45 AppServer01 haproxy[105946]: 10.118.0.5:34446 [25/Dec/2025:04:43:45.226] k8s_api k8s_api_back/cp1 1/0/13 4746 -- 11/11/10/7/0 0/0
+Dec 25 04:46:09 AppServer01 haproxy[105946]: 10.118.0.5:35834 [25/Dec/2025:04:46:08.237] k8s_api k8s_api_back/cp3 1/1/773 87937 -- 11/11/10/2/0 0/0
+Dec 25 04:46:41 AppServer01 haproxy[105946]: 10.118.0.5:51274 [25/Dec/2025:04:46:40.048] k8s_api k8s_api_back/cp2 1/0/1069 92322 -- 11/11/10/1/0 0/0
+Dec 25 04:47:25 AppServer01 haproxy[105946]: 10.118.0.5:47298 [25/Dec/2025:04:46:50.926] k8s_api k8s_api_back/cp1 1/0/34166 77399 -- 11/11/10/7/0 0/0
+Dec 25 04:47:32 AppServer01 haproxy[105946]: 10.118.0.5:54180 [25/Dec/2025:04:47:32.209] k8s_api k8s_api_back/cp3 1/0/18 15923 -- 11/11/10/2/0 0/0
+Dec 25 05:48:11 AppServer01 haproxy[105946]: 10.118.0.5:56130 [25/Dec/2025:05:48:11.505] k8s_api k8s_api_back/cp2 1/0/128 17253 -- 11/11/10/1/0 0/0
+Dec 25 05:48:20 AppServer01 haproxy[105946]: 10.118.0.5:51154 [25/Dec/2025:05:48:20.783] k8s_api k8s_api_back/cp1 1/0/19 9406 -- 11/11/10/7/0 0/0
+Dec 25 05:48:50 AppServer01 haproxy[105946]: 10.118.0.5:50426 [25/Dec/2025:05:48:50.546] k8s_api k8s_api_back/cp3 1/1/50 14469 -- 11/11/10/2/0 0/0
+Dec 25 05:49:04 AppServer01 haproxy[105946]: 10.118.0.5:43620 [25/Dec/2025:05:49:04.728] k8s_api k8s_api_back/cp2 1/0/13 4699 -- 11/11/10/1/0 0/0
+Dec 25 07:12:25 AppServer01 systemd[1]: Stopping HAProxy Load Balancer...
+Dec 25 07:12:25 AppServer01 haproxy[105944]: [WARNING]  (105944) : Exiting Master process...
+Dec 25 07:12:25 AppServer01 haproxy[105944]: [NOTICE]   (105944) : haproxy version is 2.4.29-0ubuntu0.22.04.1
+Dec 25 07:12:25 AppServer01 haproxy[105944]: [NOTICE]   (105944) : path to executable is /usr/sbin/haproxy
+Dec 25 07:12:25 AppServer01 haproxy[105944]: [ALERT]    (105944) : Current worker #1 (105946) exited with code 143 (Terminated)
+Dec 25 07:12:25 AppServer01 haproxy[105944]: [WARNING]  (105944) : All workers exited. Exiting... (0)
+Dec 25 07:12:25 AppServer01 systemd[1]: haproxy.service: Deactivated successfully.
+Dec 25 07:12:25 AppServer01 systemd[1]: Stopped HAProxy Load Balancer.
+Dec 25 07:12:25 AppServer01 systemd[1]: haproxy.service: Consumed 1min 3.653s CPU time.
+Dec 25 07:12:25 AppServer01 systemd[1]: Starting HAProxy Load Balancer...
+Dec 25 07:12:25 AppServer01 haproxy[110655]: [NOTICE]   (110655) : New worker #1 (110657) forked
+Dec 25 07:12:25 AppServer01 systemd[1]: Started HAProxy Load Balancer.
+Dec 25 07:12:25 AppServer01 haproxy[110657]: [WARNING]  (110657) : Server be_http_nodeport/workernode01 is DOWN, reason: Layer7 wrong status, code: 404, info: "Not Found", check duration: 5ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 25 07:12:25 AppServer01 haproxy[110657]: Server be_http_nodeport/workernode01 is DOWN, reason: Layer7 wrong status, code: 404, info: "Not Found", check duration: 5ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 25 07:12:25 AppServer01 haproxy[110657]: Server be_http_nodeport/workernode01 is DOWN, reason: Layer7 wrong status, code: 404, info: "Not Found", check duration: 5ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 25 07:12:26 AppServer01 haproxy[110657]: [WARNING]  (110657) : Server be_http_nodeport/workernode02 is DOWN, reason: Layer7 wrong status, code: 404, info: "Not Found", check duration: 3ms. 0 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 25 07:12:26 AppServer01 haproxy[110657]: [NOTICE]   (110657) : haproxy version is 2.4.29-0ubuntu0.22.04.1
+Dec 25 07:12:26 AppServer01 haproxy[110657]: [NOTICE]   (110657) : path to executable is /usr/sbin/haproxy
+Dec 25 07:12:26 AppServer01 haproxy[110657]: [ALERT]    (110657) : backend 'be_http_nodeport' has no server available!
+Dec 25 07:12:26 AppServer01 haproxy[110657]: Server be_http_nodeport/workernode02 is DOWN, reason: Layer7 wrong status, code: 404, info: "Not Found", check duration: 3ms. 0 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 25 07:12:26 AppServer01 haproxy[110657]: Server be_http_nodeport/workernode02 is DOWN, reason: Layer7 wrong status, code: 404, info: "Not Found", check duration: 3ms. 0 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+Dec 25 07:12:26 AppServer01 haproxy[110657]: backend be_http_nodeport has no server available!
+Dec 25 07:12:26 AppServer01 haproxy[110657]: backend be_http_nodeport has no server available!
+Dec 25 07:30:37 AppServer01 haproxy[110657]: 10.118.0.5:40058 [25/Dec/2025:07:30:37.699] fe_http_80 be_http_nodeport/<NOSRV> 0/-1/-1/-1/0 503 217 - - SC-- 1/1/0/0/0 0/0 "GET / HTTP/1.1"
+Dec 25 07:30:48 AppServer01 haproxy[110657]: 10.118.0.5:41984 [25/Dec/2025:07:30:48.677] fe_http_80 be_http_nodeport/<NOSRV> 0/-1/-1/-1/0 503 217 - - SC-- 1/1/0/0/0 0/0 "GET / HTTP/1.1"
+Dec 25 07:34:20 AppServer01 haproxy[110657]: 127.0.0.1:37990 [25/Dec/2025:07:34:20.388] fe_http_80 be_http_nodeport/<NOSRV> 0/-1/-1/-1/0 503 217 - - SC-- 1/1/0/0/0 0/0 "GET / HTTP/1.1"
+Dec 25 07:35:25 AppServer01 haproxy[110657]: 10.118.0.5:38204 [25/Dec/2025:07:35:25.615] fe_http_80 be_http_nodeport/<NOSRV> 0/-1/-1/-1/0 503 217 - - SC-- 1/1/0/0/0 0/0 "GET / HTTP/1.1"
+Dec 26 04:57:55 AppServer01 haproxy[110657]: 10.118.0.5:46990 [26/Dec/2025:04:57:55.600] fe_http_80 be_http_nodeport/<NOSRV> 0/-1/-1/-1/0 503 217 - - SC-- 1/1/0/0/0 0/0 "GET / HTTP/1.1"
+Dec 26 05:10:02 AppServer01 haproxy[110657]: 10.118.0.5:47036 [26/Dec/2025:05:10:02.000] fe_http_80 be_http_nodeport/<NOSRV> 0/-1/-1/-1/0 503 217 - - SC-- 1/1/0/0/0 0/0 "GET / HTTP/1.1"
+Dec 26 05:14:45 AppServer01 haproxy[110657]: 10.118.0.5:40034 [26/Dec/2025:05:14:45.669] fe_http_80 be_http_nodeport/<NOSRV> 0/-1/-1/-1/0 503 217 - - SC-- 2/2/0/0/0 0/0 "GET / HTTP/1.1"

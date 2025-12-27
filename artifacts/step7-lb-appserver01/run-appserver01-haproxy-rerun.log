@@ -1,0 +1,42 @@
+
+PLAY [Step 7 - AppServer01 self-managed LB (HAProxy) -> ingress-nginx NodePorts] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [AppServer01]
+
+TASK [Create evidence directory on ToolServer01] *******************************
+changed: [AppServer01 -> localhost]
+
+TASK [Install HAProxy] *********************************************************
+ok: [AppServer01]
+
+TASK [Deploy haproxy.cfg] ******************************************************
+changed: [AppServer01]
+
+TASK [Enable + start haproxy] **************************************************
+ok: [AppServer01]
+
+TASK [Capture haproxy version] *************************************************
+ok: [AppServer01]
+
+TASK [Save haproxy version] ****************************************************
+ok: [AppServer01 -> localhost]
+
+TASK [Capture listening ports 80/443] ******************************************
+ok: [AppServer01]
+
+TASK [Save ss output] **********************************************************
+changed: [AppServer01 -> localhost]
+
+TASK [Capture service status] **************************************************
+ok: [AppServer01]
+
+TASK [Save service status] *****************************************************
+ok: [AppServer01 -> localhost]
+
+RUNNING HANDLER [Restart haproxy] **********************************************
+changed: [AppServer01]
+
+PLAY RECAP *********************************************************************
+AppServer01                : ok=12   changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

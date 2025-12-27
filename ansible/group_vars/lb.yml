@@ -1,0 +1,15 @@
+# Control-plane endpoint (k8s-api.internal:6443) -> CPs:6443
+lb_controlplanes:
+  - { name: controlplane01, ip: 10.118.0.2 }
+  - { name: controlplane02, ip: 10.118.0.3 }
+  - { name: controlplane03, ip: 10.118.0.4 }
+
+# Ingress LB (80/443) -> workers NodePort
+lb_workers:
+  - { name: workernode01, ip: 10.118.0.6 }
+  - { name: workernode02, ip: 10.118.0.7 }
+
+http_nodeport: 30080
+https_nodeport: 30443
+api_port: 6443
+

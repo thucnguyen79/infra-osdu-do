@@ -1,0 +1,4 @@
+AppServer01 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}

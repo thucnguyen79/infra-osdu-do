@@ -1,0 +1,4 @@
+== curl via 10.118.0.6:30080 ==
+HTTP_CODE=503
+== curl via 10.118.0.7:30080 ==
+HTTP_CODE=503

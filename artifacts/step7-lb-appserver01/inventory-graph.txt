@@ -1,0 +1,14 @@
+@all:
+  |--@ungrouped:
+  |--@tool:
+  |  |--ToolServer01
+  |--@lb:
+  |  |--AppServer01
+  |--@k8s_cluster:
+  |  |--@controlplane:
+  |  |  |--ControlPlane01
+  |  |  |--ControlPlane02
+  |  |  |--ControlPlane03
+  |  |--@worker:
+  |  |  |--WorkerNode01
+  |  |  |--WorkerNode02

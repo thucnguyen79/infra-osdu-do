@@ -1,0 +1,19 @@
+
+PLAY [Step 7 - AppServer01 self-managed LB (HAProxy) -> ingress-nginx NodePorts] ***
+
+TASK [Gathering Facts] *********************************************************
+ok: [AppServer01]
+
+TASK [Create evidence directory on ToolServer01] *******************************
+ok: [AppServer01 -> localhost]
+
+TASK [Install HAProxy] *********************************************************
+ok: [AppServer01]
+
+TASK [Deploy haproxy.cfg] ******************************************************
+An exception occurred during task execution. To see the full traceback, use -vvv. The error was: ansible.errors.AnsibleUndefinedVariable: 'lb_controlplanes' is undefined
+fatal: [AppServer01]: FAILED! => {"changed": false, "msg": "AnsibleUndefinedVariable: 'lb_controlplanes' is undefined"}
+
+PLAY RECAP *********************************************************************
+AppServer01                : ok=3    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+
