@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+data:
+  # URL external (ingress) để ArgoCD tự generate link đúng (CLI/UI)
+  url: https://argocd.internal
+  # tắt anonymous
+  users.anonymous.enabled: "false"
