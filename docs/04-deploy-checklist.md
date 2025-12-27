@@ -259,3 +259,12 @@ Evidence:
 - [x] Truy cập được giao diện Grafana Web UI qua HTTPS.
 - [x] Log từ Pod test đổ về Loki thành công.
 - [x] Evidence đầy đủ trong artifacts/step10-observability/.
+
+## Step 11 - ArgoCD
+- [x] Namespace argocd trạng thái Active.
+- [x] Manifest install.yaml đã được nạp thành công qua Server-side apply.
+- [x] Các Pod (Server, Controller, Repo-server, Redis) đã Running.
+- [x] Ingress argocd.internal đã nhận IP và Certificate báo READY.
+- [x] Lấy được mật khẩu Admin và lưu vào artifacts.
+- [x] Lệnh curl HTTPS trả về mã 200/302 với chứng chỉ nội bộ.
+- [x] Cấu hình /etc/hosts trên ToolServer đã nhận diện domain mới.

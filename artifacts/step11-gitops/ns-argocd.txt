@@ -1,0 +1,2 @@
+NAME     STATUS   AGE
+argocd   Active   18s

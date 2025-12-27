@@ -1,0 +1,2 @@
+NAME     CLASS   HOSTS             ADDRESS                 PORTS     AGE
+argocd   nginx   argocd.internal   10.118.0.6,10.118.0.7   80, 443   37s

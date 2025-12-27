@@ -3,7 +3,3 @@ kind: Kustomization
 
 resources:
   - vendor/install.yaml
-
-patches:
-  - path: patches/patch-argocd-cm.yaml
-  - path: patches/patch-argocd-cmd-params.yaml

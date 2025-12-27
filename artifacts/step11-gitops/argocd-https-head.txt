@@ -1,0 +1,11 @@
+HTTP/2 200 
+date: Sat, 27 Dec 2025 20:25:14 GMT
+content-type: text/html; charset=utf-8
+content-length: 788
+accept-ranges: bytes
+content-security-policy: frame-ancestors 'self';
+vary: Accept-Encoding
+x-frame-options: sameorigin
+x-xss-protection: 1
+strict-transport-security: max-age=31536000; includeSubDomains
+
