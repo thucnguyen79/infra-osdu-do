@@ -322,3 +322,14 @@ Evidence:
 - [x] Namespace: Các namespace osdu-identity, osdu-data, osdu-core đã được tự động tạo trong Cluster.
 - [x] Health Status: Tất cả 3 App con hiển thị màu xanh (Healthy và Synced).
 - [x] Stub Verification: Chạy lệnh kubectl -n osdu-core get cm osdu-core-stub trả về kết quả thành công (chứng tỏ pipeline GitOps đã thông suốt).
+
+## Step 14 - OSDU Identity (Keycloak + Postgres)
+- [x] Namespace `osdu-identity` created/active
+- [x] Keycloak DB deployed and Ready (rollout OK)
+- [x] Keycloak deployed and Ready; accessible via Ingress `keycloak.internal`
+- [x] TLS issued by cert-manager `internal-ca` (verify HTTPS with internal CA)
+- [x] Realm `osdu` bootstrapped; client `osdu-cli` created
+- [x] Enabled `directAccessGrantsEnabled=true` for `osdu-cli` (password grant for POC)
+- [x] Test user created/fixed (profile + non-temporary password) -> access token acquired
+- [x] Realm export produced (`osdu-realm.json`) and stored under `artifacts/step14-identity/`
+- [x] Evidence committed/pushed (repo-first)
