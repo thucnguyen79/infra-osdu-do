@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osdu-core-stub
+  namespace: osdu-core
+data:
+  note: "Step 16 will replace this stub with OSDU core services"

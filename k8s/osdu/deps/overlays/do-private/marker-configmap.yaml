@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osdu-deps-stub
+  namespace: osdu-data
+data:
+  note: "Step 15 will replace this stub with Postgres/OpenSearch/MinIO/Kafka"

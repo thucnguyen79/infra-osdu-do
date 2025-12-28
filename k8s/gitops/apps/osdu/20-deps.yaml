@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: osdu-deps
+  namespace: argocd
+spec:
+  project: osdu
+  source:
+    repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+    targetRevision: main
+    path: k8s/osdu/deps/overlays/do-private
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: osdu-data
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

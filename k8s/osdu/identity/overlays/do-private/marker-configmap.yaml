@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osdu-identity-stub
+  namespace: osdu-identity
+data:
+  note: "Step 14 will replace this stub with Keycloak manifests"

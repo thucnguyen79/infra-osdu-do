@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: osdu
+  namespace: argocd
+spec:
+  description: OSDU POC apps
+  sourceRepos:
+  - '*'
+  destinations:
+  - namespace: argocd
+    server: https://kubernetes.default.svc
+  - namespace: osdu
+    server: https://kubernetes.default.svc
+  - namespace: osdu-identity
+    server: https://kubernetes.default.svc
+  - namespace: osdu-data
+    server: https://kubernetes.default.svc
+  - namespace: osdu-core
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'

@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps-osdu
+  namespace: argocd
+spec:
+  project: osdu
+  source:
+    repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+    targetRevision: main
+    path: k8s/gitops/apps/osdu
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
