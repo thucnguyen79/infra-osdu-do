@@ -1,3 +1,5 @@
 resources:
-  - namespace.yaml
-  - marker-configmap.yaml
+  - ../../base
+
+patches:
+  - path: patches/patch-db-storageclass.yaml

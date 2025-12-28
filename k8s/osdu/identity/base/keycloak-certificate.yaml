@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: keycloak-internal-tls
+  namespace: osdu-identity
+spec:
+  secretName: keycloak-internal-tls
+  issuerRef:
+    kind: ClusterIssuer
+    name: internal-ca
+  dnsNames:
+    - keycloak.internal

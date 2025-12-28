@@ -1,0 +1,8 @@
+resources:
+  - namespace.yaml
+  - postgres-svc.yaml
+  - postgres-sts.yaml
+  - keycloak-svc.yaml
+  - keycloak-deploy.yaml
+  - keycloak-certificate.yaml
+  - keycloak-ingress.yaml
