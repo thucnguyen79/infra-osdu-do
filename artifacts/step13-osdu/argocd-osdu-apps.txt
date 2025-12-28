@@ -1,0 +1,4 @@
+app-of-apps-osdu            Synced        Healthy
+osdu-core                   Synced        Healthy
+osdu-deps                   Synced        Healthy
+osdu-identity               Synced        Healthy
