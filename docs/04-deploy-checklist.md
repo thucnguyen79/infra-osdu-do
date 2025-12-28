@@ -104,7 +104,7 @@
 - [x] Docs updated: docs/17-kubeadm-join-nodes.md
 - [x] Control-plane join uses --apiserver-advertise-address = private eth1 IP (DO dual-NIC)
 
-# STEP 5 — Install CNI
+## STEP 5 — Install CNI
 - [x] Step 5.1 Verify kubeadm CIDRs (podSubnet/serviceSubnet)
 - [x] Step 5.2 Prepare Calico VXLAN manifest (repo-first)
 - [x] Step 5.3 Allow UDP 4789 within VPC (cloud firewall / host firewall if any)
@@ -237,25 +237,25 @@ Evidence:
 - [x] Evidence stored in artifacts/step9-storage/ (secrets under artifacts-private/)
 
 ## Step 10 - Observability
-###A) Monitoring Core
+### A. Monitoring Core
 - [x] Namespace observability tồn tại
 - [x] CRDs monitoring.coreos.com đầy đủ (có Alertmanager/Prometheus/ThanosRuler…)
 - [x] Pods Monitoring Running (Grafana/Prometheus/Alertmanager/Operator)
 
-###B) Ingress + TLS Internal CA
+### B. Ingress + TLS Internal CA
 - [x] Có 3 ingress đúng host: grafana/prometheus/alertmanager .internal
 - [x] Có 3 certificate READY=True
 - [x] HTTP 308 → HTTPS
 - [x] HTTPS verify CA OK (Grafana login 302; Prometheus/Alertmanager readiness nên 200)
 
-###C) Logging (Loki + Promtail)
+### C. Logging (Loki + Promtail)
 - [x] Loki Running
 - [x] PVC Loki Bound (retain SC)
 - [x] Promtail chạy đủ node
 - [x] Grafana query được log từ Loki
 - [x] values-loki.yaml đã fix đúng (schemaConfig…)
 
-####D) Truy cập 
+#### D. Truy cập 
 - [x] Truy cập được giao diện Grafana Web UI qua HTTPS.
 - [x] Log từ Pod test đổ về Loki thành công.
 - [x] Evidence đầy đủ trong artifacts/step10-observability/.
@@ -290,3 +290,35 @@ Evidence:
 - [x] Sync Strategy: Các App con được cấu hình ServerSideApply=true để tránh lỗi CRD lớn.
 - [x] Clean Diff: Chạy kubectl diff -k không còn lỗi "No such file or directory".
 - [x] Health Status: Tất cả các Application trên giao diện Argo CD hiển thị màu xanh (Healthy và Synced).
+
+## Step 13 - OSDU POC: “Chốt distro/version + dependency matrix” và dựng khung GitOps cho OSDU
+### A. Checklist triển khai
+- [x] Chuyển đổi SSH (Deploy Key):
+   - [x] Tạo cặp khóa SSH (Ed25519) và add Public Key vào GitHub Deploy Keys.
+   - [x] Tạo Secret repo-infra-osdu-do trong Argo CD chứa Private Key.
+   - [x] Cập nhật toàn bộ repoURL trong các App cũ (Observability) sang dạng SSH (git@...).
+   - [x] Xóa kết nối HTTPS cũ trong Argo CD Settings.
+- [x] Version Freeze (Tài liệu):
+   - [x] Tạo file docs/osdu/30-osdu-poc-core.md chốt phiên bản M25 và danh sách Dependency.
+- [x] Bootstrap OSDU Framework:
+   - [x] Tạo AppProject osdu để quản lý các namespace (osdu-identity, osdu-data, osdu-core).
+   - [x] Tạo cấu trúc thư mục và Stub (ConfigMap mồi) cho 3 nhóm dịch vụ:
+     - [x] (1) Identity Stub (osdu-identity).
+     - [x] (2) Dependencies Stub (osdu-deps).
+     - [x] (3) Core Services Stub (osdu-core).
+  - [x] Tạo manifest "Child Application" trỏ vào các thư mục Stub trên.
+  - [x] Tạo "Parent Application" app-of-apps-osdu.
+- [x] Repo-first Workflow:
+  - [x] Git Add & Commit tất cả các file mới.
+  - [x] Git Push lên nhánh main (Bắt buộc để Argo CD đọc được).
+- [x] Apply vào Cluster:
+   - [x] Apply file Project (projects/osdu.yaml).
+   - [x] Apply file Parent App (app-of-apps/osdu.yaml).
+
+### B. Checklist hoạt động
+- [x] SSH Repo Access: Kiểm tra kubectl -n argocd get app -o custom-columns=NAME:.metadata.name,REPO:.spec.source.repoURL, tất cả phải là git@github.com....
+- [x] AppProject: Project osdu xuất hiện trong Argo CD và whitelist đúng các namespace đích.
+- [x] Hierarchy: App cha app-of-apps-osdu xuất hiện trên UI và tự động sinh ra 3 App con (osdu-identity, osdu-deps, osdu-core).
+- [x] Namespace: Các namespace osdu-identity, osdu-data, osdu-core đã được tự động tạo trong Cluster.
+- [x] Health Status: Tất cả 3 App con hiển thị màu xanh (Healthy và Synced).
+- [x] Stub Verification: Chạy lệnh kubectl -n osdu-core get cm osdu-core-stub trả về kết quả thành công (chứng tỏ pipeline GitOps đã thông suốt).
