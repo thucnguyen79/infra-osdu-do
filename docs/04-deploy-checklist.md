@@ -105,18 +105,18 @@
 - [x] Control-plane join uses --apiserver-advertise-address = private eth1 IP (DO dual-NIC)
 
 # STEP 5 — Install CNI
-- [ ] Step 5.1 Verify kubeadm CIDRs (podSubnet/serviceSubnet)
-- [ ] Step 5.2 Prepare Calico VXLAN manifest (repo-first)
-- [ ] Step 5.3 Allow UDP 4789 within VPC (cloud firewall / host firewall if any)
-- [ ] Step 5.4 Apply CNI + verify nodes Ready + CoreDNS Running
-- [ ] Step 5.5 Save evidence + commit
-- [ ] DS/calico-node Ready 5/5
-- [ ] IP_AUTODETECTION_METHOD pinned to eth1 (DO dual NIC)
-- [ ] Evidence saved: artifacts/step5-cni/*
-- [ ] 5.x Collect evidence for calico-node CrashLoopBackOff (describe/events/logs previous)
-- [ ] 5.x Patch Calico probes for VXLAN (felix-only) OR allow BGP port 179
-- [ ] 5.x Verify rollout ds/calico-node == ready on all nodes
-- [ ] 5.x Verify node-to-node pod networking (ping test pod)
+- [x] Step 5.1 Verify kubeadm CIDRs (podSubnet/serviceSubnet)
+- [x] Step 5.2 Prepare Calico VXLAN manifest (repo-first)
+- [x] Step 5.3 Allow UDP 4789 within VPC (cloud firewall / host firewall if any)
+- [x] Step 5.4 Apply CNI + verify nodes Ready + CoreDNS Running
+- [x] Step 5.5 Save evidence + commit
+- [x] DS/calico-node Ready 5/5
+- [x] IP_AUTODETECTION_METHOD pinned to eth1 (DO dual NIC)
+- [x] Evidence saved: artifacts/step5-cni/*
+- [x] 5.x Collect evidence for calico-node CrashLoopBackOff (describe/events/logs previous)
+- [x] 5.x Patch Calico probes for VXLAN (felix-only) OR allow BGP port 179
+- [x] 5.x Verify rollout ds/calico-node == ready on all nodes
+- [x] 5.x Verify node-to-node pod networking (ping test pod)
 
 ## Step 6 - Ingress Controller (ingress-nginx -NodePort private-only)
 
@@ -268,3 +268,25 @@ Evidence:
 - [x] Lấy được mật khẩu Admin và lưu vào artifacts.
 - [x] Lệnh curl HTTPS trả về mã 200/302 với chứng chỉ nội bộ.
 - [x] Cấu hình /etc/hosts trên ToolServer đã nhận diện domain mới.
+
+## Step 12 - Observability App-of-Apps
+### A. Checklist triển khai
+- [x] Chuẩn bị biến repo (để tránh sửa YAML nhiều nơi)
+- [x] Tạo cấu trúc GitOps cho Observability (repo-first)
+- [x] Tạo “Application con” cho từng addon Observability
+  - [x] (1) kube-prometheus-stack
+  - [x] (2) Observability Ingress (grafana/prometheus/alertmanager internal)
+  - [x] (3) Loki
+  - [ ] (4) Promtail (tùy chọn — chỉ khi bạn đã tạo addon logging-promtail)
+- [x] Tạo “Application cha” App-of-Apps (bootstrap 1 lần)
+- [x] Repo-first: diff → commit → push
+- [x] Bootstrap vào cluster (apply đúng 1 file “cha”)
+- [x] Verify Argo đã “nhìn thấy” các app con
+- [ ] Sync strategy 
+
+### B. Checklist hoạt động
+- [x] Repository Connection: Argo CD hiển thị trạng thái Successful trong phần Settings > Repositories.
+- [x] Hierarchy: App app-of-apps-observability hiển thị trên UI và chứa 3 App con bên trong.
+- [x] Sync Strategy: Các App con được cấu hình ServerSideApply=true để tránh lỗi CRD lớn.
+- [x] Clean Diff: Chạy kubectl diff -k không còn lỗi "No such file or directory".
+- [x] Health Status: Tất cả các Application trên giao diện Argo CD hiển thị màu xanh (Healthy và Synced).
