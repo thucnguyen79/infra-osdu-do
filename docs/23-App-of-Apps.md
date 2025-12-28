@@ -145,3 +145,24 @@ Khi Argo CD đã có quyền truy cập, bạn quay lại Application app-of-app
      - Trạng thái ban đầu sẽ là OutOfSync.
      - Bạn nên thực hiện Manual Sync (nhấn nút Sync trên từng App con).
      - Hãy đảm bảo bật tùy chọn Server-Side Apply khi Sync để tránh lỗi giới hạn dung lượng metadata (262KB) đối với các CRD lớn của Prometheus
+
+## 6. Phân tích cấu trúc thành phần Logging (Loki & Promtail)
+
+### 6.1. Hiện trạng triển khai
+Dựa trên kết quả rà soát Cluster ngày 28/12/2025:
+* **Loki (Server)**: Được triển khai làm backend nhận log.
+* [cite_start]**Promtail (Agent)**: Đang chạy dưới dạng DaemonSet (5/5 nodes).
+* [cite_start]**Cấu trúc quản lý**: Hiện tại, Promtail không đứng riêng lẻ mà được nhét chung vào thư mục `logging-loki/base/vendor`.
+
+### 6.2. Mối quan hệ trong GitOps
+Do Promtail nằm trong folder của Loki, nên trong Argo CD:
+* [cite_start]Application `obs-loki` sẽ chịu trách nhiệm quản lý cả **Loki Deployment** và **Promtail DaemonSet**[cite: 119, 125].
+* [cite_start]Việc thiếu thư mục `k8s/addons/observability/logging-promtail` độc lập là do ý đồ thiết kế gộp, không phải lỗi hệ thống.
+
+---
+
+## 7. Hướng dẫn xử lý "Drift" cho Promtail ( (Không triển khai)
+Nếu sau này bạn muốn thay đổi cấu hình thu thập log (ví dụ: đổi URL đẩy log hoặc thêm filter):
+1. Chỉnh sửa file `k8s/addons/observability/logging-loki/overlays/do-private/values-promtail.yaml`.
+2. Thực hiện `git commit` và `push`.
+3. Argo CD Application `obs-loki` sẽ tự động cập nhật lại DaemonSet Promtail trên toàn bộ các Node.
