@@ -1,0 +1,311 @@
+diff -u -N /tmp/LIVE-1023149770/apps.v1.Deployment.osdu-identity.keycloak /tmp/MERGED-1800829280/apps.v1.Deployment.osdu-identity.keycloak
+--- /tmp/LIVE-1023149770/apps.v1.Deployment.osdu-identity.keycloak	2025-12-28 16:27:19.878168584 +0700
++++ /tmp/MERGED-1800829280/apps.v1.Deployment.osdu-identity.keycloak	2025-12-28 16:27:19.882168642 +0700
+@@ -0,0 +1,103 @@
++apiVersion: apps/v1
++kind: Deployment
++metadata:
++  creationTimestamp: "2025-12-28T09:27:19Z"
++  generation: 1
++  name: keycloak
++  namespace: osdu-identity
++  uid: 08d3d46d-ee33-4686-8ee5-6ab1f2ef687d
++spec:
++  progressDeadlineSeconds: 600
++  replicas: 1
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app: keycloak
++  strategy:
++    rollingUpdate:
++      maxSurge: 25%
++      maxUnavailable: 25%
++    type: RollingUpdate
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app: keycloak
++    spec:
++      containers:
++      - args:
++        - start
++        env:
++        - name: KC_DB
++          value: postgres
++        - name: KC_DB_URL_HOST
++          value: keycloak-db
++        - name: KC_DB_URL_DATABASE
++          valueFrom:
++            secretKeyRef:
++              key: POSTGRES_DB
++              name: keycloak-db-secret
++        - name: KC_DB_USERNAME
++          valueFrom:
++            secretKeyRef:
++              key: POSTGRES_USER
++              name: keycloak-db-secret
++        - name: KC_DB_PASSWORD
++          valueFrom:
++            secretKeyRef:
++              key: POSTGRES_PASSWORD
++              name: keycloak-db-secret
++        - name: KC_PROXY
++          value: edge
++        - name: KC_PROXY_HEADERS
++          value: xforwarded
++        - name: KC_HTTP_ENABLED
++          value: "true"
++        - name: KC_HOSTNAME
++          value: keycloak.internal
++        - name: KC_HOSTNAME_STRICT
++          value: "false"
++        - name: KC_HOSTNAME_STRICT_HTTPS
++          value: "false"
++        - name: KC_HEALTH_ENABLED
++          value: "true"
++        - name: KC_METRICS_ENABLED
++          value: "true"
++        envFrom:
++        - secretRef:
++            name: keycloak-admin-secret
++        image: quay.io/keycloak/keycloak:25.0.6
++        imagePullPolicy: IfNotPresent
++        livenessProbe:
++          failureThreshold: 3
++          httpGet:
++            path: /health/live
++            port: 8080
++            scheme: HTTP
++          initialDelaySeconds: 60
++          periodSeconds: 10
++          successThreshold: 1
++          timeoutSeconds: 1
++        name: keycloak
++        ports:
++        - containerPort: 8080
++          protocol: TCP
++        readinessProbe:
++          failureThreshold: 3
++          httpGet:
++            path: /health/ready
++            port: 8080
++            scheme: HTTP
++          initialDelaySeconds: 30
++          periodSeconds: 10
++          successThreshold: 1
++          timeoutSeconds: 1
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext: {}
++      terminationGracePeriodSeconds: 30
++status: {}
+diff -u -N /tmp/LIVE-1023149770/apps.v1.StatefulSet.osdu-identity.keycloak-db /tmp/MERGED-1800829280/apps.v1.StatefulSet.osdu-identity.keycloak-db
+--- /tmp/LIVE-1023149770/apps.v1.StatefulSet.osdu-identity.keycloak-db	2025-12-28 16:27:19.894168816 +0700
++++ /tmp/MERGED-1800829280/apps.v1.StatefulSet.osdu-identity.keycloak-db	2025-12-28 16:27:19.894168816 +0700
+@@ -0,0 +1,76 @@
++apiVersion: apps/v1
++kind: StatefulSet
++metadata:
++  creationTimestamp: "2025-12-28T09:27:19Z"
++  generation: 1
++  name: keycloak-db
++  namespace: osdu-identity
++  uid: 7b543b2d-ec3d-48ef-9ea2-5bb6e93a07bb
++spec:
++  persistentVolumeClaimRetentionPolicy:
++    whenDeleted: Retain
++    whenScaled: Retain
++  podManagementPolicy: OrderedReady
++  replicas: 1
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app: keycloak-db
++  serviceName: keycloak-db
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app: keycloak-db
++    spec:
++      containers:
++      - envFrom:
++        - secretRef:
++            name: keycloak-db-secret
++        image: postgres:16
++        imagePullPolicy: IfNotPresent
++        name: postgres
++        ports:
++        - containerPort: 5432
++          protocol: TCP
++        readinessProbe:
++          exec:
++            command:
++            - bash
++            - -lc
++            - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
++          failureThreshold: 3
++          initialDelaySeconds: 10
++          periodSeconds: 5
++          successThreshold: 1
++          timeoutSeconds: 1
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /var/lib/postgresql/data
++          name: data
++      dnsPolicy: ClusterFirst
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext: {}
++      terminationGracePeriodSeconds: 30
++  updateStrategy:
++    rollingUpdate:
++      partition: 0
++    type: RollingUpdate
++  volumeClaimTemplates:
++  - apiVersion: v1
++    kind: PersistentVolumeClaim
++    metadata:
++      creationTimestamp: null
++      name: data
++    spec:
++      resources: {}
++      storageClassName: do-block-storage-retain
++      volumeMode: Filesystem
++    status:
++      phase: Pending
++status:
++  availableReplicas: 0
++  replicas: 0
+diff -u -N /tmp/LIVE-1023149770/cert-manager.io.v1.Certificate.osdu-identity.keycloak-internal-tls /tmp/MERGED-1800829280/cert-manager.io.v1.Certificate.osdu-identity.keycloak-internal-tls
+--- /tmp/LIVE-1023149770/cert-manager.io.v1.Certificate.osdu-identity.keycloak-internal-tls	2025-12-28 16:27:19.914169107 +0700
++++ /tmp/MERGED-1800829280/cert-manager.io.v1.Certificate.osdu-identity.keycloak-internal-tls	2025-12-28 16:27:19.914169107 +0700
+@@ -0,0 +1,15 @@
++apiVersion: cert-manager.io/v1
++kind: Certificate
++metadata:
++  creationTimestamp: "2025-12-28T09:27:19Z"
++  generation: 1
++  name: keycloak-internal-tls
++  namespace: osdu-identity
++  uid: bee2f2fe-e637-4b26-ab1b-bb90cd21c725
++spec:
++  dnsNames:
++  - keycloak.internal
++  issuerRef:
++    kind: ClusterIssuer
++    name: internal-ca
++  secretName: keycloak-internal-tls
+diff -u -N /tmp/LIVE-1023149770/networking.k8s.io.v1.Ingress.osdu-identity.keycloak /tmp/MERGED-1800829280/networking.k8s.io.v1.Ingress.osdu-identity.keycloak
+--- /tmp/LIVE-1023149770/networking.k8s.io.v1.Ingress.osdu-identity.keycloak	2025-12-28 16:27:19.930169340 +0700
++++ /tmp/MERGED-1800829280/networking.k8s.io.v1.Ingress.osdu-identity.keycloak	2025-12-28 16:27:19.930169340 +0700
+@@ -0,0 +1,30 @@
++apiVersion: networking.k8s.io/v1
++kind: Ingress
++metadata:
++  annotations:
++    kubernetes.io/ingress.class: nginx
++    nginx.ingress.kubernetes.io/backend-protocol: HTTP
++    nginx.ingress.kubernetes.io/ssl-redirect: "true"
++  creationTimestamp: "2025-12-28T09:27:19Z"
++  generation: 1
++  name: keycloak
++  namespace: osdu-identity
++  uid: 371b9d3a-2ebb-4631-8712-3583ccf72350
++spec:
++  rules:
++  - host: keycloak.internal
++    http:
++      paths:
++      - backend:
++          service:
++            name: keycloak
++            port:
++              number: 80
++        path: /
++        pathType: Prefix
++  tls:
++  - hosts:
++    - keycloak.internal
++    secretName: keycloak-internal-tls
++status:
++  loadBalancer: {}
+diff -u -N /tmp/LIVE-1023149770/v1.Namespace..osdu-identity /tmp/MERGED-1800829280/v1.Namespace..osdu-identity
+--- /tmp/LIVE-1023149770/v1.Namespace..osdu-identity	2025-12-28 16:27:19.850168177 +0700
++++ /tmp/MERGED-1800829280/v1.Namespace..osdu-identity	2025-12-28 16:27:19.850168177 +0700
+@@ -2,7 +2,6 @@
+ kind: Namespace
+ metadata:
+   annotations:
+-    argocd.argoproj.io/tracking-id: osdu-identity:/Namespace:osdu-identity/osdu-identity
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"v1","kind":"Namespace","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"osdu-identity:/Namespace:osdu-identity/osdu-identity"},"name":"osdu-identity"}}
+   creationTimestamp: "2025-12-28T08:42:22Z"
+diff -u -N /tmp/LIVE-1023149770/v1.Service.osdu-identity.keycloak /tmp/MERGED-1800829280/v1.Service.osdu-identity.keycloak
+--- /tmp/LIVE-1023149770/v1.Service.osdu-identity.keycloak	2025-12-28 16:27:19.858168293 +0700
++++ /tmp/MERGED-1800829280/v1.Service.osdu-identity.keycloak	2025-12-28 16:27:19.858168293 +0700
+@@ -0,0 +1,26 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-28T09:27:19Z"
++  name: keycloak
++  namespace: osdu-identity
++  uid: 809601d5-7e0c-46c4-af9b-167e0d17167f
++spec:
++  clusterIP: 10.96.0.0
++  clusterIPs:
++  - 10.96.0.0
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - name: http
++    port: 80
++    protocol: TCP
++    targetPort: 8080
++  selector:
++    app: keycloak
++  sessionAffinity: None
++  type: ClusterIP
++status:
++  loadBalancer: {}
+diff -u -N /tmp/LIVE-1023149770/v1.Service.osdu-identity.keycloak-db /tmp/MERGED-1800829280/v1.Service.osdu-identity.keycloak-db
+--- /tmp/LIVE-1023149770/v1.Service.osdu-identity.keycloak-db	2025-12-28 16:27:19.870168467 +0700
++++ /tmp/MERGED-1800829280/v1.Service.osdu-identity.keycloak-db	2025-12-28 16:27:19.870168467 +0700
+@@ -0,0 +1,26 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-28T09:27:19Z"
++  name: keycloak-db
++  namespace: osdu-identity
++  uid: b4c48281-aab8-41f8-8983-092081101803
++spec:
++  clusterIP: 10.96.0.0
++  clusterIPs:
++  - 10.96.0.0
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - name: pg
++    port: 5432
++    protocol: TCP
++    targetPort: 5432
++  selector:
++    app: keycloak-db
++  sessionAffinity: None
++  type: ClusterIP
++status:
++  loadBalancer: {}

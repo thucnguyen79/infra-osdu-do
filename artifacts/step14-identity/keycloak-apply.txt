@@ -1,0 +1,7 @@
+namespace/osdu-identity configured
+service/keycloak created
+service/keycloak-db created
+deployment.apps/keycloak created
+statefulset.apps/keycloak-db created
+certificate.cert-manager.io/keycloak-internal-tls created
+ingress.networking.k8s.io/keycloak created

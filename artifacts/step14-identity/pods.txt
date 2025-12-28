@@ -1,0 +1,3 @@
+NAME                        READY   STATUS    RESTARTS   AGE    IP                NODE           NOMINATED NODE   READINESS GATES
+keycloak-59f675884c-7rl99   1/1     Running   0          14m    192.168.246.236   workernode02   <none>           <none>
+keycloak-db-0               1/1     Running   0          108m   192.168.246.229   workernode02   <none>           <none>

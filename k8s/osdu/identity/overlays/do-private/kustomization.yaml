@@ -3,3 +3,5 @@ resources:
 
 patches:
   - path: patches/patch-db-storageclass.yaml
+patchesStrategicMerge:
+  - patches/patch-keycloak-ingress-class.yaml

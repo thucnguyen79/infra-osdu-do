@@ -1,0 +1,7 @@
+HTTP/1.1 308 Permanent Redirect
+Date: Sun, 28 Dec 2025 11:59:01 GMT
+Content-Type: text/html
+Content-Length: 164
+Connection: keep-alive
+Location: https://keycloak.internal
+

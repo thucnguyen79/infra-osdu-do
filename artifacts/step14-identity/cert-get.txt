@@ -1,0 +1,2 @@
+NAME                    READY   SECRET                  ISSUER        STATUS                                          AGE
+keycloak-internal-tls   True    keycloak-internal-tls   internal-ca   Certificate is up to date and has not expired   150m

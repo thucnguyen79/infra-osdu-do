@@ -1,0 +1,1 @@
+deployment "keycloak" successfully rolled out
