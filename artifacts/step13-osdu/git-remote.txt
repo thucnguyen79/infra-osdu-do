@@ -1,0 +1,2 @@
+origin	git@github.com:thucnguyen79/infra-osdu-do.git (fetch)
+origin	git@github.com:thucnguyen79/infra-osdu-do.git (push)

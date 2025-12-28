@@ -1,2 +1,5 @@
 NAME                        SYNC STATUS   HEALTH STATUS
-app-of-apps-observability   OutOfSync     Healthy
+app-of-apps-observability   Synced        Healthy
+obs-ingress                 Synced        Healthy
+obs-kube-prometheus-stack   Synced        Healthy
+obs-loki                    Synced        Healthy
