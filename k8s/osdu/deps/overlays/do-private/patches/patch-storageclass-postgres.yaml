@@ -8,5 +8,8 @@ spec:
     - metadata:
         name: data
       spec:
+        accessModes: ["ReadWriteOnce"]
         storageClassName: do-block-storage-retain
-
+        resources:
+          requests:
+            storage: 20Gi
