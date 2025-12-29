@@ -6,6 +6,20 @@ metadata:
 spec:
   template:
     spec:
+      initContainers:
+        - name: init-pgdata-dir
+          image: postgres:16-alpine
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /var/lib/postgresql/data/pgdata
+              chown -R postgres:postgres /var/lib/postgresql/data/pgdata
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
       containers:
         - name: postgres
           env:
