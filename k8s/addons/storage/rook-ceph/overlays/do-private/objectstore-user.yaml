@@ -1,0 +1,7 @@
+apiVersion: ceph.rook.io/v1
+kind: CephObjectStoreUser
+metadata:
+  name: osdu-s3-user
+spec:
+  store: osdu-store
+  displayName: "osdu-s3-user"

@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: osdu-ceph
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "05"
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+    targetRevision: main
+    path: k8s/addons/storage/rook-ceph/overlays/do-private
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rook-ceph
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
