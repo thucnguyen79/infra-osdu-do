@@ -1,0 +1,6 @@
+== namespaces ==
+2:argocd            Active   44h
+5:ingress-nginx     Active   4d12h
+10:osdu-core         Active   31h
+11:osdu-data         Active   31h
+12:osdu-identity     Active   31h

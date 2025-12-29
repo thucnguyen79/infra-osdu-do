@@ -1,0 +1,2 @@
+k8s/osdu/deps/overlays/do-private/namespace.yaml:2:kind: Namespace
+k8s/osdu/deps/base/namespace/namespace.yaml:2:kind: Namespace

@@ -1,0 +1,4 @@
+== osdu-data pods ==
+NAME                          READY   STATUS    RESTARTS   AGE   IP                NODE           NOMINATED NODE   READINESS GATES
+osdu-redis-54df55c6bd-4rhfk   1/1     Running   0          53s   192.168.246.196   workernode02   <none>           <none>
+osdu-redpanda-0               1/1     Running   0          53s   192.168.52.151    workernode01   <none>           <none>

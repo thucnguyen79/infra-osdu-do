@@ -1,0 +1,277 @@
+apiVersion: v1
+data:
+  note: Step 15 will replace this stub with Postgres/OpenSearch/MinIO/Kafka
+kind: ConfigMap
+metadata:
+  name: osdu-deps-stub
+  namespace: osdu-data
+---
+apiVersion: v1
+data:
+  S3_ENDPOINT: http://rook-ceph-rgw-osdu-store.rook-ceph.svc:80
+  S3_PATH_STYLE: "true"
+  S3_REGION: us-east-1
+kind: ConfigMap
+metadata:
+  name: osdu-objectstore-config
+  namespace: osdu-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: osdu-kafka
+  namespace: osdu-data
+spec:
+  ports:
+  - name: kafka
+    port: 9092
+    targetPort: 9092
+  selector:
+    app: osdu-redpanda
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: osdu-opensearch
+  namespace: osdu-data
+spec:
+  ports:
+  - name: http
+    port: 9200
+    targetPort: 9200
+  selector:
+    app: osdu-opensearch
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: osdu-postgres
+  namespace: osdu-data
+spec:
+  ports:
+  - name: pg
+    port: 5432
+    targetPort: 5432
+  selector:
+    app: osdu-postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: osdu-redis
+  namespace: osdu-data
+spec:
+  ports:
+  - name: redis
+    port: 6379
+    targetPort: 6379
+  selector:
+    app: osdu-redis
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: osdu-redis
+  namespace: osdu-data
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-redis
+  template:
+    metadata:
+      labels:
+        app: osdu-redis
+    spec:
+      containers:
+      - image: redis:7-alpine
+        name: redis
+        ports:
+        - containerPort: 6379
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: osdu-opensearch
+  namespace: osdu-data
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-opensearch
+  serviceName: osdu-opensearch
+  template:
+    metadata:
+      labels:
+        app: osdu-opensearch
+    spec:
+      containers:
+      - env:
+        - name: discovery.type
+          value: single-node
+        - name: plugins.security.disabled
+          value: "true"
+        - name: OPENSEARCH_JAVA_OPTS
+          value: -Xms1g -Xmx1g
+        image: opensearchproject/opensearch:2.16.0
+        name: opensearch
+        ports:
+        - containerPort: 9200
+          name: http
+        volumeMounts:
+        - mountPath: /usr/share/opensearch/data
+          name: data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi
+      storageClassName: do-block-storage-xfs-retain
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: osdu-postgres
+  namespace: osdu-data
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-postgres
+  serviceName: osdu-postgres
+  template:
+    metadata:
+      labels:
+        app: osdu-postgres
+    spec:
+      containers:
+      - envFrom:
+        - secretRef:
+            name: osdu-postgres-secret
+        image: postgres:16-alpine
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -lc
+            - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: postgres
+        ports:
+        - containerPort: 5432
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -lc
+            - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 20Gi
+      storageClassName: do-block-storage-retain
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: osdu-redpanda
+  namespace: osdu-data
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-redpanda
+  serviceName: osdu-kafka
+  template:
+    metadata:
+      labels:
+        app: osdu-redpanda
+    spec:
+      containers:
+      - args:
+        - redpanda
+        - start
+        - --overprovisioned
+        - --smp=1
+        - --memory=1G
+        - --reserve-memory=0M
+        - --node-id=0
+        - --kafka-addr=PLAINTEXT://0.0.0.0:9092
+        - --advertise-kafka-addr=PLAINTEXT://osdu-kafka.osdu-data.svc.cluster.local:9092
+        image: redpandadata/redpanda:v24.2.6
+        name: redpanda
+        ports:
+        - containerPort: 9092
+          name: kafka
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+    argocd.argoproj.io/sync-wave: "1"
+  name: osdu-postgres-initdb
+  namespace: osdu-data
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      containers:
+      - args:
+        - |
+          set -euo pipefail
+
+          echo "Waiting for Postgres..."
+          until pg_isready -h osdu-postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB"; do
+            sleep 3
+          done
+
+          # Danh sách DB tối thiểu (POC) – có thể tăng/giảm khi chốt distro ở Step 17
+          DBS="osdu partition entitlements legal schema storage registry file"
+
+          for db in $DBS; do
+            psql -h osdu-postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB" <<SQL
+            DO \$\$
+            BEGIN
+              IF NOT EXISTS (SELECT FROM pg_database WHERE datname = '$db') THEN
+                PERFORM dblink_exec('dbname=' || current_database(), 'CREATE DATABASE "$db"');
+              END IF;
+            END
+            \$\$;
+            SQL
+          done
+
+          echo "OK: initdb done"
+        command:
+        - sh
+        - -lc
+        envFrom:
+        - secretRef:
+            name: osdu-postgres-secret
+        image: postgres:16-alpine
+        name: initdb
+      restartPolicy: Never

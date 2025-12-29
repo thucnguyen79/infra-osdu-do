@@ -1,0 +1,11 @@
+== argocd apps (osdu-deps) ==
+NAME                        SYNC STATUS   HEALTH STATUS
+app-of-apps-observability   Synced        Healthy
+app-of-apps-osdu            Synced        Healthy
+obs-ingress                 Synced        Healthy
+obs-kube-prometheus-stack   Synced        Healthy
+obs-loki                    Synced        Healthy
+osdu-ceph                   Synced        Healthy
+osdu-core                   Synced        Healthy
+osdu-deps                   OutOfSync     Missing
+osdu-identity               Synced        Healthy

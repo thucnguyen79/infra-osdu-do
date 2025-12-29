@@ -1,0 +1,15 @@
+35:  name: osdu-opensearch
+48:  name: osdu-postgres
+99:  name: osdu-opensearch
+128:  volumeClaimTemplates:
+132:      accessModes:
+136:          storage: 50Gi
+137:      storageClassName: do-block-storage-xfs-retain
+144:  name: osdu-postgres
+160:            name: osdu-postgres-secret
+184:  volumeClaimTemplates:
+188:      accessModes:
+192:          storage: 20Gi
+193:      storageClassName: do-block-storage-retain
+237:  name: osdu-postgres-initdb
+274:            name: osdu-postgres-secret

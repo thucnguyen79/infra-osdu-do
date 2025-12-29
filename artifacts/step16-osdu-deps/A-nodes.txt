@@ -1,0 +1,7 @@
+== nodes ==
+NAME             STATUS   ROLES           AGE    VERSION    INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION       CONTAINER-RUNTIME
+controlplane01   Ready    control-plane   5d8h   v1.30.14   10.118.0.2    <none>        Ubuntu 22.04.4 LTS   5.15.0-113-generic   containerd://1.7.28
+controlplane02   Ready    control-plane   5d6h   v1.30.14   10.118.0.3    <none>        Ubuntu 22.04.4 LTS   5.15.0-113-generic   containerd://1.7.28
+controlplane03   Ready    control-plane   5d5h   v1.30.14   10.118.0.4    <none>        Ubuntu 22.04.4 LTS   5.15.0-113-generic   containerd://1.7.28
+workernode01     Ready    <none>          5d5h   v1.30.14   10.118.0.6    <none>        Ubuntu 22.04.4 LTS   5.15.0-113-generic   containerd://1.7.28
+workernode02     Ready    <none>          5d5h   v1.30.14   10.118.0.7    <none>        Ubuntu 22.04.4 LTS   5.15.0-113-generic   containerd://1.7.28
