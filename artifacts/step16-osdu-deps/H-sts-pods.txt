@@ -1,0 +1,7 @@
+== osdu-data sts/pods ==
+NAME                             READY   AGE    CONTAINERS   IMAGES
+statefulset.apps/osdu-redpanda   1/1     135m   redpanda     redpandadata/redpanda:v24.2.6
+
+NAME                              READY   STATUS    RESTARTS   AGE    IP                NODE           NOMINATED NODE   READINESS GATES
+pod/osdu-redis-54df55c6bd-4rhfk   1/1     Running   0          135m   192.168.246.196   workernode02   <none>           <none>
+pod/osdu-redpanda-0               1/1     Running   0          135m   192.168.52.151    workernode01   <none>           <none>

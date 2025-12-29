@@ -1,0 +1,278 @@
+Name:         osdu-deps
+Namespace:    argocd
+Labels:       <none>
+Annotations:  argocd.argoproj.io/tracking-id: app-of-apps-osdu:argoproj.io/Application:argocd/osdu-deps
+API Version:  argoproj.io/v1alpha1
+Kind:         Application
+Metadata:
+  Creation Timestamp:  2025-12-28T08:42:21Z
+  Generation:          620
+  Resource Version:    1025053
+  UID:                 641ba836-b86d-4a86-b875-8fcb9179b92c
+Operation:
+  Initiated By:
+    Automated:  true
+  Retry:
+    Limit:  5
+  Sync:
+    Prune:     true
+    Revision:  7cd8d8aa5479fcb41ce46e74a157a0c3070527e3
+    Source:
+      Path:             k8s/osdu/deps/overlays/do-private
+      Repo URL:         git@github.com:thucnguyen79/infra-osdu-do.git
+      Target Revision:  main
+    Sync Options:
+      CreateNamespace=true
+Spec:
+  Destination:
+    Namespace:  osdu-data
+    Server:     https://kubernetes.default.svc
+  Project:      osdu
+  Source:
+    Path:             k8s/osdu/deps/overlays/do-private
+    Repo URL:         git@github.com:thucnguyen79/infra-osdu-do.git
+    Target Revision:  main
+  Sync Policy:
+    Automated:
+      Prune:      true
+      Self Heal:  true
+    Sync Options:
+      CreateNamespace=true
+Status:
+  Controller Namespace:  argocd
+  Health:
+    Last Transition Time:  2025-12-29T14:31:43Z
+    Status:                Missing
+  History:
+    Deploy Started At:  2025-12-28T08:42:22Z
+    Deployed At:        2025-12-28T08:42:22Z
+    Id:                 0
+    Initiated By:
+      Automated:  true
+    Revision:     633a37ef18ce31d8390a22b93a14cb2a61105277
+    Source:
+      Path:             k8s/osdu/deps/overlays/do-private
+      Repo URL:         git@github.com:thucnguyen79/infra-osdu-do.git
+      Target Revision:  main
+  Operation State:
+    Message:  waiting for healthy state of apps/StatefulSet/osdu-opensearch and 1 more resources
+    Operation:
+      Initiated By:
+        Automated:  true
+      Retry:
+        Limit:  5
+      Sync:
+        Prune:     true
+        Revision:  7cd8d8aa5479fcb41ce46e74a157a0c3070527e3
+        Source:
+          Path:             k8s/osdu/deps/overlays/do-private
+          Repo URL:         git@github.com:thucnguyen79/infra-osdu-do.git
+          Target Revision:  main
+        Sync Options:
+          CreateNamespace=true
+    Phase:       Running
+    Started At:  2025-12-29T13:57:09Z
+    Sync Result:
+      Resources:
+        Group:       
+        Hook Phase:  Succeeded
+        Kind:        Namespace
+        Message:     namespace/osdu-data configured
+        Name:        osdu-data
+        Namespace:   osdu-data
+        Status:      Synced
+        Sync Phase:  Sync
+        Version:     v1
+        Group:       
+        Hook Phase:  Succeeded
+        Kind:        ConfigMap
+        Message:     configmap/osdu-deps-stub unchanged
+        Name:        osdu-deps-stub
+        Namespace:   osdu-data
+        Status:      Synced
+        Sync Phase:  Sync
+        Version:     v1
+        Group:       
+        Hook Phase:  Succeeded
+        Kind:        ConfigMap
+        Message:     configmap/osdu-objectstore-config created
+        Name:        osdu-objectstore-config
+        Namespace:   osdu-data
+        Status:      Synced
+        Sync Phase:  Sync
+        Version:     v1
+        Group:       
+        Hook Phase:  Succeeded
+        Kind:        Service
+        Message:     service/osdu-kafka created
+        Name:        osdu-kafka
+        Namespace:   osdu-data
+        Status:      Synced
+        Sync Phase:  Sync
+        Version:     v1
+        Group:       
+        Hook Phase:  Succeeded
+        Kind:        Service
+        Message:     service/osdu-postgres created
+        Name:        osdu-postgres
+        Namespace:   osdu-data
+        Status:      Synced
+        Sync Phase:  Sync
+        Version:     v1
+        Group:       
+        Hook Phase:  Succeeded
+        Kind:        Service
+        Message:     service/osdu-redis created
+        Name:        osdu-redis
+        Namespace:   osdu-data
+        Status:      Synced
+        Sync Phase:  Sync
+        Version:     v1
+        Group:       
+        Hook Phase:  Succeeded
+        Kind:        Service
+        Message:     service/osdu-opensearch created
+        Name:        osdu-opensearch
+        Namespace:   osdu-data
+        Status:      Synced
+        Sync Phase:  Sync
+        Version:     v1
+        Group:       apps
+        Hook Phase:  Succeeded
+        Images:
+          redis:7-alpine
+        Kind:        Deployment
+        Message:     deployment.apps/osdu-redis created
+        Name:        osdu-redis
+        Namespace:   osdu-data
+        Status:      Synced
+        Sync Phase:  Sync
+        Version:     v1
+        Group:       apps
+        Hook Phase:  Running
+        Images:
+          postgres:16-alpine
+        Kind:        StatefulSet
+        Message:     statefulset.apps/osdu-postgres created
+        Name:        osdu-postgres
+        Namespace:   osdu-data
+        Status:      Synced
+        Sync Phase:  Sync
+        Version:     v1
+        Group:       apps
+        Hook Phase:  Running
+        Images:
+          opensearchproject/opensearch:2.16.0
+        Kind:        StatefulSet
+        Message:     statefulset.apps/osdu-opensearch created
+        Name:        osdu-opensearch
+        Namespace:   osdu-data
+        Status:      Synced
+        Sync Phase:  Sync
+        Version:     v1
+        Group:       apps
+        Hook Phase:  Succeeded
+        Images:
+          redpandadata/redpanda:v24.2.6
+        Kind:        StatefulSet
+        Message:     partitioned roll out complete: 1 new pods have been updated...
+        Name:        osdu-redpanda
+        Namespace:   osdu-data
+        Status:      Synced
+        Sync Phase:  Sync
+        Version:     v1
+      Revision:      7cd8d8aa5479fcb41ce46e74a157a0c3070527e3
+      Source:
+        Path:              k8s/osdu/deps/overlays/do-private
+        Repo URL:          git@github.com:thucnguyen79/infra-osdu-do.git
+        Target Revision:   main
+  Reconciled At:           2025-12-29T16:11:04Z
+  Resource Health Source:  appTree
+  Resources:
+    Kind:              ConfigMap
+    Name:              osdu-deps-stub
+    Namespace:         osdu-data
+    Status:            Synced
+    Version:           v1
+    Kind:              ConfigMap
+    Name:              osdu-objectstore-config
+    Namespace:         osdu-data
+    Status:            Synced
+    Version:           v1
+    Kind:              Namespace
+    Name:              osdu-data
+    Requires Pruning:  true
+    Status:            OutOfSync
+    Version:           v1
+    Kind:              Service
+    Name:              osdu-kafka
+    Namespace:         osdu-data
+    Status:            Synced
+    Version:           v1
+    Kind:              Service
+    Name:              osdu-opensearch
+    Namespace:         osdu-data
+    Status:            Synced
+    Version:           v1
+    Kind:              Service
+    Name:              osdu-postgres
+    Namespace:         osdu-data
+    Status:            Synced
+    Version:           v1
+    Kind:              Service
+    Name:              osdu-redis
+    Namespace:         osdu-data
+    Status:            Synced
+    Version:           v1
+    Group:             apps
+    Kind:              ControllerRevision
+    Name:              osdu-opensearch-86496449b4
+    Namespace:         osdu-data
+    Version:           v1
+    Group:             apps
+    Kind:              ControllerRevision
+    Name:              osdu-postgres-8697db9799
+    Namespace:         osdu-data
+    Version:           v1
+    Group:             apps
+    Kind:              Deployment
+    Name:              osdu-redis
+    Namespace:         osdu-data
+    Status:            Synced
+    Version:           v1
+    Group:             apps
+    Kind:              StatefulSet
+    Name:              osdu-opensearch
+    Namespace:         osdu-data
+    Status:            OutOfSync
+    Version:           v1
+    Group:             apps
+    Kind:              StatefulSet
+    Name:              osdu-postgres
+    Namespace:         osdu-data
+    Status:            OutOfSync
+    Version:           v1
+    Group:             apps
+    Kind:              StatefulSet
+    Name:              osdu-redpanda
+    Namespace:         osdu-data
+    Status:            Synced
+    Version:           v1
+  Source Hydrator:
+  Source Type:  Kustomize
+  Summary:
+    Images:
+      redis:7-alpine
+      redpandadata/redpanda:v24.2.6
+  Sync:
+    Compared To:
+      Destination:
+        Namespace:  osdu-data
+        Server:     https://kubernetes.default.svc
+      Source:
+        Path:             k8s/osdu/deps/overlays/do-private
+        Repo URL:         git@github.com:thucnguyen79/infra-osdu-do.git
+        Target Revision:  main
+    Revision:             bf9e4c7f19db39cc21253fcec0590f2a3a2d8d47
+    Status:               OutOfSync
+Events:                   <none>

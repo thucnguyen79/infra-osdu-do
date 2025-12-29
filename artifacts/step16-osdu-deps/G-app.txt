@@ -1,0 +1,2 @@
+NAME        SYNC STATUS   HEALTH STATUS   REVISION                                   PROJECT
+osdu-deps   OutOfSync     Missing         bf9e4c7f19db39cc21253fcec0590f2a3a2d8d47   osdu
