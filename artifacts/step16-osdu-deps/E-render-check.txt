@@ -1,0 +1,5 @@
+== kustomize render check ==
+121:        - name: DISABLE_INSTALL_DEMO_CONFIG
+123:        - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+126:              key: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+173:        - name: PGDATA

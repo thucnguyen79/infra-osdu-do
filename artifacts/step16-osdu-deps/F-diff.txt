@@ -1,0 +1,248 @@
+diff -u -N /tmp/LIVE-4056537616/apps.v1.Deployment.osdu-data.osdu-redis /tmp/MERGED-3306477048/apps.v1.Deployment.osdu-data.osdu-redis
+--- /tmp/LIVE-4056537616/apps.v1.Deployment.osdu-data.osdu-redis	2025-12-30 02:08:46.366552524 +0700
++++ /tmp/MERGED-3306477048/apps.v1.Deployment.osdu-data.osdu-redis	2025-12-30 02:08:46.366552524 +0700
+@@ -3,12 +3,11 @@
+ metadata:
+   annotations:
+     argocd.argoproj.io/sync-wave: "0"
+-    argocd.argoproj.io/tracking-id: osdu-deps:apps/Deployment:osdu-data/osdu-redis
+     deployment.kubernetes.io/revision: "1"
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"argocd.argoproj.io/sync-wave":"0","argocd.argoproj.io/tracking-id":"osdu-deps:apps/Deployment:osdu-data/osdu-redis"},"name":"osdu-redis","namespace":"osdu-data"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"osdu-redis"}},"template":{"metadata":{"labels":{"app":"osdu-redis"}},"spec":{"containers":[{"image":"redis:7-alpine","name":"redis","ports":[{"containerPort":6379}]}]}}}}
+   creationTimestamp: "2025-12-29T13:57:11Z"
+-  generation: 1
++  generation: 2
+   name: osdu-redis
+   namespace: osdu-data
+   resourceVersion: "1002146"
+diff -u -N /tmp/LIVE-4056537616/apps.v1.StatefulSet.osdu-data.osdu-opensearch /tmp/MERGED-3306477048/apps.v1.StatefulSet.osdu-data.osdu-opensearch
+--- /tmp/LIVE-4056537616/apps.v1.StatefulSet.osdu-data.osdu-opensearch	2025-12-30 02:08:46.410553025 +0700
++++ /tmp/MERGED-3306477048/apps.v1.StatefulSet.osdu-data.osdu-opensearch	2025-12-30 02:08:46.410553025 +0700
+@@ -3,11 +3,10 @@
+ metadata:
+   annotations:
+     argocd.argoproj.io/sync-wave: "0"
+-    argocd.argoproj.io/tracking-id: osdu-deps:apps/StatefulSet:osdu-data/osdu-opensearch
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"apps/v1","kind":"StatefulSet","metadata":{"annotations":{"argocd.argoproj.io/sync-wave":"0","argocd.argoproj.io/tracking-id":"osdu-deps:apps/StatefulSet:osdu-data/osdu-opensearch"},"name":"osdu-opensearch","namespace":"osdu-data"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"osdu-opensearch"}},"serviceName":"osdu-opensearch","template":{"metadata":{"labels":{"app":"osdu-opensearch"}},"spec":{"containers":[{"env":[{"name":"discovery.type","value":"single-node"},{"name":"plugins.security.disabled","value":"true"},{"name":"OPENSEARCH_JAVA_OPTS","value":"-Xms1g -Xmx1g"}],"image":"opensearchproject/opensearch:2.16.0","name":"opensearch","ports":[{"containerPort":9200,"name":"http"}],"volumeMounts":[{"mountPath":"/usr/share/opensearch/data","name":"data"}]}]}},"volumeClaimTemplates":[{"metadata":{"name":"data"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"50Gi"}},"storageClassName":"do-block-storage-xfs-retain"}}]}}
+   creationTimestamp: "2025-12-29T17:00:16Z"
+-  generation: 1
++  generation: 2
+   name: osdu-opensearch
+   namespace: osdu-data
+   resourceVersion: "1055667"
+@@ -31,6 +30,13 @@
+     spec:
+       containers:
+       - env:
++        - name: DISABLE_INSTALL_DEMO_CONFIG
++          value: "true"
++        - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
++          valueFrom:
++            secretKeyRef:
++              key: OPENSEARCH_INITIAL_ADMIN_PASSWORD
++              name: osdu-opensearch-secret
+         - name: discovery.type
+           value: single-node
+         - name: plugins.security.disabled
+diff -u -N /tmp/LIVE-4056537616/apps.v1.StatefulSet.osdu-data.osdu-postgres /tmp/MERGED-3306477048/apps.v1.StatefulSet.osdu-data.osdu-postgres
+--- /tmp/LIVE-4056537616/apps.v1.StatefulSet.osdu-data.osdu-postgres	2025-12-30 02:08:46.454553527 +0700
++++ /tmp/MERGED-3306477048/apps.v1.StatefulSet.osdu-data.osdu-postgres	2025-12-30 02:08:46.454553527 +0700
+@@ -3,11 +3,10 @@
+ metadata:
+   annotations:
+     argocd.argoproj.io/sync-wave: "0"
+-    argocd.argoproj.io/tracking-id: osdu-deps:apps/StatefulSet:osdu-data/osdu-postgres
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"apps/v1","kind":"StatefulSet","metadata":{"annotations":{"argocd.argoproj.io/sync-wave":"0","argocd.argoproj.io/tracking-id":"osdu-deps:apps/StatefulSet:osdu-data/osdu-postgres"},"name":"osdu-postgres","namespace":"osdu-data"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"osdu-postgres"}},"serviceName":"osdu-postgres","template":{"metadata":{"labels":{"app":"osdu-postgres"}},"spec":{"containers":[{"envFrom":[{"secretRef":{"name":"osdu-postgres-secret"}}],"image":"postgres:16-alpine","livenessProbe":{"exec":{"command":["sh","-lc","pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]},"initialDelaySeconds":30,"periodSeconds":10},"name":"postgres","ports":[{"containerPort":5432}],"readinessProbe":{"exec":{"command":["sh","-lc","pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]},"initialDelaySeconds":10,"periodSeconds":10},"volumeMounts":[{"mountPath":"/var/lib/postgresql/data","name":"data"}]}]}},"volumeClaimTemplates":[{"metadata":{"name":"data"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"20Gi"}},"storageClassName":"do-block-storage-retain"}}]}}
+   creationTimestamp: "2025-12-29T17:00:16Z"
+-  generation: 1
++  generation: 2
+   name: osdu-postgres
+   namespace: osdu-data
+   resourceVersion: "1050895"
+@@ -30,7 +29,10 @@
+         app: osdu-postgres
+     spec:
+       containers:
+-      - envFrom:
++      - env:
++        - name: PGDATA
++          value: /var/lib/postgresql/data/pgdata
++        envFrom:
+         - secretRef:
+             name: osdu-postgres-secret
+         image: postgres:16-alpine
+diff -u -N /tmp/LIVE-4056537616/apps.v1.StatefulSet.osdu-data.osdu-redpanda /tmp/MERGED-3306477048/apps.v1.StatefulSet.osdu-data.osdu-redpanda
+--- /tmp/LIVE-4056537616/apps.v1.StatefulSet.osdu-data.osdu-redpanda	2025-12-30 02:08:46.498554029 +0700
++++ /tmp/MERGED-3306477048/apps.v1.StatefulSet.osdu-data.osdu-redpanda	2025-12-30 02:08:46.498554029 +0700
+@@ -3,7 +3,6 @@
+ metadata:
+   annotations:
+     argocd.argoproj.io/sync-wave: "0"
+-    argocd.argoproj.io/tracking-id: osdu-deps:apps/StatefulSet:osdu-data/osdu-redpanda
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"apps/v1","kind":"StatefulSet","metadata":{"annotations":{"argocd.argoproj.io/sync-wave":"0","argocd.argoproj.io/tracking-id":"osdu-deps:apps/StatefulSet:osdu-data/osdu-redpanda"},"name":"osdu-redpanda","namespace":"osdu-data"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"osdu-redpanda"}},"serviceName":"osdu-kafka","template":{"metadata":{"labels":{"app":"osdu-redpanda"}},"spec":{"containers":[{"args":["redpanda","start","--overprovisioned","--smp=1","--memory=1G","--reserve-memory=0M","--node-id=0","--kafka-addr=PLAINTEXT://0.0.0.0:9092","--advertise-kafka-addr=PLAINTEXT://osdu-kafka.osdu-data.svc.cluster.local:9092"],"image":"redpandadata/redpanda:v24.2.6","name":"redpanda","ports":[{"containerPort":9092,"name":"kafka"}]}]}}}}
+   creationTimestamp: "2025-12-29T13:57:11Z"
+diff -u -N /tmp/LIVE-4056537616/batch.v1.Job.osdu-data.osdu-postgres-initdb /tmp/MERGED-3306477048/batch.v1.Job.osdu-data.osdu-postgres-initdb
+--- /tmp/LIVE-4056537616/batch.v1.Job.osdu-data.osdu-postgres-initdb	2025-12-30 02:08:46.510554166 +0700
++++ /tmp/MERGED-3306477048/batch.v1.Job.osdu-data.osdu-postgres-initdb	2025-12-30 02:08:46.510554166 +0700
+@@ -0,0 +1,81 @@
++apiVersion: batch/v1
++kind: Job
++metadata:
++  annotations:
++    argocd.argoproj.io/hook: PostSync
++    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
++    argocd.argoproj.io/sync-wave: "1"
++  creationTimestamp: "2025-12-29T19:08:46Z"
++  generation: 1
++  labels:
++    batch.kubernetes.io/controller-uid: 27b371da-e6ab-4232-b685-2329d47227db
++    batch.kubernetes.io/job-name: osdu-postgres-initdb
++    controller-uid: 27b371da-e6ab-4232-b685-2329d47227db
++    job-name: osdu-postgres-initdb
++  name: osdu-postgres-initdb
++  namespace: osdu-data
++  uid: 27b371da-e6ab-4232-b685-2329d47227db
++spec:
++  backoffLimit: 3
++  completionMode: NonIndexed
++  completions: 1
++  manualSelector: false
++  parallelism: 1
++  podReplacementPolicy: TerminatingOrFailed
++  selector:
++    matchLabels:
++      batch.kubernetes.io/controller-uid: 27b371da-e6ab-4232-b685-2329d47227db
++  suspend: false
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        batch.kubernetes.io/controller-uid: 27b371da-e6ab-4232-b685-2329d47227db
++        batch.kubernetes.io/job-name: osdu-postgres-initdb
++        controller-uid: 27b371da-e6ab-4232-b685-2329d47227db
++        job-name: osdu-postgres-initdb
++    spec:
++      containers:
++      - args:
++        - |
++          set -euo pipefail
++
++          echo "Waiting for Postgres..."
++          until pg_isready -h osdu-postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB"; do
++            sleep 3
++          done
++
++          # Danh sách DB tối thiểu (POC) – có thể tăng/giảm khi chốt distro ở Step 17
++          DBS="osdu partition entitlements legal schema storage registry file"
++
++          for db in $DBS; do
++            psql -h osdu-postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB" <<SQL
++            DO \$\$
++            BEGIN
++              IF NOT EXISTS (SELECT FROM pg_database WHERE datname = '$db') THEN
++                PERFORM dblink_exec('dbname=' || current_database(), 'CREATE DATABASE "$db"');
++              END IF;
++            END
++            \$\$;
++            SQL
++          done
++
++          echo "OK: initdb done"
++        command:
++        - sh
++        - -lc
++        envFrom:
++        - secretRef:
++            name: osdu-postgres-secret
++        image: postgres:16-alpine
++        imagePullPolicy: IfNotPresent
++        name: initdb
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      restartPolicy: Never
++      schedulerName: default-scheduler
++      securityContext: {}
++      terminationGracePeriodSeconds: 30
++status: {}
+diff -u -N /tmp/LIVE-4056537616/v1.ConfigMap.osdu-data.osdu-deps-stub /tmp/MERGED-3306477048/v1.ConfigMap.osdu-data.osdu-deps-stub
+--- /tmp/LIVE-4056537616/v1.ConfigMap.osdu-data.osdu-deps-stub	2025-12-30 02:08:45.914547368 +0700
++++ /tmp/MERGED-3306477048/v1.ConfigMap.osdu-data.osdu-deps-stub	2025-12-30 02:08:45.914547368 +0700
+@@ -4,7 +4,6 @@
+ kind: ConfigMap
+ metadata:
+   annotations:
+-    argocd.argoproj.io/tracking-id: osdu-deps:/ConfigMap:osdu-data/osdu-deps-stub
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"v1","data":{"note":"Step 15 will replace this stub with Postgres/OpenSearch/MinIO/Kafka"},"kind":"ConfigMap","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"osdu-deps:/ConfigMap:osdu-data/osdu-deps-stub"},"name":"osdu-deps-stub","namespace":"osdu-data"}}
+   creationTimestamp: "2025-12-28T08:42:22Z"
+diff -u -N /tmp/LIVE-4056537616/v1.ConfigMap.osdu-data.osdu-objectstore-config /tmp/MERGED-3306477048/v1.ConfigMap.osdu-data.osdu-objectstore-config
+--- /tmp/LIVE-4056537616/v1.ConfigMap.osdu-data.osdu-objectstore-config	2025-12-30 02:08:45.994548282 +0700
++++ /tmp/MERGED-3306477048/v1.ConfigMap.osdu-data.osdu-objectstore-config	2025-12-30 02:08:45.994548282 +0700
+@@ -6,7 +6,6 @@
+ kind: ConfigMap
+ metadata:
+   annotations:
+-    argocd.argoproj.io/tracking-id: osdu-deps:/ConfigMap:osdu-data/osdu-objectstore-config
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"v1","data":{"S3_ENDPOINT":"http://rook-ceph-rgw-osdu-store.rook-ceph.svc:80","S3_PATH_STYLE":"true","S3_REGION":"us-east-1"},"kind":"ConfigMap","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"osdu-deps:/ConfigMap:osdu-data/osdu-objectstore-config"},"name":"osdu-objectstore-config","namespace":"osdu-data"}}
+   creationTimestamp: "2025-12-29T13:57:11Z"
+diff -u -N /tmp/LIVE-4056537616/v1.Namespace..osdu-data /tmp/MERGED-3306477048/v1.Namespace..osdu-data
+--- /tmp/LIVE-4056537616/v1.Namespace..osdu-data	2025-12-30 02:08:45.842546547 +0700
++++ /tmp/MERGED-3306477048/v1.Namespace..osdu-data	2025-12-30 02:08:45.842546547 +0700
+@@ -2,7 +2,6 @@
+ kind: Namespace
+ metadata:
+   annotations:
+-    argocd.argoproj.io/tracking-id: osdu-deps:/Namespace:osdu-data/osdu-data
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"v1","kind":"Namespace","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"osdu-deps:/Namespace:osdu-data/osdu-data"},"labels":{"app.kubernetes.io/part-of":"osdu"},"name":"osdu-data"}}
+   creationTimestamp: "2025-12-28T08:42:22Z"
+diff -u -N /tmp/LIVE-4056537616/v1.Service.osdu-data.osdu-kafka /tmp/MERGED-3306477048/v1.Service.osdu-data.osdu-kafka
+--- /tmp/LIVE-4056537616/v1.Service.osdu-data.osdu-kafka	2025-12-30 02:08:46.078549239 +0700
++++ /tmp/MERGED-3306477048/v1.Service.osdu-data.osdu-kafka	2025-12-30 02:08:46.078549239 +0700
+@@ -2,7 +2,6 @@
+ kind: Service
+ metadata:
+   annotations:
+-    argocd.argoproj.io/tracking-id: osdu-deps:/Service:osdu-data/osdu-kafka
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"osdu-deps:/Service:osdu-data/osdu-kafka"},"name":"osdu-kafka","namespace":"osdu-data"},"spec":{"ports":[{"name":"kafka","port":9092,"targetPort":9092}],"selector":{"app":"osdu-redpanda"}}}
+   creationTimestamp: "2025-12-29T13:57:11Z"
+diff -u -N /tmp/LIVE-4056537616/v1.Service.osdu-data.osdu-opensearch /tmp/MERGED-3306477048/v1.Service.osdu-data.osdu-opensearch
+--- /tmp/LIVE-4056537616/v1.Service.osdu-data.osdu-opensearch	2025-12-30 02:08:46.154550106 +0700
++++ /tmp/MERGED-3306477048/v1.Service.osdu-data.osdu-opensearch	2025-12-30 02:08:46.154550106 +0700
+@@ -2,7 +2,6 @@
+ kind: Service
+ metadata:
+   annotations:
+-    argocd.argoproj.io/tracking-id: osdu-deps:/Service:osdu-data/osdu-opensearch
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"osdu-deps:/Service:osdu-data/osdu-opensearch"},"name":"osdu-opensearch","namespace":"osdu-data"},"spec":{"ports":[{"name":"http","port":9200,"targetPort":9200}],"selector":{"app":"osdu-opensearch"}}}
+   creationTimestamp: "2025-12-29T13:57:11Z"
+diff -u -N /tmp/LIVE-4056537616/v1.Service.osdu-data.osdu-postgres /tmp/MERGED-3306477048/v1.Service.osdu-data.osdu-postgres
+--- /tmp/LIVE-4056537616/v1.Service.osdu-data.osdu-postgres	2025-12-30 02:08:46.234551019 +0700
++++ /tmp/MERGED-3306477048/v1.Service.osdu-data.osdu-postgres	2025-12-30 02:08:46.234551019 +0700
+@@ -2,7 +2,6 @@
+ kind: Service
+ metadata:
+   annotations:
+-    argocd.argoproj.io/tracking-id: osdu-deps:/Service:osdu-data/osdu-postgres
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"osdu-deps:/Service:osdu-data/osdu-postgres"},"name":"osdu-postgres","namespace":"osdu-data"},"spec":{"ports":[{"name":"pg","port":5432,"targetPort":5432}],"selector":{"app":"osdu-postgres"}}}
+   creationTimestamp: "2025-12-29T13:57:11Z"
+diff -u -N /tmp/LIVE-4056537616/v1.Service.osdu-data.osdu-redis /tmp/MERGED-3306477048/v1.Service.osdu-data.osdu-redis
+--- /tmp/LIVE-4056537616/v1.Service.osdu-data.osdu-redis	2025-12-30 02:08:46.318551977 +0700
++++ /tmp/MERGED-3306477048/v1.Service.osdu-data.osdu-redis	2025-12-30 02:08:46.318551977 +0700
+@@ -2,7 +2,6 @@
+ kind: Service
+ metadata:
+   annotations:
+-    argocd.argoproj.io/tracking-id: osdu-deps:/Service:osdu-data/osdu-redis
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"osdu-deps:/Service:osdu-data/osdu-redis"},"name":"osdu-redis","namespace":"osdu-data"},"spec":{"ports":[{"name":"redis","port":6379,"targetPort":6379}],"selector":{"app":"osdu-redis"}}}
+   creationTimestamp: "2025-12-29T13:57:11Z"

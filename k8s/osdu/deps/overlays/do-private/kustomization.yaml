@@ -3,11 +3,41 @@ kind: Kustomization
 
 resources:
   - ../../base
-#  - namespace.yaml
   - marker-configmap.yaml
+#  - namespace.yaml  # giữ comment nếu base đã có Namespace osdu-data (tránh duplicate)
 
 patches:
+  # PVC patches (bạn đã làm đúng hướng)
   - path: patches/patch-storageclass-postgres.yaml
+    target:
+      group: apps
+      version: v1
+      kind: StatefulSet
+      name: osdu-postgres
+      namespace: osdu-data
+
   - path: patches/patch-storageclass-opensearch.yaml
+    target:
+      group: apps
+      version: v1
+      kind: StatefulSet
+      name: osdu-opensearch
+      namespace: osdu-data
+
+  # CRITICAL runtime fixes
   - path: patches/patch-postgres-pgdata.yaml
+    target:
+      group: apps
+      version: v1
+      kind: StatefulSet
+      name: osdu-postgres
+      namespace: osdu-data
+
   - path: patches/patch-opensearch-initial-admin-password.yaml
+    target:
+      group: apps
+      version: v1
+      kind: StatefulSet
+      name: osdu-opensearch
+      namespace: osdu-data
+
