@@ -1,0 +1,120 @@
+	at org.opensearch.bootstrap.OpenSearch.init(OpenSearch.java:181) [opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.OpenSearch.execute(OpenSearch.java:172) [opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.cli.EnvironmentAwareCommand.execute(EnvironmentAwareCommand.java:104) [opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.cli.Command.mainWithoutErrorHandling(Command.java:138) [opensearch-cli-2.16.0.jar:2.16.0]
+	at org.opensearch.cli.Command.main(Command.java:101) [opensearch-cli-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.OpenSearch.main(OpenSearch.java:138) [opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.OpenSearch.main(OpenSearch.java:104) [opensearch-2.16.0.jar:2.16.0]
+[2025-12-29T21:10:23,064][INFO ][o.o.i.r.ReindexPlugin    ] [osdu-opensearch-0] ReindexPlugin reloadSPI called
+[2025-12-29T21:10:23,065][INFO ][o.o.i.r.ReindexPlugin    ] [osdu-opensearch-0] Unable to find any implementation for RemoteReindexExtension
+[2025-12-29T21:10:23,120][INFO ][o.o.j.JobSchedulerPlugin ] [osdu-opensearch-0] Loaded scheduler extension: reports-scheduler, index: .opendistro-reports-definitions
+[2025-12-29T21:10:23,121][INFO ][o.o.j.JobSchedulerPlugin ] [osdu-opensearch-0] Loaded scheduler extension: opensearch_time_series_analytics, index: .opendistro-anomaly-detector-jobs
+[2025-12-29T21:10:23,122][INFO ][o.o.j.JobSchedulerPlugin ] [osdu-opensearch-0] Loaded scheduler extension: opendistro-index-management, index: .opendistro-ism-config
+[2025-12-29T21:10:23,123][INFO ][o.o.j.JobSchedulerPlugin ] [osdu-opensearch-0] Loaded scheduler extension: scheduler_geospatial_ip2geo_datasource, index: .scheduler-geospatial-ip2geo-datasource
+[2025-12-29T21:10:23,124][INFO ][o.o.j.JobSchedulerPlugin ] [osdu-opensearch-0] Loaded scheduler extension: opensearch_sap_job, index: .opensearch-sap--job
+[2025-12-29T21:10:23,145][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [aggs-matrix-stats]
+[2025-12-29T21:10:23,145][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [analysis-common]
+[2025-12-29T21:10:23,145][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [cache-common]
+[2025-12-29T21:10:23,145][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [geo]
+[2025-12-29T21:10:23,145][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [ingest-common]
+[2025-12-29T21:10:23,145][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [ingest-geoip]
+[2025-12-29T21:10:23,145][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [ingest-user-agent]
+[2025-12-29T21:10:23,145][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [lang-expression]
+[2025-12-29T21:10:23,145][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [lang-mustache]
+[2025-12-29T21:10:23,145][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [lang-painless]
+[2025-12-29T21:10:23,146][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [mapper-extras]
+[2025-12-29T21:10:23,146][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [opensearch-dashboards]
+[2025-12-29T21:10:23,146][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [parent-join]
+[2025-12-29T21:10:23,146][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [percolator]
+[2025-12-29T21:10:23,146][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [rank-eval]
+[2025-12-29T21:10:23,146][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [reindex]
+[2025-12-29T21:10:23,146][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [repository-url]
+[2025-12-29T21:10:23,146][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [search-pipeline-common]
+[2025-12-29T21:10:23,146][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [systemd]
+[2025-12-29T21:10:23,146][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded module [transport-netty4]
+[2025-12-29T21:10:23,146][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-alerting]
+[2025-12-29T21:10:23,147][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-anomaly-detection]
+[2025-12-29T21:10:23,147][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-asynchronous-search]
+[2025-12-29T21:10:23,147][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-cross-cluster-replication]
+[2025-12-29T21:10:23,147][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-custom-codecs]
+[2025-12-29T21:10:23,147][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-flow-framework]
+[2025-12-29T21:10:23,147][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-geospatial]
+[2025-12-29T21:10:23,147][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-index-management]
+[2025-12-29T21:10:23,147][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-job-scheduler]
+[2025-12-29T21:10:23,147][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-knn]
+[2025-12-29T21:10:23,147][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-ml]
+[2025-12-29T21:10:23,147][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-neural-search]
+[2025-12-29T21:10:23,147][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-notifications]
+[2025-12-29T21:10:23,147][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-notifications-core]
+[2025-12-29T21:10:23,148][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-observability]
+[2025-12-29T21:10:23,148][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-performance-analyzer]
+[2025-12-29T21:10:23,148][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-reports-scheduler]
+[2025-12-29T21:10:23,148][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-security]
+[2025-12-29T21:10:23,148][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-security-analytics]
+[2025-12-29T21:10:23,148][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-skills]
+[2025-12-29T21:10:23,148][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [opensearch-sql]
+[2025-12-29T21:10:23,148][INFO ][o.o.p.PluginsService     ] [osdu-opensearch-0] loaded plugin [query-insights]
+[2025-12-29T21:10:23,211][INFO ][o.o.e.ExtensionsManager  ] [osdu-opensearch-0] ExtensionsManager initialized
+[2025-12-29T21:10:23,226][ERROR][o.o.b.OpenSearchUncaughtExceptionHandler] [osdu-opensearch-0] uncaught exception in thread [main]
+org.opensearch.bootstrap.StartupException: OpenSearchException[failed to bind service]; nested: AccessDeniedException[/usr/share/opensearch/data/nodes];
+	at org.opensearch.bootstrap.OpenSearch.init(OpenSearch.java:185) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.OpenSearch.execute(OpenSearch.java:172) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.cli.EnvironmentAwareCommand.execute(EnvironmentAwareCommand.java:104) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.cli.Command.mainWithoutErrorHandling(Command.java:138) ~[opensearch-cli-2.16.0.jar:2.16.0]
+	at org.opensearch.cli.Command.main(Command.java:101) ~[opensearch-cli-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.OpenSearch.main(OpenSearch.java:138) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.OpenSearch.main(OpenSearch.java:104) ~[opensearch-2.16.0.jar:2.16.0]
+Caused by: org.opensearch.OpenSearchException: failed to bind service
+	at org.opensearch.node.Node.<init>(Node.java:1447) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.node.Node.<init>(Node.java:432) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.Bootstrap$5.<init>(Bootstrap.java:242) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.Bootstrap.setup(Bootstrap.java:242) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.Bootstrap.init(Bootstrap.java:404) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.OpenSearch.init(OpenSearch.java:181) ~[opensearch-2.16.0.jar:2.16.0]
+	... 6 more
+Caused by: java.nio.file.AccessDeniedException: /usr/share/opensearch/data/nodes
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:90) ~[?:?]
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106) ~[?:?]
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111) ~[?:?]
+	at java.base/sun.nio.fs.UnixFileSystemProvider.createDirectory(UnixFileSystemProvider.java:438) ~[?:?]
+	at java.base/java.nio.file.Files.createDirectory(Files.java:699) ~[?:?]
+	at java.base/java.nio.file.Files.createAndCheckIsDirectory(Files.java:807) ~[?:?]
+	at java.base/java.nio.file.Files.createDirectories(Files.java:793) ~[?:?]
+	at org.opensearch.env.NodeEnvironment.lambda$new$0(NodeEnvironment.java:332) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.env.NodeEnvironment$NodeLock.<init>(NodeEnvironment.java:264) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.env.NodeEnvironment.<init>(NodeEnvironment.java:330) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.env.NodeEnvironment.<init>(NodeEnvironment.java:301) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.node.Node.<init>(Node.java:550) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.node.Node.<init>(Node.java:432) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.Bootstrap$5.<init>(Bootstrap.java:242) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.Bootstrap.setup(Bootstrap.java:242) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.Bootstrap.init(Bootstrap.java:404) ~[opensearch-2.16.0.jar:2.16.0]
+	at org.opensearch.bootstrap.OpenSearch.init(OpenSearch.java:181) ~[opensearch-2.16.0.jar:2.16.0]
+	... 6 more
+uncaught exception in thread [main]
+OpenSearchException[failed to bind service]; nested: AccessDeniedException[/usr/share/opensearch/data/nodes];
+Likely root cause: java.nio.file.AccessDeniedException: /usr/share/opensearch/data/nodes
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:90)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.createDirectory(UnixFileSystemProvider.java:438)
+	at java.base/java.nio.file.Files.createDirectory(Files.java:699)
+	at java.base/java.nio.file.Files.createAndCheckIsDirectory(Files.java:807)
+	at java.base/java.nio.file.Files.createDirectories(Files.java:793)
+	at org.opensearch.env.NodeEnvironment.lambda$new$0(NodeEnvironment.java:332)
+	at org.opensearch.env.NodeEnvironment$NodeLock.<init>(NodeEnvironment.java:264)
+	at org.opensearch.env.NodeEnvironment.<init>(NodeEnvironment.java:330)
+	at org.opensearch.env.NodeEnvironment.<init>(NodeEnvironment.java:301)
+	at org.opensearch.node.Node.<init>(Node.java:550)
+	at org.opensearch.node.Node.<init>(Node.java:432)
+	at org.opensearch.bootstrap.Bootstrap$5.<init>(Bootstrap.java:242)
+	at org.opensearch.bootstrap.Bootstrap.setup(Bootstrap.java:242)
+	at org.opensearch.bootstrap.Bootstrap.init(Bootstrap.java:404)
+	at org.opensearch.bootstrap.OpenSearch.init(OpenSearch.java:181)
+	at org.opensearch.bootstrap.OpenSearch.execute(OpenSearch.java:172)
+	at org.opensearch.cli.EnvironmentAwareCommand.execute(EnvironmentAwareCommand.java:104)
+	at org.opensearch.cli.Command.mainWithoutErrorHandling(Command.java:138)
+	at org.opensearch.cli.Command.main(Command.java:101)
+	at org.opensearch.bootstrap.OpenSearch.main(OpenSearch.java:138)
+	at org.opensearch.bootstrap.OpenSearch.main(OpenSearch.java:104)
+For complete error details, refer to the log at /usr/share/opensearch/logs/docker-cluster.log

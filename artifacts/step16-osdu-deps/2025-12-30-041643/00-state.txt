@@ -1,0 +1,21 @@
+NAME                               READY   AGE     CONTAINERS   IMAGES
+statefulset.apps/osdu-opensearch   1/1     4h16m   opensearch   opensearchproject/opensearch:2.16.0
+statefulset.apps/osdu-postgres     1/1     4h16m   postgres     postgres:16-alpine
+statefulset.apps/osdu-redpanda     1/1     7h19m   redpanda     redpandadata/redpanda:v24.2.6
+
+NAME                              READY   STATUS    RESTARTS   AGE     IP                NODE           NOMINATED NODE   READINESS GATES
+pod/osdu-opensearch-0             1/1     Running   0          6m51s   192.168.246.255   workernode02   <none>           <none>
+pod/osdu-postgres-0               1/1     Running   0          10m     192.168.246.254   workernode02   <none>           <none>
+pod/osdu-postgres-initdb-4csrc    0/1     Error     0          33s     192.168.52.173    workernode01   <none>           <none>
+pod/osdu-postgres-initdb-hjzw9    0/1     Error     0          103s    192.168.52.170    workernode01   <none>           <none>
+pod/osdu-postgres-initdb-p99g9    0/1     Error     0          73s     192.168.52.172    workernode01   <none>           <none>
+pod/osdu-postgres-initdb-qxjkp    0/1     Error     0          93s     192.168.52.171    workernode01   <none>           <none>
+pod/osdu-redis-54df55c6bd-4rhfk   1/1     Running   0          7h19m   192.168.246.196   workernode02   <none>           <none>
+pod/osdu-redpanda-0               1/1     Running   0          7h19m   192.168.52.151    workernode01   <none>           <none>
+
+NAME                                           STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS                  VOLUMEATTRIBUTESCLASS   AGE     VOLUMEMODE
+persistentvolumeclaim/data-osdu-opensearch-0   Bound    pvc-567a6c5a-7deb-4de2-8d11-59e28cc4abd2   50Gi       RWO            do-block-storage-xfs-retain   <unset>                 4h16m   Filesystem
+persistentvolumeclaim/data-osdu-postgres-0     Bound    pvc-bb1cae6b-b162-4310-afd7-c1bbb50355b8   20Gi       RWO            do-block-storage-retain       <unset>                 4h16m   Filesystem
+
+NAME                             STATUS   COMPLETIONS   DURATION   AGE    CONTAINERS   IMAGES               SELECTOR
+job.batch/osdu-postgres-initdb   Failed   0/1           103s       103s   initdb       postgres:16-alpine   batch.kubernetes.io/controller-uid=9f159355-a116-4bc7-a667-b090553705d0

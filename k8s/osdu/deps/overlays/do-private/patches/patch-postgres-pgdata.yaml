@@ -24,7 +24,7 @@ spec:
 
       containers:
         - name: postgres
-          # ✅ “neutralize” nếu trước đó bạn set PGDATA=/var/lib/postgresql/data/pgdata
+          #  “neutralize” nếu trước đó bạn set PGDATA=/var/lib/postgresql/data/pgdata
           # (giờ ta mount subPath rồi, để PGDATA default cho chắc)
           env:
             - name: PGDATA

@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: osdu-opensearch
+  namespace: osdu-data
+spec:
+  template:
+    spec:
+      containers:
+        - name: opensearch
+          env:
+            - name: plugins.security.disabled
+              $patch: delete
+            - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+              $patch: delete
+

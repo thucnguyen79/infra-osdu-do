@@ -7,6 +7,7 @@ resources:
 #  - namespace.yaml  # giữ comment nếu base đã có Namespace osdu-data (tránh duplicate)
 
 patches:
+  - path: patches/patch-opensearch-env-clean.yaml
   # PVC patches (bạn đã làm đúng hướng)
   - path: patches/patch-storageclass-postgres.yaml
     target:
