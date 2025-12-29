@@ -1,0 +1,528 @@
+diff -u -N /tmp/LIVE-1688692429/apps.v1.Deployment.osdu-data.osdu-redis /tmp/MERGED-2486168541/apps.v1.Deployment.osdu-data.osdu-redis
+--- /tmp/LIVE-1688692429/apps.v1.Deployment.osdu-data.osdu-redis	2025-12-29 20:48:11.067265206 +0700
++++ /tmp/MERGED-2486168541/apps.v1.Deployment.osdu-data.osdu-redis	2025-12-29 20:48:11.067265206 +0700
+@@ -0,0 +1,44 @@
++apiVersion: apps/v1
++kind: Deployment
++metadata:
++  annotations:
++    argocd.argoproj.io/sync-wave: "0"
++  creationTimestamp: "2025-12-29T13:48:11Z"
++  generation: 1
++  name: osdu-redis
++  namespace: osdu-data
++  uid: ab0abe77-df43-49b3-b54a-a4ec1edd2cd8
++spec:
++  progressDeadlineSeconds: 600
++  replicas: 1
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app: osdu-redis
++  strategy:
++    rollingUpdate:
++      maxSurge: 25%
++      maxUnavailable: 25%
++    type: RollingUpdate
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app: osdu-redis
++    spec:
++      containers:
++      - image: redis:7-alpine
++        imagePullPolicy: IfNotPresent
++        name: redis
++        ports:
++        - containerPort: 6379
++          protocol: TCP
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext: {}
++      terminationGracePeriodSeconds: 30
++status: {}
+diff -u -N /tmp/LIVE-1688692429/apps.v1.StatefulSet.osdu-data.osdu-opensearch /tmp/MERGED-2486168541/apps.v1.StatefulSet.osdu-data.osdu-opensearch
+--- /tmp/LIVE-1688692429/apps.v1.StatefulSet.osdu-data.osdu-opensearch	2025-12-29 20:48:11.075265307 +0700
++++ /tmp/MERGED-2486168541/apps.v1.StatefulSet.osdu-data.osdu-opensearch	2025-12-29 20:48:11.075265307 +0700
+@@ -0,0 +1,72 @@
++apiVersion: apps/v1
++kind: StatefulSet
++metadata:
++  annotations:
++    argocd.argoproj.io/sync-wave: "0"
++  creationTimestamp: "2025-12-29T13:48:11Z"
++  generation: 1
++  name: osdu-opensearch
++  namespace: osdu-data
++  uid: 045b48c2-b810-4711-b59f-497ef454420d
++spec:
++  persistentVolumeClaimRetentionPolicy:
++    whenDeleted: Retain
++    whenScaled: Retain
++  podManagementPolicy: OrderedReady
++  replicas: 1
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app: osdu-opensearch
++  serviceName: osdu-opensearch
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app: osdu-opensearch
++    spec:
++      containers:
++      - env:
++        - name: discovery.type
++          value: single-node
++        - name: plugins.security.disabled
++          value: "true"
++        - name: OPENSEARCH_JAVA_OPTS
++          value: -Xms1g -Xmx1g
++        image: opensearchproject/opensearch:2.16.0
++        imagePullPolicy: IfNotPresent
++        name: opensearch
++        ports:
++        - containerPort: 9200
++          name: http
++          protocol: TCP
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /usr/share/opensearch/data
++          name: data
++      dnsPolicy: ClusterFirst
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext: {}
++      terminationGracePeriodSeconds: 30
++  updateStrategy:
++    rollingUpdate:
++      partition: 0
++    type: RollingUpdate
++  volumeClaimTemplates:
++  - apiVersion: v1
++    kind: PersistentVolumeClaim
++    metadata:
++      creationTimestamp: null
++      name: data
++    spec:
++      resources: {}
++      storageClassName: do-block-storage-xfs-retain
++      volumeMode: Filesystem
++    status:
++      phase: Pending
++status:
++  availableReplicas: 0
++  replicas: 0
+diff -u -N /tmp/LIVE-1688692429/apps.v1.StatefulSet.osdu-data.osdu-postgres /tmp/MERGED-2486168541/apps.v1.StatefulSet.osdu-data.osdu-postgres
+--- /tmp/LIVE-1688692429/apps.v1.StatefulSet.osdu-data.osdu-postgres	2025-12-29 20:48:11.087265458 +0700
++++ /tmp/MERGED-2486168541/apps.v1.StatefulSet.osdu-data.osdu-postgres	2025-12-29 20:48:11.087265458 +0700
+@@ -0,0 +1,89 @@
++apiVersion: apps/v1
++kind: StatefulSet
++metadata:
++  annotations:
++    argocd.argoproj.io/sync-wave: "0"
++  creationTimestamp: "2025-12-29T13:48:11Z"
++  generation: 1
++  name: osdu-postgres
++  namespace: osdu-data
++  uid: 74314fbf-1e2c-43f3-bd10-23bc287e32a2
++spec:
++  persistentVolumeClaimRetentionPolicy:
++    whenDeleted: Retain
++    whenScaled: Retain
++  podManagementPolicy: OrderedReady
++  replicas: 1
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app: osdu-postgres
++  serviceName: osdu-postgres
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app: osdu-postgres
++    spec:
++      containers:
++      - envFrom:
++        - secretRef:
++            name: osdu-postgres-secret
++        image: postgres:16-alpine
++        imagePullPolicy: IfNotPresent
++        livenessProbe:
++          exec:
++            command:
++            - sh
++            - -lc
++            - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
++          failureThreshold: 3
++          initialDelaySeconds: 30
++          periodSeconds: 10
++          successThreshold: 1
++          timeoutSeconds: 1
++        name: postgres
++        ports:
++        - containerPort: 5432
++          protocol: TCP
++        readinessProbe:
++          exec:
++            command:
++            - sh
++            - -lc
++            - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
++          failureThreshold: 3
++          initialDelaySeconds: 10
++          periodSeconds: 10
++          successThreshold: 1
++          timeoutSeconds: 1
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++        volumeMounts:
++        - mountPath: /var/lib/postgresql/data
++          name: data
++      dnsPolicy: ClusterFirst
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext: {}
++      terminationGracePeriodSeconds: 30
++  updateStrategy:
++    rollingUpdate:
++      partition: 0
++    type: RollingUpdate
++  volumeClaimTemplates:
++  - apiVersion: v1
++    kind: PersistentVolumeClaim
++    metadata:
++      creationTimestamp: null
++      name: data
++    spec:
++      resources: {}
++      storageClassName: do-block-storage-retain
++      volumeMode: Filesystem
++    status:
++      phase: Pending
++status:
++  availableReplicas: 0
++  replicas: 0
+diff -u -N /tmp/LIVE-1688692429/apps.v1.StatefulSet.osdu-data.osdu-redpanda /tmp/MERGED-2486168541/apps.v1.StatefulSet.osdu-data.osdu-redpanda
+--- /tmp/LIVE-1688692429/apps.v1.StatefulSet.osdu-data.osdu-redpanda	2025-12-29 20:48:11.095265560 +0700
++++ /tmp/MERGED-2486168541/apps.v1.StatefulSet.osdu-data.osdu-redpanda	2025-12-29 20:48:11.095265560 +0700
+@@ -0,0 +1,60 @@
++apiVersion: apps/v1
++kind: StatefulSet
++metadata:
++  annotations:
++    argocd.argoproj.io/sync-wave: "0"
++  creationTimestamp: "2025-12-29T13:48:11Z"
++  generation: 1
++  name: osdu-redpanda
++  namespace: osdu-data
++  uid: a56ca7c6-86bf-43b1-b534-13ba0a3eb419
++spec:
++  persistentVolumeClaimRetentionPolicy:
++    whenDeleted: Retain
++    whenScaled: Retain
++  podManagementPolicy: OrderedReady
++  replicas: 1
++  revisionHistoryLimit: 10
++  selector:
++    matchLabels:
++      app: osdu-redpanda
++  serviceName: osdu-kafka
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        app: osdu-redpanda
++    spec:
++      containers:
++      - args:
++        - redpanda
++        - start
++        - --overprovisioned
++        - --smp=1
++        - --memory=1G
++        - --reserve-memory=0M
++        - --node-id=0
++        - --kafka-addr=PLAINTEXT://0.0.0.0:9092
++        - --advertise-kafka-addr=PLAINTEXT://osdu-kafka.osdu-data.svc.cluster.local:9092
++        image: redpandadata/redpanda:v24.2.6
++        imagePullPolicy: IfNotPresent
++        name: redpanda
++        ports:
++        - containerPort: 9092
++          name: kafka
++          protocol: TCP
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      restartPolicy: Always
++      schedulerName: default-scheduler
++      securityContext: {}
++      terminationGracePeriodSeconds: 30
++  updateStrategy:
++    rollingUpdate:
++      partition: 0
++    type: RollingUpdate
++status:
++  availableReplicas: 0
++  replicas: 0
+diff -u -N /tmp/LIVE-1688692429/batch.v1.Job.osdu-data.osdu-postgres-initdb /tmp/MERGED-2486168541/batch.v1.Job.osdu-data.osdu-postgres-initdb
+--- /tmp/LIVE-1688692429/batch.v1.Job.osdu-data.osdu-postgres-initdb	2025-12-29 20:48:11.103265661 +0700
++++ /tmp/MERGED-2486168541/batch.v1.Job.osdu-data.osdu-postgres-initdb	2025-12-29 20:48:11.107265711 +0700
+@@ -0,0 +1,81 @@
++apiVersion: batch/v1
++kind: Job
++metadata:
++  annotations:
++    argocd.argoproj.io/hook: PostSync
++    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
++    argocd.argoproj.io/sync-wave: "1"
++  creationTimestamp: "2025-12-29T13:48:11Z"
++  generation: 1
++  labels:
++    batch.kubernetes.io/controller-uid: e9d3af28-60b8-4b18-8ded-19e541a70ae1
++    batch.kubernetes.io/job-name: osdu-postgres-initdb
++    controller-uid: e9d3af28-60b8-4b18-8ded-19e541a70ae1
++    job-name: osdu-postgres-initdb
++  name: osdu-postgres-initdb
++  namespace: osdu-data
++  uid: e9d3af28-60b8-4b18-8ded-19e541a70ae1
++spec:
++  backoffLimit: 3
++  completionMode: NonIndexed
++  completions: 1
++  manualSelector: false
++  parallelism: 1
++  podReplacementPolicy: TerminatingOrFailed
++  selector:
++    matchLabels:
++      batch.kubernetes.io/controller-uid: e9d3af28-60b8-4b18-8ded-19e541a70ae1
++  suspend: false
++  template:
++    metadata:
++      creationTimestamp: null
++      labels:
++        batch.kubernetes.io/controller-uid: e9d3af28-60b8-4b18-8ded-19e541a70ae1
++        batch.kubernetes.io/job-name: osdu-postgres-initdb
++        controller-uid: e9d3af28-60b8-4b18-8ded-19e541a70ae1
++        job-name: osdu-postgres-initdb
++    spec:
++      containers:
++      - args:
++        - |
++          set -euo pipefail
++
++          echo "Waiting for Postgres..."
++          until pg_isready -h osdu-postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB"; do
++            sleep 3
++          done
++
++          # Danh sách DB tối thiểu (POC) – có thể tăng/giảm khi chốt distro ở Step 17
++          DBS="osdu partition entitlements legal schema storage registry file"
++
++          for db in $DBS; do
++            psql -h osdu-postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB" <<SQL
++            DO \$\$
++            BEGIN
++              IF NOT EXISTS (SELECT FROM pg_database WHERE datname = '$db') THEN
++                PERFORM dblink_exec('dbname=' || current_database(), 'CREATE DATABASE "$db"');
++              END IF;
++            END
++            \$\$;
++            SQL
++          done
++
++          echo "OK: initdb done"
++        command:
++        - sh
++        - -lc
++        envFrom:
++        - secretRef:
++            name: osdu-postgres-secret
++        image: postgres:16-alpine
++        imagePullPolicy: IfNotPresent
++        name: initdb
++        resources: {}
++        terminationMessagePath: /dev/termination-log
++        terminationMessagePolicy: File
++      dnsPolicy: ClusterFirst
++      restartPolicy: Never
++      schedulerName: default-scheduler
++      securityContext: {}
++      terminationGracePeriodSeconds: 30
++status: {}
+diff -u -N /tmp/LIVE-1688692429/v1.ConfigMap.osdu-data.osdu-deps-stub /tmp/MERGED-2486168541/v1.ConfigMap.osdu-data.osdu-deps-stub
+--- /tmp/LIVE-1688692429/v1.ConfigMap.osdu-data.osdu-deps-stub	2025-12-29 20:48:11.015264549 +0700
++++ /tmp/MERGED-2486168541/v1.ConfigMap.osdu-data.osdu-deps-stub	2025-12-29 20:48:11.015264549 +0700
+@@ -4,7 +4,6 @@
+ kind: ConfigMap
+ metadata:
+   annotations:
+-    argocd.argoproj.io/tracking-id: osdu-deps:/ConfigMap:osdu-data/osdu-deps-stub
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"v1","data":{"note":"Step 15 will replace this stub with Postgres/OpenSearch/MinIO/Kafka"},"kind":"ConfigMap","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"osdu-deps:/ConfigMap:osdu-data/osdu-deps-stub"},"name":"osdu-deps-stub","namespace":"osdu-data"}}
+   creationTimestamp: "2025-12-28T08:42:22Z"
+diff -u -N /tmp/LIVE-1688692429/v1.ConfigMap.osdu-data.osdu-objectstore-config /tmp/MERGED-2486168541/v1.ConfigMap.osdu-data.osdu-objectstore-config
+--- /tmp/LIVE-1688692429/v1.ConfigMap.osdu-data.osdu-objectstore-config	2025-12-29 20:48:11.023264650 +0700
++++ /tmp/MERGED-2486168541/v1.ConfigMap.osdu-data.osdu-objectstore-config	2025-12-29 20:48:11.023264650 +0700
+@@ -0,0 +1,11 @@
++apiVersion: v1
++data:
++  S3_ENDPOINT: http://rook-ceph-rgw-osdu-store.rook-ceph.svc:80
++  S3_PATH_STYLE: "true"
++  S3_REGION: us-east-1
++kind: ConfigMap
++metadata:
++  creationTimestamp: "2025-12-29T13:48:11Z"
++  name: osdu-objectstore-config
++  namespace: osdu-data
++  uid: 4e3801bf-4bdb-40b1-bceb-0f7bd3156444
+diff -u -N /tmp/LIVE-1688692429/v1.Namespace..osdu-data /tmp/MERGED-2486168541/v1.Namespace..osdu-data
+--- /tmp/LIVE-1688692429/v1.Namespace..osdu-data	2025-12-29 20:48:10.931263487 +0700
++++ /tmp/MERGED-2486168541/v1.Namespace..osdu-data	2025-12-29 20:48:10.931263487 +0700
+@@ -2,11 +2,11 @@
+ kind: Namespace
+ metadata:
+   annotations:
+-    argocd.argoproj.io/tracking-id: osdu-deps:/Namespace:osdu-data/osdu-data
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"v1","kind":"Namespace","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"osdu-deps:/Namespace:osdu-data/osdu-data"},"name":"osdu-data"}}
+   creationTimestamp: "2025-12-28T08:42:22Z"
+   labels:
++    app.kubernetes.io/part-of: osdu
+     kubernetes.io/metadata.name: osdu-data
+   name: osdu-data
+   resourceVersion: "729151"
+diff -u -N /tmp/LIVE-1688692429/v1.Service.osdu-data.osdu-kafka /tmp/MERGED-2486168541/v1.Service.osdu-data.osdu-kafka
+--- /tmp/LIVE-1688692429/v1.Service.osdu-data.osdu-kafka	2025-12-29 20:48:11.031264751 +0700
++++ /tmp/MERGED-2486168541/v1.Service.osdu-data.osdu-kafka	2025-12-29 20:48:11.031264751 +0700
+@@ -0,0 +1,26 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-29T13:48:11Z"
++  name: osdu-kafka
++  namespace: osdu-data
++  uid: 063b4ffc-66d5-4fc4-bd4d-14a730921381
++spec:
++  clusterIP: 10.96.0.0
++  clusterIPs:
++  - 10.96.0.0
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - name: kafka
++    port: 9092
++    protocol: TCP
++    targetPort: 9092
++  selector:
++    app: osdu-redpanda
++  sessionAffinity: None
++  type: ClusterIP
++status:
++  loadBalancer: {}
+diff -u -N /tmp/LIVE-1688692429/v1.Service.osdu-data.osdu-opensearch /tmp/MERGED-2486168541/v1.Service.osdu-data.osdu-opensearch
+--- /tmp/LIVE-1688692429/v1.Service.osdu-data.osdu-opensearch	2025-12-29 20:48:11.043264902 +0700
++++ /tmp/MERGED-2486168541/v1.Service.osdu-data.osdu-opensearch	2025-12-29 20:48:11.043264902 +0700
+@@ -0,0 +1,26 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-29T13:48:11Z"
++  name: osdu-opensearch
++  namespace: osdu-data
++  uid: 2e1e1e31-843f-4dd9-b38c-3d5cd9b7f3a6
++spec:
++  clusterIP: 10.96.0.0
++  clusterIPs:
++  - 10.96.0.0
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - name: http
++    port: 9200
++    protocol: TCP
++    targetPort: 9200
++  selector:
++    app: osdu-opensearch
++  sessionAffinity: None
++  type: ClusterIP
++status:
++  loadBalancer: {}
+diff -u -N /tmp/LIVE-1688692429/v1.Service.osdu-data.osdu-postgres /tmp/MERGED-2486168541/v1.Service.osdu-data.osdu-postgres
+--- /tmp/LIVE-1688692429/v1.Service.osdu-data.osdu-postgres	2025-12-29 20:48:11.051265004 +0700
++++ /tmp/MERGED-2486168541/v1.Service.osdu-data.osdu-postgres	2025-12-29 20:48:11.051265004 +0700
+@@ -0,0 +1,26 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-29T13:48:11Z"
++  name: osdu-postgres
++  namespace: osdu-data
++  uid: a766a66c-0902-4e8b-940a-380342cea903
++spec:
++  clusterIP: 10.96.0.0
++  clusterIPs:
++  - 10.96.0.0
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - name: pg
++    port: 5432
++    protocol: TCP
++    targetPort: 5432
++  selector:
++    app: osdu-postgres
++  sessionAffinity: None
++  type: ClusterIP
++status:
++  loadBalancer: {}
+diff -u -N /tmp/LIVE-1688692429/v1.Service.osdu-data.osdu-redis /tmp/MERGED-2486168541/v1.Service.osdu-data.osdu-redis
+--- /tmp/LIVE-1688692429/v1.Service.osdu-data.osdu-redis	2025-12-29 20:48:11.059265105 +0700
++++ /tmp/MERGED-2486168541/v1.Service.osdu-data.osdu-redis	2025-12-29 20:48:11.059265105 +0700
+@@ -0,0 +1,26 @@
++apiVersion: v1
++kind: Service
++metadata:
++  creationTimestamp: "2025-12-29T13:48:11Z"
++  name: osdu-redis
++  namespace: osdu-data
++  uid: 0d85b848-1cdb-477e-9426-19160cbe2ae0
++spec:
++  clusterIP: 10.96.0.0
++  clusterIPs:
++  - 10.96.0.0
++  internalTrafficPolicy: Cluster
++  ipFamilies:
++  - IPv4
++  ipFamilyPolicy: SingleStack
++  ports:
++  - name: redis
++    port: 6379
++    protocol: TCP
++    targetPort: 6379
++  selector:
++    app: osdu-redis
++  sessionAffinity: None
++  type: ClusterIP
++status:
++  loadBalancer: {}

@@ -1,0 +1,3 @@
+== ceph rgw endpoint ==
+NAME         PHASE   ENDPOINT                                           SECUREENDPOINT   AGE
+osdu-store   Ready   http://rook-ceph-rgw-osdu-store.rook-ceph.svc:80                    4h11m

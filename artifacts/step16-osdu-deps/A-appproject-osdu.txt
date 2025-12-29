@@ -1,0 +1,31 @@
+== osdu AppProject destinations ==
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"AppProject","metadata":{"annotations":{},"name":"osdu","namespace":"argocd"},"spec":{"clusterResourceWhitelist":[{"group":"*","kind":"*"}],"description":"OSDU POC apps","destinations":[{"namespace":"argocd","server":"https://kubernetes.default.svc"},{"namespace":"osdu","server":"https://kubernetes.default.svc"},{"namespace":"osdu-identity","server":"https://kubernetes.default.svc"},{"namespace":"osdu-data","server":"https://kubernetes.default.svc"},{"namespace":"osdu-core","server":"https://kubernetes.default.svc"}],"sourceRepos":["*"]}}
+  creationTimestamp: "2025-12-28T08:42:02Z"
+  generation: 1
+  name: osdu
+  namespace: argocd
+  resourceVersion: "729062"
+  uid: 6e34b80b-613a-447c-9a35-db9a83ad411e
+spec:
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  description: OSDU POC apps
+  destinations:
+  - namespace: argocd
+    server: https://kubernetes.default.svc
+  - namespace: osdu
+    server: https://kubernetes.default.svc
+  - namespace: osdu-identity
+    server: https://kubernetes.default.svc
+  - namespace: osdu-data
+    server: https://kubernetes.default.svc
+  - namespace: osdu-core
+    server: https://kubernetes.default.svc
+  sourceRepos:
+  - '*'

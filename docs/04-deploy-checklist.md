@@ -333,3 +333,24 @@ Evidence:
 - [x] Test user created/fixed (profile + non-temporary password) -> access token acquired
 - [x] Realm export produced (`osdu-realm.json`) and stored under `artifacts/step14-identity/`
 - [x] Evidence committed/pushed (repo-first)
+
+## Step 15 - Data Ecosystem (Ceph Object Storage)
+### A. Triển khai Resources (Repo-first)
+- [x] **Vendor Rook Manifests:** Đã tải CRDs, Common, Operator v1.14.9 về `base/vendor`.
+- [x] **Cấu hình Overlay:**
+  - [x] `CephCluster`: Cấu hình Minimal (1 Mon, 1 OSD, No Replica).
+  - [x] `ObjectStore`: RGW Port 80.
+  - [x] `User`: Tạo user `osdu-s3-user`.
+  - [x] `Ingress/TLS`: Domain `s3.internal` với `internal-ca`.
+- [x] **GitOps:**
+  - [x] Commit code lên nhánh main.
+  - [x] ArgoCD App `osdu-ceph` (Project `default`) Synced & Healthy.
+
+### B. Kiểm tra & Nghiệm thu
+- [x] **Pods Health:**
+  - [x] Operator, Mon, Mgr Running.
+  - [x] OSD-0 Running (PVC 50Gi Bound).
+  - [x] RGW Running.
+- [x] **Kết nối S3:**
+  - [x] Lệnh `curl` nội bộ trả về 200 OK.
+  - [x] Đã lấy được AccessKey và SecretKey.

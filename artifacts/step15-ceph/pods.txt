@@ -1,0 +1,16 @@
+NAME                                               READY   STATUS      RESTARTS      AGE   IP                NODE           NOMINATED NODE   READINESS GATES
+csi-cephfsplugin-8gshz                             2/2     Running     0             14m   10.118.0.7        workernode02   <none>           <none>
+csi-cephfsplugin-jmqfb                             2/2     Running     1 (13m ago)   14m   10.118.0.6        workernode01   <none>           <none>
+csi-cephfsplugin-provisioner-868bf46b56-c9hl7      5/5     Running     0             14m   192.168.246.243   workernode02   <none>           <none>
+csi-cephfsplugin-provisioner-868bf46b56-q6vhx      5/5     Running     1 (13m ago)   14m   192.168.52.149    workernode01   <none>           <none>
+csi-rbdplugin-7gjj2                                2/2     Running     1 (13m ago)   14m   10.118.0.6        workernode01   <none>           <none>
+csi-rbdplugin-dd6dx                                2/2     Running     0             14m   10.118.0.7        workernode02   <none>           <none>
+csi-rbdplugin-provisioner-d9b9d694c-bn2cb          5/5     Running     0             14m   192.168.246.244   workernode02   <none>           <none>
+csi-rbdplugin-provisioner-d9b9d694c-n4hg9          5/5     Running     1 (13m ago)   14m   192.168.52.148    workernode01   <none>           <none>
+rook-ceph-exporter-workernode02-86586c56b5-v56wn   1/1     Running     0             14m   192.168.246.247   workernode02   <none>           <none>
+rook-ceph-mgr-a-5bfcdd86db-fgff9                   1/1     Running     0             14m   192.168.246.246   workernode02   <none>           <none>
+rook-ceph-mon-a-f5867cb6c-q5zk7                    1/1     Running     0             14m   192.168.246.242   workernode02   <none>           <none>
+rook-ceph-operator-7d5565fbc7-95rb6                1/1     Running     0             15m   192.168.246.238   workernode02   <none>           <none>
+rook-ceph-osd-0-7bfd847cff-6bn48                   1/1     Running     0             13m   192.168.246.250   workernode02   <none>           <none>
+rook-ceph-osd-prepare-osd-set-data-0ztbx8-zzw6n    0/1     Completed   0             13m   192.168.246.249   workernode02   <none>           <none>
+rook-ceph-rgw-osdu-store-a-5cbdbfb7d9-dp9zn        1/1     Running     0             12m   192.168.246.253   workernode02   <none>           <none>

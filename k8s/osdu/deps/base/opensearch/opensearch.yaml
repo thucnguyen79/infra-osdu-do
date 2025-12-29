@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: osdu-opensearch
+  namespace: osdu-data
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  serviceName: osdu-opensearch
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-opensearch
+  template:
+    metadata:
+      labels:
+        app: osdu-opensearch
+    spec:
+      containers:
+        - name: opensearch
+          image: opensearchproject/opensearch:2.16.0
+          env:
+            - name: discovery.type
+              value: single-node
+            - name: plugins.security.disabled
+              value: "true"
+            - name: OPENSEARCH_JAVA_OPTS
+              value: "-Xms1g -Xmx1g"
+          ports:
+            - containerPort: 9200
+              name: http
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/opensearch/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 50Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: osdu-opensearch
+  namespace: osdu-data
+spec:
+  selector:
+    app: osdu-opensearch
+  ports:
+    - name: http
+      port: 9200
+      targetPort: 9200
+

@@ -1,0 +1,5 @@
+== argocd apps ==
+app-of-apps-osdu            Synced        Healthy
+osdu-ceph                   Synced        Healthy
+osdu-deps                   Synced        Healthy
+osdu-identity               Synced        Healthy

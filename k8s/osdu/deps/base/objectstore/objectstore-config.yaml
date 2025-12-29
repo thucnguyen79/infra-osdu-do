@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osdu-objectstore-config
+  namespace: osdu-data
+data:
+  S3_ENDPOINT: "http://rook-ceph-rgw-osdu-store.rook-ceph.svc:80"
+  S3_REGION: "us-east-1"
+  S3_PATH_STYLE: "true"
+

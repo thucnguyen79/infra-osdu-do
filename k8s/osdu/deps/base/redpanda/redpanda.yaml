@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: osdu-redpanda
+  namespace: osdu-data
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  serviceName: osdu-kafka
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-redpanda
+  template:
+    metadata:
+      labels:
+        app: osdu-redpanda
+    spec:
+      containers:
+        - name: redpanda
+          image: redpandadata/redpanda:v24.2.6
+          args:
+            - redpanda
+            - start
+            - --overprovisioned
+            - --smp=1
+            - --memory=1G
+            - --reserve-memory=0M
+            - --node-id=0
+            - --kafka-addr=PLAINTEXT://0.0.0.0:9092
+            - --advertise-kafka-addr=PLAINTEXT://osdu-kafka.osdu-data.svc.cluster.local:9092
+          ports:
+            - containerPort: 9092
+              name: kafka
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: osdu-kafka
+  namespace: osdu-data
+spec:
+  selector:
+    app: osdu-redpanda
+  ports:
+    - name: kafka
+      port: 9092
+      targetPort: 9092
+

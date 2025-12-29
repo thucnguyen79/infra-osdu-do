@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: osdu-postgres-initdb
+  namespace: osdu-data
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: initdb
+          image: postgres:16-alpine
+          envFrom:
+            - secretRef:
+                name: osdu-postgres-secret
+          command: ["sh","-lc"]
+          args:
+            - |
+              set -euo pipefail
+
+              echo "Waiting for Postgres..."
+              until pg_isready -h osdu-postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB"; do
+                sleep 3
+              done
+
+              # Danh sách DB tối thiểu (POC) – có thể tăng/giảm khi chốt distro ở Step 17
+              DBS="osdu partition entitlements legal schema storage registry file"
+
+              for db in $DBS; do
+                psql -h osdu-postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB" <<SQL
+                DO \$\$
+                BEGIN
+                  IF NOT EXISTS (SELECT FROM pg_database WHERE datname = '$db') THEN
+                    PERFORM dblink_exec('dbname=' || current_database(), 'CREATE DATABASE "$db"');
+                  END IF;
+                END
+                \$\$;
+                SQL
+              done
+
+              echo "OK: initdb done"
+
