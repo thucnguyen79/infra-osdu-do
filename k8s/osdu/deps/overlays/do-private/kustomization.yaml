@@ -8,7 +8,7 @@ resources:
 
 patches:
   - path: patches/patch-opensearch-env-clean.yaml
-  - path: patches/patch-postgres-initdb-job.yaml
+  #- path: patches/patch-postgres-initdb-job.yaml
   # PVC patches (bạn đã làm đúng hướng)
   - path: patches/patch-storageclass-postgres.yaml
     target:

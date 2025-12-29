@@ -15,33 +15,39 @@ spec:
       containers:
         - name: initdb
           image: postgres:16-alpine
+          imagePullPolicy: IfNotPresent
           envFrom:
             - secretRef:
                 name: osdu-postgres-secret
-          command: ["sh","-lc"]
+          command: ["sh", "-c"]
           args:
-            - |
+            - |-
               set -euo pipefail
 
               echo "Waiting for Postgres..."
-              until pg_isready -h osdu-postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB"; do
-                sleep 3
+              # Dùng biến môi trường an toàn thay vì hardcode
+              export PGPASSWORD="${POSTGRES_PASSWORD:-}"
+              
+              # Chờ DB sẵn sàng
+              until pg_isready -h osdu-postgres -p 5432 -U "${POSTGRES_USER}"; do
+                echo "Waiting for postgres connection..."
+                sleep 2
               done
+              echo "Postgres is ready."
 
-              # Danh sách DB tối thiểu (POC) – có thể tăng/giảm khi chốt distro ở Step 17
-              DBS="osdu partition entitlements legal schema storage registry file"
-
+              DBS="osdu entitlements legal partition storage registry file schema notification"
+              
               for db in $DBS; do
-                psql -h osdu-postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB" <<SQL
-                DO \$\$
-                BEGIN
-                  IF NOT EXISTS (SELECT FROM pg_database WHERE datname = '$db') THEN
-                    PERFORM dblink_exec('dbname=' || current_database(), 'CREATE DATABASE "$db"');
-                  END IF;
-                END
-                \$\$;
-                SQL
+                echo "Ensure database: $db"
+                # Kiểm tra DB tồn tại chưa (trả về 1 nếu có)
+                EXISTS="$(psql -h osdu-postgres -p 5432 -U "${POSTGRES_USER}" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='${db}'")"
+                
+                if [ "${EXISTS}" != "1" ]; then
+                  echo "Creating database: $db"
+                  psql -h osdu-postgres -p 5432 -U "${POSTGRES_USER}" -d postgres -c "CREATE DATABASE \"${db}\";"
+                else
+                  echo "Database $db already exists."
+                fi
               done
 
-              echo "OK: initdb done"
-
+              echo "Initdb done."
