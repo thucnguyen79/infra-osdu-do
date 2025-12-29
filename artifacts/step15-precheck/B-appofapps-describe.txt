@@ -1,0 +1,304 @@
+== [B] Describe App-of-Apps (observability + osdu) ==
+---- app-of-apps-observability ----
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"Application","metadata":{"annotations":{},"name":"app-of-apps-observability","namespace":"argocd"},"spec":{"destination":{"namespace":"argocd","server":"https://kubernetes.default.svc"},"project":"default","source":{"directory":{"recurse":true},"path":"k8s/gitops/apps/observability","repoURL":"git@github.com:thucnguyen79/infra-osdu-do.git","targetRevision":"main"},"syncPolicy":{"syncOptions":["ServerSideApply=true"]}}}
+  creationTimestamp: "2025-12-28T04:03:05Z"
+  generation: 537
+  name: app-of-apps-observability
+  namespace: argocd
+  resourceVersion: "929636"
+  uid: 20b67d3d-52ff-4213-b3e3-00cb56df3fde
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    directory:
+      jsonnet: {}
+      recurse: true
+    path: k8s/gitops/apps/observability
+    repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+    targetRevision: main
+  syncPolicy:
+    syncOptions:
+    - ServerSideApply=true
+status:
+  controllerNamespace: argocd
+  health:
+    lastTransitionTime: "2025-12-28T04:03:07Z"
+    status: Healthy
+  history:
+  - deployStartedAt: "2025-12-28T05:43:35Z"
+    deployedAt: "2025-12-28T05:43:39Z"
+    id: 0
+    initiatedBy:
+      username: admin
+    revision: 76ae52b80d5e6fc04291f2f4445b2abbbde3cb57
+    source:
+      directory:
+        jsonnet: {}
+        recurse: true
+      path: k8s/gitops/apps/observability
+      repoURL: https://github.com/thucnguyen79/infra-osdu-do.git
+      targetRevision: main
+  - deployStartedAt: "2025-12-28T08:15:50Z"
+    deployedAt: "2025-12-28T08:15:54Z"
+    id: 1
+    initiatedBy:
+      username: admin
+    revision: 0583a00376b8f152f55cf8570785602c2b4d99a4
+    source:
+      directory:
+        jsonnet: {}
+        recurse: true
+      path: k8s/gitops/apps/observability
+      repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+      targetRevision: main
+  operationState:
+    finishedAt: "2025-12-28T08:15:54Z"
+    message: successfully synced (all tasks run)
+    operation:
+      initiatedBy:
+        username: admin
+      retry: {}
+      sync:
+        revision: 0583a00376b8f152f55cf8570785602c2b4d99a4
+        source:
+          directory:
+            jsonnet: {}
+            recurse: true
+          path: k8s/gitops/apps/observability
+          repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+          targetRevision: main
+        syncOptions:
+        - ServerSideApply=true
+        syncStrategy:
+          hook: {}
+    phase: Succeeded
+    startedAt: "2025-12-28T08:15:50Z"
+    syncResult:
+      resources:
+      - group: argoproj.io
+        hookPhase: Succeeded
+        kind: Application
+        message: application.argoproj.io/obs-kube-prometheus-stack serverside-applied
+        name: obs-kube-prometheus-stack
+        namespace: argocd
+        status: Synced
+        syncPhase: Sync
+        version: v1alpha1
+      - group: argoproj.io
+        hookPhase: Succeeded
+        kind: Application
+        message: application.argoproj.io/obs-ingress serverside-applied
+        name: obs-ingress
+        namespace: argocd
+        status: Synced
+        syncPhase: Sync
+        version: v1alpha1
+      - group: argoproj.io
+        hookPhase: Running
+        kind: Application
+        message: application.argoproj.io/obs-loki serverside-applied
+        name: obs-loki
+        namespace: argocd
+        status: Synced
+        syncPhase: Sync
+        version: v1alpha1
+      revision: 0583a00376b8f152f55cf8570785602c2b4d99a4
+      source:
+        directory:
+          jsonnet: {}
+          recurse: true
+        path: k8s/gitops/apps/observability
+        repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+        targetRevision: main
+  reconciledAt: "2025-12-29T06:45:40Z"
+  resourceHealthSource: appTree
+  resources:
+  - group: argoproj.io
+    kind: Application
+    name: obs-ingress
+    namespace: argocd
+    status: Synced
+    syncWave: 20
+    version: v1alpha1
+  - group: argoproj.io
+    kind: Application
+    name: obs-kube-prometheus-stack
+    namespace: argocd
+    status: Synced
+    syncWave: 10
+    version: v1alpha1
+  - group: argoproj.io
+    kind: Application
+    name: obs-loki
+    namespace: argocd
+    status: Synced
+    syncWave: 30
+    version: v1alpha1
+  sourceHydrator: {}
+  sourceType: Directory
+  summary: {}
+  sync:
+    comparedTo:
+      destination:
+        namespace: argocd
+        server: https://kubernetes.default.svc
+      source:
+        directory:
+          jsonnet: {}
+          recurse: true
+        path: k8s/gitops/apps/observability
+        repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+        targetRevision: main
+    revision: 347610db9f2229be0ef7faaf2dc0c831d2d17b97
+    status: Synced
+---- app-of-apps-osdu ----
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"Application","metadata":{"annotations":{},"name":"app-of-apps-osdu","namespace":"argocd"},"spec":{"destination":{"namespace":"argocd","server":"https://kubernetes.default.svc"},"project":"osdu","source":{"directory":{"recurse":true},"path":"k8s/gitops/apps/osdu","repoURL":"git@github.com:thucnguyen79/infra-osdu-do.git","targetRevision":"main"},"syncPolicy":{"automated":{"prune":true,"selfHeal":true}}}}
+  creationTimestamp: "2025-12-28T08:42:19Z"
+  generation: 423
+  name: app-of-apps-osdu
+  namespace: argocd
+  resourceVersion: "929799"
+  uid: 3046ec3d-56c0-4fee-9a98-3fb45c7e0e6b
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: osdu
+  source:
+    directory:
+      jsonnet: {}
+      recurse: true
+    path: k8s/gitops/apps/osdu
+    repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+status:
+  controllerNamespace: argocd
+  health:
+    lastTransitionTime: "2025-12-28T08:42:21Z"
+    status: Healthy
+  history:
+  - deployStartedAt: "2025-12-28T08:42:21Z"
+    deployedAt: "2025-12-28T08:42:21Z"
+    id: 0
+    initiatedBy:
+      automated: true
+    revision: 633a37ef18ce31d8390a22b93a14cb2a61105277
+    source:
+      directory:
+        jsonnet: {}
+        recurse: true
+      path: k8s/gitops/apps/osdu
+      repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+      targetRevision: main
+  operationState:
+    finishedAt: "2025-12-28T08:42:21Z"
+    message: successfully synced (all tasks run)
+    operation:
+      initiatedBy:
+        automated: true
+      retry:
+        limit: 5
+      sync:
+        prune: true
+        revision: 633a37ef18ce31d8390a22b93a14cb2a61105277
+        source:
+          directory:
+            jsonnet: {}
+            recurse: true
+          path: k8s/gitops/apps/osdu
+          repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+          targetRevision: main
+    phase: Succeeded
+    startedAt: "2025-12-28T08:42:21Z"
+    syncResult:
+      resources:
+      - group: argoproj.io
+        hookPhase: Running
+        kind: Application
+        message: application.argoproj.io/osdu-core created
+        name: osdu-core
+        namespace: argocd
+        status: Synced
+        syncPhase: Sync
+        version: v1alpha1
+      - group: argoproj.io
+        hookPhase: Running
+        kind: Application
+        message: application.argoproj.io/osdu-identity created
+        name: osdu-identity
+        namespace: argocd
+        status: Synced
+        syncPhase: Sync
+        version: v1alpha1
+      - group: argoproj.io
+        hookPhase: Running
+        kind: Application
+        message: application.argoproj.io/osdu-deps created
+        name: osdu-deps
+        namespace: argocd
+        status: Synced
+        syncPhase: Sync
+        version: v1alpha1
+      revision: 633a37ef18ce31d8390a22b93a14cb2a61105277
+      source:
+        directory:
+          jsonnet: {}
+          recurse: true
+        path: k8s/gitops/apps/osdu
+        repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+        targetRevision: main
+  reconciledAt: "2025-12-29T06:46:43Z"
+  resourceHealthSource: appTree
+  resources:
+  - group: argoproj.io
+    kind: Application
+    name: osdu-core
+    namespace: argocd
+    status: Synced
+    version: v1alpha1
+  - group: argoproj.io
+    kind: Application
+    name: osdu-deps
+    namespace: argocd
+    status: Synced
+    version: v1alpha1
+  - group: argoproj.io
+    kind: Application
+    name: osdu-identity
+    namespace: argocd
+    status: Synced
+    version: v1alpha1
+  sourceHydrator: {}
+  sourceType: Directory
+  summary: {}
+  sync:
+    comparedTo:
+      destination:
+        namespace: argocd
+        server: https://kubernetes.default.svc
+      source:
+        directory:
+          jsonnet: {}
+          recurse: true
+        path: k8s/gitops/apps/osdu
+        repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+        targetRevision: main
+    revision: 347610db9f2229be0ef7faaf2dc0c831d2d17b97
+    status: Synced

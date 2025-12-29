@@ -1,0 +1,68 @@
+== [D] Promtail/Loki resources in namespace observability ==
+NAME                                          DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE   CONTAINERS      IMAGES                                     SELECTOR
+daemonset.apps/kps-prometheus-node-exporter   5         5         5       5            5           kubernetes.io/os=linux   39h   node-exporter   quay.io/prometheus/node-exporter:v1.10.2   app.kubernetes.io/instance=kps,app.kubernetes.io/name=prometheus-node-exporter
+daemonset.apps/loki-canary                    2         2         2       2            2           <none>                   36h   loki-canary     docker.io/grafana/loki-canary:3.6.3        app.kubernetes.io/component=canary,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+daemonset.apps/promtail                       5         5         5       5            5           <none>                   36h   promtail        docker.io/grafana/promtail:3.5.1           app.kubernetes.io/instance=promtail,app.kubernetes.io/name=promtail
+
+NAME                                                        READY   STATUS      RESTARTS   AGE   IP                NODE             NOMINATED NODE   READINESS GATES
+pod/alertmanager-kps-kube-prometheus-stack-alertmanager-0   2/2     Running     0          39h   192.168.52.141    workernode01     <none>           <none>
+pod/kps-grafana-56f5b675c9-nl25q                            3/3     Running     0          36h   192.168.246.216   workernode02     <none>           <none>
+pod/kps-grafana-test                                        0/1     Completed   0          37h   192.168.246.210   workernode02     <none>           <none>
+pod/kps-kube-prometheus-stack-operator-5b47c57749-67qrs     1/1     Running     0          39h   192.168.52.140    workernode01     <none>           <none>
+pod/kps-kube-state-metrics-5c9bb4b8c-qvtnd                  1/1     Running     0          39h   192.168.52.139    workernode01     <none>           <none>
+pod/kps-prometheus-node-exporter-6n8h4                      1/1     Running     0          39h   10.118.0.2        controlplane01   <none>           <none>
+pod/kps-prometheus-node-exporter-gj5hn                      1/1     Running     0          39h   10.118.0.4        controlplane03   <none>           <none>
+pod/kps-prometheus-node-exporter-sk7p8                      1/1     Running     0          39h   10.118.0.3        controlplane02   <none>           <none>
+pod/kps-prometheus-node-exporter-vbhk7                      1/1     Running     0          39h   10.118.0.6        workernode01     <none>           <none>
+pod/kps-prometheus-node-exporter-wz9l2                      1/1     Running     0          39h   10.118.0.7        workernode02     <none>           <none>
+pod/loki-0                                                  2/2     Running     0          36h   192.168.246.215   workernode02     <none>           <none>
+pod/loki-canary-4dg7j                                       1/1     Running     0          36h   192.168.52.145    workernode01     <none>           <none>
+pod/loki-canary-hntjp                                       1/1     Running     0          36h   192.168.246.213   workernode02     <none>           <none>
+pod/loki-chunks-cache-0                                     2/2     Running     0          36h   192.168.52.144    workernode01     <none>           <none>
+pod/loki-helm-test                                          0/1     Error       0          36h   192.168.52.146    workernode01     <none>           <none>
+pod/loki-results-cache-0                                    2/2     Running     0          36h   192.168.246.212   workernode02     <none>           <none>
+pod/prometheus-kps-kube-prometheus-stack-prometheus-0       2/2     Running     0          39h   192.168.246.206   workernode02     <none>           <none>
+pod/promtail-648hr                                          1/1     Running     0          36h   192.168.246.214   workernode02     <none>           <none>
+pod/promtail-6rqzj                                          1/1     Running     0          36h   192.168.198.193   controlplane03   <none>           <none>
+pod/promtail-lx28k                                          1/1     Running     0          36h   192.168.52.147    workernode01     <none>           <none>
+pod/promtail-tpxxw                                          1/1     Running     0          36h   192.168.232.1     controlplane02   <none>           <none>
+pod/promtail-ts7jd                                          1/1     Running     0          36h   192.168.40.68     controlplane01   <none>           <none>
+
+NAME                                             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE   SELECTOR
+service/alertmanager-operated                    ClusterIP   None             <none>        9093/TCP,9094/TCP,9094/UDP   39h   app.kubernetes.io/name=alertmanager
+service/kps-grafana                              ClusterIP   10.108.50.164    <none>        80/TCP                       39h   app.kubernetes.io/instance=kps,app.kubernetes.io/name=grafana
+service/kps-kube-prometheus-stack-alertmanager   ClusterIP   10.100.213.101   <none>        9093/TCP,8080/TCP            39h   alertmanager=kps-kube-prometheus-stack-alertmanager,app.kubernetes.io/name=alertmanager
+service/kps-kube-prometheus-stack-operator       ClusterIP   10.107.235.204   <none>        443/TCP                      39h   app=kube-prometheus-stack-operator,release=kps
+service/kps-kube-prometheus-stack-prometheus     ClusterIP   10.105.2.83      <none>        9090/TCP,8080/TCP            39h   app.kubernetes.io/name=prometheus,operator.prometheus.io/name=kps-kube-prometheus-stack-prometheus
+service/kps-kube-state-metrics                   ClusterIP   10.111.148.51    <none>        8080/TCP                     39h   app.kubernetes.io/instance=kps,app.kubernetes.io/name=kube-state-metrics
+service/kps-prometheus-node-exporter             ClusterIP   10.110.178.198   <none>        9100/TCP                     39h   app.kubernetes.io/instance=kps,app.kubernetes.io/name=prometheus-node-exporter
+service/loki                                     ClusterIP   10.97.135.96     <none>        3100/TCP,9095/TCP            36h   app.kubernetes.io/component=single-binary,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+service/loki-canary                              ClusterIP   10.96.107.251    <none>        3500/TCP                     36h   app.kubernetes.io/component=canary,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+service/loki-chunks-cache                        ClusterIP   None             <none>        11211/TCP,9150/TCP           36h   app.kubernetes.io/component=memcached-chunks-cache,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+service/loki-headless                            ClusterIP   None             <none>        3100/TCP                     36h   app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+service/loki-memberlist                          ClusterIP   None             <none>        7946/TCP                     36h   app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki,app.kubernetes.io/part-of=memberlist
+service/loki-results-cache                       ClusterIP   None             <none>        11211/TCP,9150/TCP           36h   app.kubernetes.io/component=memcached-results-cache,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+service/prometheus-operated                      ClusterIP   None             <none>        9090/TCP                     39h   app.kubernetes.io/name=prometheus
+--- Filter promtail ---
+NAME                      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE   CONTAINERS   IMAGES                             SELECTOR
+daemonset.apps/promtail   5         5         5       5            5           <none>          36h   promtail     docker.io/grafana/promtail:3.5.1   app.kubernetes.io/instance=promtail,app.kubernetes.io/name=promtail
+
+NAME                 READY   STATUS    RESTARTS   AGE   IP                NODE             NOMINATED NODE   READINESS GATES
+pod/promtail-648hr   1/1     Running   0          36h   192.168.246.214   workernode02     <none>           <none>
+pod/promtail-6rqzj   1/1     Running   0          36h   192.168.198.193   controlplane03   <none>           <none>
+pod/promtail-lx28k   1/1     Running   0          36h   192.168.52.147    workernode01     <none>           <none>
+pod/promtail-tpxxw   1/1     Running   0          36h   192.168.232.1     controlplane02   <none>           <none>
+pod/promtail-ts7jd   1/1     Running   0          36h   192.168.40.68     controlplane01   <none>           <none>
+--- Filter loki ---
+NAME                                  READY   AGE   CONTAINERS           IMAGES
+statefulset.apps/loki                 1/1     36h   loki,loki-sc-rules   docker.io/grafana/loki:3.6.3,docker.io/kiwigrid/k8s-sidecar:1.30.9
+statefulset.apps/loki-chunks-cache    1/1     36h   memcached,exporter   memcached:1.6.39-alpine,prom/memcached-exporter:v0.15.4
+statefulset.apps/loki-results-cache   1/1     36h   memcached,exporter   memcached:1.6.39-alpine,prom/memcached-exporter:v0.15.4
+
+NAME                         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)              AGE   SELECTOR
+service/loki                 ClusterIP   10.97.135.96    <none>        3100/TCP,9095/TCP    36h   app.kubernetes.io/component=single-binary,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+service/loki-canary          ClusterIP   10.96.107.251   <none>        3500/TCP             36h   app.kubernetes.io/component=canary,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+service/loki-chunks-cache    ClusterIP   None            <none>        11211/TCP,9150/TCP   36h   app.kubernetes.io/component=memcached-chunks-cache,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+service/loki-headless        ClusterIP   None            <none>        3100/TCP             36h   app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
+service/loki-memberlist      ClusterIP   None            <none>        7946/TCP             36h   app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki,app.kubernetes.io/part-of=memberlist
+service/loki-results-cache   ClusterIP   None            <none>        11211/TCP,9150/TCP   36h   app.kubernetes.io/component=memcached-results-cache,app.kubernetes.io/instance=loki,app.kubernetes.io/name=loki
