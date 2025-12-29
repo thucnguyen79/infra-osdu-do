@@ -9,4 +9,5 @@ resources:
 patches:
   - path: patches/patch-storageclass-postgres.yaml
   - path: patches/patch-storageclass-opensearch.yaml
-
+  - path: patches/patch-postgres-pgdata.yaml
+  - path: patches/patch-opensearch-initial-admin-password.yaml
