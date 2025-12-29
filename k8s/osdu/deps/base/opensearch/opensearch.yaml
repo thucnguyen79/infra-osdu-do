@@ -22,8 +22,14 @@ spec:
           env:
             - name: discovery.type
               value: single-node
-            - name: plugins.security.disabled
+
+            # them 2 dong
+            - name: DISABLE_INSTALL_DEMO_CONFIG
               value: "true"
+            - name: DISABLE_SECURITY_PLUGIN
+              value: "true"
+            # - name: plugins.security.disabled
+            #   value: "true"
             - name: OPENSEARCH_JAVA_OPTS
               value: "-Xms1g -Xmx1g"
           ports:

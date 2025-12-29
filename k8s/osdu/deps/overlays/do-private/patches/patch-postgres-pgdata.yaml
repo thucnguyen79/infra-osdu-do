@@ -8,21 +8,30 @@ spec:
     spec:
       initContainers:
         - name: init-pgdata-dir
-          image: postgres:16-alpine
+          image: busybox:1.36
           command:
             - sh
             - -c
             - |
-              mkdir -p /var/lib/postgresql/data/pgdata
-              chown -R postgres:postgres /var/lib/postgresql/data/pgdata
+              set -eux
+              mkdir -p /mnt/pgdata
+              chown -R 999:999 /mnt/pgdata
           securityContext:
             runAsUser: 0
           volumeMounts:
             - name: data
-              mountPath: /var/lib/postgresql/data
+              mountPath: /mnt
+
       containers:
         - name: postgres
+          # ✅ “neutralize” nếu trước đó bạn set PGDATA=/var/lib/postgresql/data/pgdata
+          # (giờ ta mount subPath rồi, để PGDATA default cho chắc)
           env:
             - name: PGDATA
-              value: /var/lib/postgresql/data/pgdata
+              value: /var/lib/postgresql/data
+
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+              subPath: pgdata
 
