@@ -392,3 +392,41 @@ Triển khai các dependency nền phục vụ Step 17 (OSDU core services): Pos
 
 - [ ] **Artifacts**
   - [ ] Lưu toàn bộ output vào `artifacts/step16-osdu-deps/<timestamp>/` (không commit secrets)
+
+## Step 17 — OSDU Core scaffold + Tooling (osdu-core)
+
+### Mục tiêu
+Tạo khung triển khai `osdu-core` theo GitOps (ArgoCD + Kustomize), đồng thời dựng **toolbox** để kiểm tra connectivity từ trong cluster và chuẩn bị **AdminCLI** phục vụ bootstrap/ops ở các step kế tiếp.
+
+### Checklist (Runbook-level)
+
+- [ ] **Precheck**
+  - [ ] `kubectl -n osdu-data get sts,pod -o wide` → deps READY
+  - [ ] `kubectl -n argocd get applications | egrep 'osdu-deps|osdu-identity'` → Synced/Healthy
+
+- [ ] **Repo-first**
+  - [ ] Có `k8s/osdu/core/base/` (toolbox deployment) + `k8s/osdu/core/overlays/do-private/` (namespace + marker)
+  - [ ] Render check: `kubectl kustomize k8s/osdu/core/overlays/do-private` không lỗi
+  - [ ] (Nếu chưa có) tạo ArgoCD `Application/osdu-core` trỏ đến `k8s/osdu/core/overlays/do-private` và `CreateNamespace=true`
+  - [ ] Commit/Push repo
+
+- [ ] **GitOps Sync**
+  - [ ] ArgoCD app `osdu-core` Refresh + Sync
+
+- [ ] **Verify**
+  - [ ] `kubectl -n osdu-core get deploy,pod,cm -o wide` → `osdu-toolbox` Running
+
+- [ ] **Smoke checks (from inside cluster)**
+  - [ ] DNS: resolve `osdu-postgres.osdu-data`, `osdu-opensearch.osdu-data`
+  - [ ] OpenSearch: `curl http://osdu-opensearch.osdu-data:9200/_cluster/health?pretty`
+  - [ ] Postgres: copy secret `osdu-postgres-secret` sang `osdu-core` (out-of-band), `psql` list roles/DB
+  - [ ] Redis: `redis-cli ping` (ephemeral pod)
+  - [ ] Redpanda: `rpk cluster info` (ephemeral pod)
+
+- [ ] **AdminCLI**
+  - [ ] Cài/chuẩn bị AdminCLI (container hoặc pipx) và chạy được `admincli --help`
+
+- [ ] **Artifacts**
+  - [ ] Lưu output vào `artifacts/step17-osdu-core/<timestamp>/` (không commit secrets)
+
+**Tài liệu chi tiết:** `docs/35-step17-osdu-core.md`
