@@ -16,34 +16,34 @@ spec:
     spec:
       containers:
         - name: partition
-          image: community.opengroup.org:5555/osdu/platform/system/partition:latest
+          image: community.opengroup.org:5555/osdu/platform/system/partition/partition-osm/osdu-gcp-partition:0.26.1-rc3
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           envFrom:
             - configMapRef:
                 name: osdu-core-env
           env:
-            - name: SPRING_DATASOURCE_URL
+            - name: SPRING_PROFILES_ACTIVE
+              value: "osm,gcp"
+            - name: osm.postgres.datasource.url
               value: "jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/partition"
-            - name: SPRING_DATASOURCE_USERNAME
+            - name: osm.postgres.datasource.username
               valueFrom:
                 secretKeyRef:
                   name: osdu-postgres-secret
                   key: POSTGRES_USER
-            - name: SPRING_DATASOURCE_PASSWORD
+            - name: osm.postgres.datasource.password
               valueFrom:
                 secretKeyRef:
                   name: osdu-postgres-secret
                   key: POSTGRES_PASSWORD
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: "$(KEYCLOAK_ISSUER_URI)"
+            - name: PARTITION_AUTH_ENABLED
+              value: "false"
           readinessProbe:
             tcpSocket:
               port: 8080
-            initialDelaySeconds: 10
+            initialDelaySeconds: 20
             periodSeconds: 10
-          livenessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 20
