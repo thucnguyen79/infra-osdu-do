@@ -1,0 +1,62 @@
+== opensearch events ==
+Name:             osdu-opensearch-0
+Namespace:        osdu-data
+Priority:         0
+Service Account:  default
+Node:             workernode01/10.118.0.6
+Start Time:       Tue, 30 Dec 2025 04:28:18 +0700
+Labels:           app=osdu-opensearch
+                  apps.kubernetes.io/pod-index=0
+                  controller-revision-hash=osdu-opensearch-64bc76bdf5
+                  statefulset.kubernetes.io/pod-name=osdu-opensearch-0
+Annotations:      cni.projectcalico.org/containerID: e4d0a2ce812e1b72ab93be48448f3da81eb57517bc9fcddef499b62b82cdfb74
+                  cni.projectcalico.org/podIP: 192.168.52.182/32
+                  cni.projectcalico.org/podIPs: 192.168.52.182/32
+                  kubectl.kubernetes.io/restartedAt: 2025-12-30T03:04:01+07:00
+Status:           Running
+IP:               192.168.52.182
+IPs:
+  IP:           192.168.52.182
+Controlled By:  StatefulSet/osdu-opensearch
+Containers:
+  opensearch:
+    Container ID:   containerd://304e99a3ed383a37a758f5e7b5a7a1d09d119ad5ed3f3d1d699c1f55b678c30f
+    Image:          opensearchproject/opensearch:2.16.0
+    Image ID:       docker.io/opensearchproject/opensearch@sha256:d5dd094fd48bdc4dfd032b7137c9c44a697071dcf320f1a76bc4159fe079679c
+    Port:           9200/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Tue, 30 Dec 2025 04:28:30 +0700
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      DISABLE_INSTALL_DEMO_CONFIG:  true
+      DISABLE_SECURITY_PLUGIN:      true
+      discovery.type:               single-node
+      OPENSEARCH_JAVA_OPTS:         -Xms1g -Xmx1g
+    Mounts:
+      /usr/share/opensearch/data from data (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-76rp7 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  data:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  data-osdu-opensearch-0
+    ReadOnly:   false
+  kube-api-access-76rp7:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:                      <none>

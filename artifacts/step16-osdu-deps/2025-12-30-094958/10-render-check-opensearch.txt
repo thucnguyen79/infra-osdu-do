@@ -1,0 +1,8 @@
+137:          runAsUser: 1000
+139:        - mountPath: /usr/share/opensearch/data
+145:          mkdir -p /usr/share/opensearch/data/nodes
+146:          chown -R 1000:1000 /usr/share/opensearch/data
+147:          chmod -R g+rwX /usr/share/opensearch/data
+152:        name: init-opensearch-data-perms
+156:        - mountPath: /usr/share/opensearch/data
+159:        fsGroup: 1000
