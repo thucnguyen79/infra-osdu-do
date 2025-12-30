@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-toolbox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-toolbox
+  template:
+    metadata:
+      labels:
+        app: osdu-toolbox
+    spec:
+      containers:
+        - name: toolbox
+          image: postgres:16-alpine
+          imagePullPolicy: IfNotPresent
+          command: ["sh","-c"]
+          args: ["sleep infinity"]
+          # postgres image có sẵn psql/pg_isready.
+          # Khi cần curl/jq/nslookup: apk add --no-cache curl jq bind-tools

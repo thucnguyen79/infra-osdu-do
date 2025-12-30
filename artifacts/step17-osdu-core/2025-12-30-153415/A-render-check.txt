@@ -1,0 +1,3 @@
+9:kind: ConfigMap
+15:kind: Deployment
+17:  name: osdu-toolbox
