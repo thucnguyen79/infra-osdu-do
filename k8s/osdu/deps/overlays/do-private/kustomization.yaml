@@ -9,6 +9,12 @@ resources:
 patches:
   - path: patches/patch-opensearch-env-clean.yaml
   - path: patches/patch-opensearch-permissions.yaml
+    target:
+      group: apps
+      version: v1
+      kind: StatefulSet
+      name: osdu-opensearch
+      namespace: osdu-data
   #- path: patches/patch-postgres-initdb-job.yaml
   # PVC patches (bạn đã làm đúng hướng)
   - path: patches/patch-storageclass-postgres.yaml
