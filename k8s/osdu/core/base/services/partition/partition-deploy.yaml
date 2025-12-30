@@ -16,7 +16,8 @@ spec:
     spec:
       containers:
         - name: partition
-          image: community.opengroup.org:5555/osdu/platform/system/partition/partition-osm/osdu-gcp-partition:0.26.1-rc3
+          # SỬA: Dùng image partition-gc (bản M24 - 0.27.0)
+          image: community.opengroup.org:5555/osdu/platform/system/partition/partition-gc:0.27.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -24,8 +25,10 @@ spec:
             - configMapRef:
                 name: osdu-core-env
           env:
+            # SỬA: Image GC dùng profile 'gcp' để kích hoạt driver Postgres
             - name: SPRING_PROFILES_ACTIVE
-              value: "osm,gcp"
+              value: "gcp"
+            # Các biến kết nối DB vẫn giữ nguyên
             - name: osm.postgres.datasource.url
               value: "jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/partition"
             - name: osm.postgres.datasource.username
@@ -40,8 +43,12 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: "$(KEYCLOAK_ISSUER_URI)"
+            # Giữ tắt Auth để bootstrap
             - name: PARTITION_AUTH_ENABLED
               value: "false"
+            # Thêm biến này cho chắc chắn (đôi khi image GC cần)
+            - name: CLOUD_PROVIDER
+              value: "gcp"
           readinessProbe:
             tcpSocket:
               port: 8080
