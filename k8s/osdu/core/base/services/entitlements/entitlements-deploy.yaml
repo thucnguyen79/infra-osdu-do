@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-entitlements
+  labels:
+    app: osdu-entitlements
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-entitlements
+  template:
+    metadata:
+      labels:
+        app: osdu-entitlements
+    spec:
+      containers:
+        - name: entitlements
+          image: community.opengroup.org:5555/osdu/platform/security-and-compliance/entitlements:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: osdu-core-env
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/entitlements"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-postgres-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: "$(KEYCLOAK_ISSUER_URI)"
+            - name: PARTITION_BASE_URL
+              value: "http://osdu-partition:8080"
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 20

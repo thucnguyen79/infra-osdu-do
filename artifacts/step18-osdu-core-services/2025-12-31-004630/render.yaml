@@ -1,0 +1,467 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: osdu-core
+---
+apiVersion: v1
+data:
+  KAFKA_BOOTSTRAP_SERVERS: ""
+  KEYCLOAK_BASE_URL: ""
+  KEYCLOAK_ISSUER_URI: ""
+  KEYCLOAK_REALM: ""
+  OPENSEARCH_HOST: ""
+  OPENSEARCH_PORT: ""
+  POSTGRES_HOST: ""
+  POSTGRES_PORT: ""
+  REDIS_HOST: ""
+kind: ConfigMap
+metadata:
+  name: osdu-core-env
+  namespace: osdu-core
+---
+apiVersion: v1
+data:
+  env: do-private
+  note: Created by Step17
+  owner: gitops
+kind: ConfigMap
+metadata:
+  name: osdu-core-marker
+  namespace: osdu-core
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: osdu-entitlements
+  name: osdu-entitlements
+  namespace: osdu-core
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: osdu-entitlements
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: osdu-file
+  name: osdu-file
+  namespace: osdu-core
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: osdu-file
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: osdu-legal
+  name: osdu-legal
+  namespace: osdu-core
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: osdu-legal
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: osdu-partition
+  name: osdu-partition
+  namespace: osdu-core
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: osdu-partition
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: osdu-schema
+  name: osdu-schema
+  namespace: osdu-core
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: osdu-schema
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: osdu-storage
+  name: osdu-storage
+  namespace: osdu-core
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: osdu-storage
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: osdu-entitlements
+  name: osdu-entitlements
+  namespace: osdu-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-entitlements
+  template:
+    metadata:
+      labels:
+        app: osdu-entitlements
+    spec:
+      containers:
+      - env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/entitlements
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_USER
+              name: osdu-postgres-secret
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: osdu-postgres-secret
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          value: $(KEYCLOAK_ISSUER_URI)
+        - name: PARTITION_BASE_URL
+          value: http://osdu-partition:8080
+        envFrom:
+        - configMapRef:
+            name: osdu-core-env
+        image: community.opengroup.org:5555/osdu/platform/security-and-compliance/entitlements:latest
+        livenessProbe:
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          tcpSocket:
+            port: 8080
+        name: entitlements
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          tcpSocket:
+            port: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: osdu-file
+  name: osdu-file
+  namespace: osdu-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-file
+  template:
+    metadata:
+      labels:
+        app: osdu-file
+    spec:
+      containers:
+      - env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/file
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_USER
+              name: osdu-postgres-secret
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: osdu-postgres-secret
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          value: $(KEYCLOAK_ISSUER_URI)
+        - name: PARTITION_BASE_URL
+          value: http://osdu-partition:8080
+        envFrom:
+        - configMapRef:
+            name: osdu-core-env
+        image: community.opengroup.org:5555/osdu/platform/system/file:latest
+        livenessProbe:
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          tcpSocket:
+            port: 8080
+        name: file
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          tcpSocket:
+            port: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: osdu-legal
+  name: osdu-legal
+  namespace: osdu-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-legal
+  template:
+    metadata:
+      labels:
+        app: osdu-legal
+    spec:
+      containers:
+      - env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/legal
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_USER
+              name: osdu-postgres-secret
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: osdu-postgres-secret
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          value: $(KEYCLOAK_ISSUER_URI)
+        - name: PARTITION_BASE_URL
+          value: http://osdu-partition:8080
+        envFrom:
+        - configMapRef:
+            name: osdu-core-env
+        image: community.opengroup.org:5555/osdu/platform/security-and-compliance/legal:latest
+        livenessProbe:
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          tcpSocket:
+            port: 8080
+        name: legal
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          tcpSocket:
+            port: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: osdu-partition
+  name: osdu-partition
+  namespace: osdu-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-partition
+  template:
+    metadata:
+      labels:
+        app: osdu-partition
+    spec:
+      containers:
+      - env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/partition
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_USER
+              name: osdu-postgres-secret
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: osdu-postgres-secret
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          value: $(KEYCLOAK_ISSUER_URI)
+        envFrom:
+        - configMapRef:
+            name: osdu-core-env
+        image: community.opengroup.org:5555/osdu/platform/system/partition:latest
+        livenessProbe:
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          tcpSocket:
+            port: 8080
+        name: partition
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          tcpSocket:
+            port: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: osdu-schema
+  name: osdu-schema
+  namespace: osdu-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-schema
+  template:
+    metadata:
+      labels:
+        app: osdu-schema
+    spec:
+      containers:
+      - env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/schema
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_USER
+              name: osdu-postgres-secret
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: osdu-postgres-secret
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          value: $(KEYCLOAK_ISSUER_URI)
+        - name: PARTITION_BASE_URL
+          value: http://osdu-partition:8080
+        envFrom:
+        - configMapRef:
+            name: osdu-core-env
+        image: community.opengroup.org:5555/osdu/platform/system/schema-service:latest
+        livenessProbe:
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          tcpSocket:
+            port: 8080
+        name: schema
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          tcpSocket:
+            port: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: osdu-storage
+  name: osdu-storage
+  namespace: osdu-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-storage
+  template:
+    metadata:
+      labels:
+        app: osdu-storage
+    spec:
+      containers:
+      - env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/storage
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_USER
+              name: osdu-postgres-secret
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: osdu-postgres-secret
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          value: $(KEYCLOAK_ISSUER_URI)
+        - name: PARTITION_BASE_URL
+          value: http://osdu-partition:8080
+        envFrom:
+        - configMapRef:
+            name: osdu-core-env
+        image: community.opengroup.org:5555/osdu/platform/system/storage:latest
+        livenessProbe:
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          tcpSocket:
+            port: 8080
+        name: storage
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          tcpSocket:
+            port: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-toolbox
+  namespace: osdu-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-toolbox
+  template:
+    metadata:
+      labels:
+        app: osdu-toolbox
+    spec:
+      containers:
+      - args:
+        - sleep infinity
+        command:
+        - sh
+        - -c
+        image: postgres:16-alpine
+        imagePullPolicy: IfNotPresent
+        name: toolbox

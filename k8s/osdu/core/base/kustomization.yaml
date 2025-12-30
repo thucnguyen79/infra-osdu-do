@@ -1,4 +1,25 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
 resources:
+  # toolbox (Step 17)
   - toolbox/toolbox-deploy.yaml
+
+  # core services (Step 18)
+  - services/partition/partition-deploy.yaml
+  - services/partition/partition-svc.yaml
+
+  - services/entitlements/entitlements-deploy.yaml
+  - services/entitlements/entitlements-svc.yaml
+
+  - services/schema/schema-deploy.yaml
+  - services/schema/schema-svc.yaml
+
+  - services/legal/legal-deploy.yaml
+  - services/legal/legal-svc.yaml
+
+  - services/storage/storage-deploy.yaml
+  - services/storage/storage-svc.yaml
+
+  - services/file/file-deploy.yaml
+  - services/file/file-svc.yaml
