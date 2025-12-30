@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: partition
-          # SỬA: Dùng tag release-0.27 (Branch tag)
-          image: community.opengroup.org:5555/osdu/platform/system/partition/partition-gc:release-0.27
+          # Dùng Image Partition Core Plus (M24)
+          image: community.opengroup.org:5555/osdu/platform/system/partition/partition-core-plus:0.27.0-rc4
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -25,26 +25,27 @@ spec:
             - configMapRef:
                 name: osdu-core-env
           env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: "gcp"
-            - name: osm.postgres.datasource.url
+            # Core Plus không cần profile 'gcp' hay 'osm', chỉ cần biến DB chuẩn
+            - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/partition"
-            - name: osm.postgres.datasource.username
+            - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: osdu-postgres-secret
                   key: POSTGRES_USER
-            - name: osm.postgres.datasource.password
+            - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: osdu-postgres-secret
                   key: POSTGRES_PASSWORD
+            # Security Auth
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: "$(KEYCLOAK_ISSUER_URI)"
             - name: PARTITION_AUTH_ENABLED
               value: "false"
+            # Cấu hình MinIO/S3 (Core Plus cần cái này để lưu property)
             - name: CLOUD_PROVIDER
-              value: "gcp"
+              value: "minio" 
           readinessProbe:
             tcpSocket:
               port: 8080
