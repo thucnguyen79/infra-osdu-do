@@ -354,3 +354,41 @@ Evidence:
 - [x] **Kết nối S3:**
   - [x] Lệnh `curl` nội bộ trả về 200 OK.
   - [x] Đã lấy được AccessKey và SecretKey.
+
+## Step 16 — OSDU Deps (osdu-data): Postgres + OpenSearch + Redis + Redpanda + InitDB
+
+### Mục tiêu
+Triển khai các dependency nền phục vụ Step 17 (OSDU core services): Postgres, OpenSearch, Redis, Redpanda; đồng thời đảm bảo các DB cần thiết đã được tạo.
+
+### Checklist (Runbook-level)
+
+- [ ] **Precheck**
+  - [ ] `kubectl get nodes -o wide` → tất cả `Ready`
+  - [ ] `kubectl get sc` → có `do-block-storage-retain`, `do-block-storage-xfs-retain`
+  - [ ] `kubectl -n argocd get appproject osdu -o yaml` → allow `osdu-data`
+
+- [ ] **Repo-first**
+  - [ ] Overlay `k8s/osdu/deps/overlays/do-private/` không khai báo Namespace `osdu-data` trùng với base (không có `resources: - namespace.yaml`)
+  - [ ] Patch PVC templates có đủ `accessModes` + `resources.requests.storage` (Postgres/OpenSearch)
+  - [ ] Postgres set `PGDATA` vào subdir + initContainer (và khuyến nghị `subPath: pgdata`)
+  - [ ] OpenSearch có initContainer permissions + `fsGroup` để tránh `AccessDeniedException`
+
+- [ ] **Secrets (Out-of-band, KHÔNG commit Git)**
+  - [ ] `kubectl -n osdu-data create secret generic osdu-opensearch-secret --from-literal=OPENSEARCH_INITIAL_ADMIN_PASSWORD=... --dry-run=client -o yaml | kubectl apply -f -`
+  - [ ] (Nếu có) secrets khác cho Step 17 (S3/Ceph creds, db creds…) cũng tạo out-of-band
+
+- [ ] **GitOps Sync**
+  - [ ] `kubectl diff -k k8s/osdu/deps/overlays/do-private` chạy OK (không lỗi Kustomize)
+  - [ ] Commit/Push repo
+  - [ ] ArgoCD app `osdu-deps` Refresh + Sync
+
+- [ ] **Verify**
+  - [ ] `kubectl -n osdu-data get sts,pod -o wide` → `osdu-postgres` READY `1/1`, `osdu-opensearch` READY `1/1`
+  - [ ] `kubectl -n osdu-data get pvc -o wide` → PVC `Bound`
+
+- [ ] **Smoke test**
+  - [ ] Postgres: `psql -U "$POSTGRES_USER" -d postgres -c "\l"` thấy các DB: `osdu entitlements legal partition storage registry file schema ...`
+  - [ ] OpenSearch: `port-forward` + `curl http://127.0.0.1:9200/_cluster/health?pretty` trả JSON (status `yellow/green`)
+
+- [ ] **Artifacts**
+  - [ ] Lưu toàn bộ output vào `artifacts/step16-osdu-deps/<timestamp>/` (không commit secrets)
