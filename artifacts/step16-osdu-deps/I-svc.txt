@@ -1,6 +1,6 @@
 == osdu-data svc ==
 NAME              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE   SELECTOR
-osdu-kafka        ClusterIP   10.97.253.103    <none>        9092/TCP   95s   app=osdu-redpanda
-osdu-opensearch   ClusterIP   10.102.200.152   <none>        9200/TCP   95s   app=osdu-opensearch
-osdu-postgres     ClusterIP   10.109.9.83      <none>        5432/TCP   95s   app=osdu-postgres
-osdu-redis        ClusterIP   10.107.46.176    <none>        6379/TCP   95s   app=osdu-redis
+osdu-kafka        ClusterIP   10.97.253.103    <none>        9092/TCP   13h   app=osdu-redpanda
+osdu-opensearch   ClusterIP   10.102.200.152   <none>        9200/TCP   13h   app=osdu-opensearch
+osdu-postgres     ClusterIP   10.109.9.83      <none>        5432/TCP   13h   app=osdu-postgres
+osdu-redis        ClusterIP   10.107.46.176    <none>        6379/TCP   13h   app=osdu-redis

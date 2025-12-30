@@ -1,1 +1,4 @@
 == osdu-data pvc ==
+NAME                     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS                  VOLUMEATTRIBUTESCLASS   AGE   VOLUMEMODE
+data-osdu-opensearch-0   Bound    pvc-567a6c5a-7deb-4de2-8d11-59e28cc4abd2   50Gi       RWO            do-block-storage-xfs-retain   <unset>                 10h   Filesystem
+data-osdu-postgres-0     Bound    pvc-bb1cae6b-b162-4310-afd7-c1bbb50355b8   20Gi       RWO            do-block-storage-retain       <unset>                 10h   Filesystem
