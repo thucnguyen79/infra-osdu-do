@@ -16,16 +16,15 @@ spec:
     spec:
       containers:
         - name: partition
-          # Dùng chính xác Image từ README bạn tìm được
-          image: community.opengroup.org:5555/osdu/platform/system/partition/partition-core-plus-dk-az-community-ref-impl:3a341a939fe74889c3b99a5271e2977d84925c74
-          imagePullPolicy: IfNotPresent
+          # Dùng tag latest cho Partition Core Plus
+          image: community.opengroup.org:5555/osdu/platform/system/partition/partition-core-plus:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           envFrom:
             - configMapRef:
                 name: osdu-core-env
           env:
-            # Cấu hình chuẩn cho Core Plus
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/partition"
             - name: SPRING_DATASOURCE_USERNAME
@@ -40,10 +39,8 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: "$(KEYCLOAK_ISSUER_URI)"
-            # Tạm tắt Auth
             - name: PARTITION_AUTH_ENABLED
               value: "false"
-            # Provider
             - name: CLOUD_PROVIDER
               value: "minio"
           readinessProbe:
