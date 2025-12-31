@@ -16,12 +16,17 @@ spec:
     spec:
       containers:
         - name: file
-          image: community.opengroup.org:5555/osdu/platform/system/file:latest
+          # TÌM TAG TRONG REGISTRY VÀ THAY VÀO ĐÂY
+          image: community.opengroup.org:5555/osdu/platform/system/file/core-plus-file-release:8531906d
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           envFrom:
             - configMapRef:
                 name: osdu-core-env
+            # Nạp thêm secret S3/MinIO cho File
+            - secretRef:
+                name: osdu-objectstore-secret
           env:
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/file"
@@ -37,15 +42,13 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: "$(KEYCLOAK_ISSUER_URI)"
-            - name: PARTITION_BASE_URL
+            - name: PARTITION_SERVICE_ENDPOINT
               value: "http://osdu-partition:8080"
+            # Cấu hình MinIO
+            - name: CLOUD_PROVIDER
+              value: "minio"
           readinessProbe:
             tcpSocket:
               port: 8080
-            initialDelaySeconds: 10
+            initialDelaySeconds: 20
             periodSeconds: 10
-          livenessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 20

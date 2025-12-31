@@ -16,7 +16,9 @@ spec:
     spec:
       containers:
         - name: legal
-          image: community.opengroup.org:5555/osdu/platform/security-and-compliance/legal:latest
+          # TÌM TAG TRONG REGISTRY VÀ THAY VÀO ĐÂY
+          image: community.opengroup.org:5555/osdu/platform/security-and-compliance/legal/core-plus-legal-release:340be643
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           envFrom:
@@ -37,15 +39,10 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: "$(KEYCLOAK_ISSUER_URI)"
-            - name: PARTITION_BASE_URL
+            - name: PARTITION_SERVICE_ENDPOINT
               value: "http://osdu-partition:8080"
           readinessProbe:
             tcpSocket:
               port: 8080
-            initialDelaySeconds: 10
+            initialDelaySeconds: 20
             periodSeconds: 10
-          livenessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 20
