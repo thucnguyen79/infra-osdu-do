@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: storage
-          # TÌM TAG TRONG REGISTRY VÀ THAY VÀO ĐÂY
+          # Giữ nguyên Image bạn đã tìm được
           image: community.opengroup.org:5555/osdu/platform/system/storage/core-plus-storage-core-plus-release:dcc4c072
           imagePullPolicy: IfNotPresent
           ports:
@@ -24,7 +24,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: osdu-core-env
-            # Nạp thêm secret S3/MinIO cho Storage
             - secretRef:
                 name: osdu-objectstore-secret
           env:
@@ -42,11 +41,16 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: "$(KEYCLOAK_ISSUER_URI)"
-            - name: PARTITION_SERVICE_ENDPOINT
+            # FIX LỖI: Thêm 2 biến OPENID bắt buộc cho Core Plus
+            - name: OPENID_PROVIDER_URL
+              value: "$(KEYCLOAK_ISSUER_URI)"
+            - name: OPENID_PROVIDER_CLIENT_ID
+              value: "osdu" 
+            # FIX LỖI: Dùng PARTITION_API cho đồng bộ (dù Storage thường thông minh hơn)
+            - name: PARTITION_API
               value: "http://osdu-partition:8080"
             - name: STORAGE_AUTH_ENABLED
               value: "false"
-            # Cấu hình MinIO
             - name: CLOUD_PROVIDER
               value: "minio"
           readinessProbe:
