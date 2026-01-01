@@ -16,7 +16,6 @@ spec:
     spec:
       containers:
         - name: entitlements
-          # Image Core Plus bạn đã tìm được
           image: community.opengroup.org:5555/osdu/platform/security-and-compliance/entitlements/core-plus-entitlements-v2-release:9e5865f1
           imagePullPolicy: IfNotPresent
           ports:
@@ -25,6 +24,23 @@ spec:
             - configMapRef:
                 name: osdu-core-env
           env:
+            # --- KHAI BÁO CÁC BIẾN GỐC ---
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: POSTGRES_HOST
+            - name: POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: POSTGRES_PORT
+            - name: KEYCLOAK_ISSUER_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
+            # -----------------------------
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/entitlements"
             - name: SPRING_DATASOURCE_USERNAME
@@ -39,14 +55,10 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: "$(KEYCLOAK_ISSUER_URI)"
-            # --- CÁC BIẾN QUAN TRỌNG CHO CORE PLUS ---
             - name: PARTITION_API
               value: "http://osdu-partition:8080"
             - name: ENTITLEMENTS_AUTH_ENABLED
               value: "false"
-            # Thêm biến này đề phòng nó dùng tên cũ
-            - name: PARTITION_SERVICE_ENDPOINT
-              value: "http://osdu-partition:8080"
           readinessProbe:
             tcpSocket:
               port: 8080

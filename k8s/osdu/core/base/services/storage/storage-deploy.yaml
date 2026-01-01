@@ -16,6 +16,7 @@ spec:
     spec:
       containers:
         - name: storage
+          # SỬA LẠI TÊN IMAGE CHUẨN (dcc4c072)
           image: community.opengroup.org:5555/osdu/platform/system/storage/core-plus-storage-core-plus-release:dcc4c072
           imagePullPolicy: IfNotPresent
           ports:
@@ -26,6 +27,23 @@ spec:
             - secretRef:
                 name: osdu-objectstore-secret
           env:
+            # --- KHAI BÁO CÁC BIẾN GỐC ĐỂ DÙNG LẠI (QUAN TRỌNG) ---
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: POSTGRES_HOST
+            - name: POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: POSTGRES_PORT
+            - name: KEYCLOAK_ISSUER_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
+            # ------------------------------------------------------
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/storage"
             - name: SPRING_DATASOURCE_USERNAME
@@ -40,7 +58,6 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: "$(KEYCLOAK_ISSUER_URI)"
-            # --- CÁC BIẾN QUAN TRỌNG CHO CORE PLUS ---
             - name: OPENID_PROVIDER_URL
               value: "$(KEYCLOAK_ISSUER_URI)"
             - name: OPENID_PROVIDER_CLIENT_ID
