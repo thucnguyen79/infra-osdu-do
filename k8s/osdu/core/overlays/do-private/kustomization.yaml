@@ -12,12 +12,18 @@ generatorOptions:
 configMapGenerator:
   - name: osdu-core-env
     literals:
-      - POSTGRES_HOST=
-      - POSTGRES_PORT=
-      - REDIS_HOST=
-      - KAFKA_BOOTSTRAP_SERVERS=
-      - OPENSEARCH_HOST=
-      - OPENSEARCH_PORT=
-      - KEYCLOAK_ISSUER_URI=
+      # --- CẤU HÌNH DATABASE & INFRA ---
+      - POSTGRES_HOST=osdu-postgres.osdu-data.svc.cluster.local
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=osdu-redis-master.osdu-data.svc.cluster.local
+      - KAFKA_BOOTSTRAP_SERVERS=osdu-kafka-kafka-bootstrap.osdu-data.svc.cluster.local:9092
+      - OPENSEARCH_HOST=osdu-opensearch-cluster-master.osdu-data.svc.cluster.local
+      - OPENSEARCH_PORT=9200
+      
+      # --- CẤU HÌNH IDENTITY ---
+      # Lưu ý: Dùng địa chỉ nội bộ K8s để service gọi nhau nhanh hơn
+      - KEYCLOAK_ISSUER_URI=http://keycloak.osdu-identity.svc.cluster.local/realms/osdu
+      
+      # --- CẤU HÌNH JAVA ---
       - JAVA_OPTS=-Xms256m -Xmx512m
       - SERVER_PORT=8080
