@@ -6,6 +6,11 @@ resources:
   - ../../base
   - marker-configmap.yaml
 
+patchesStrategicMerge:
+  - patches/patch-partition-env.yaml
+  - patches/patch-storage-openid.yaml
+  - patches/patch-entitlements.yaml
+
 generatorOptions:
   disableNameSuffixHash: true
 

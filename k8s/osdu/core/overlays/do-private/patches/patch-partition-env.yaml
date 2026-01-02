@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-partition
+spec:
+  template:
+    spec:
+      containers:
+        - name: partition
+          env:
+            # Use Spring placeholders (${...}) at runtime; avoid Kustomize $(...) vars (which may resolve to empty).
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/partition"
+            # Pull DB creds from secret (same namespace as the Deployment).
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-postgres-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-postgres-secret
+                  key: POSTGRES_PASSWORD
+            # Fix issuer: don't rely on $(KEYCLOAK_ISSUER_URI) substitution.
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
