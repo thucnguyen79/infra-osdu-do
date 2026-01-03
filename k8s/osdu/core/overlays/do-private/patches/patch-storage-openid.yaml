@@ -2,23 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: osdu-storage
+  namespace: osdu-core
 spec:
   template:
     spec:
       containers:
-        - name: storage
+        - name: osdu-storage
           env:
-            # Avoid Kustomize $(...) vars; rely on osdu-core-env + Spring placeholder resolution.
-            - name: SPRING_DATASOURCE_URL
-              value: "jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/storage"
-            # OpenID config must be a real issuer URI (the OpenID plugin validates non-empty Issuer).
+            - name: KEYCLOAK_ISSUER_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
+            # Các biến cho plugin OpenID (thêm alias để tránh lệch tên property giữa các bản build)
             - name: OPENID_PROVIDER_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: KEYCLOAK_ISSUER_URI
+              value: "$(KEYCLOAK_ISSUER_URI)"
+            - name: OPENID_PROVIDER_ISSUER
+              value: "$(KEYCLOAK_ISSUER_URI)"
+            - name: OPENID_PROVIDER_ISSUER_URI
+              value: "$(KEYCLOAK_ISSUER_URI)"
+            - name: OPENID_PROVIDER_DISCOVERY_URL
+              value: "$(KEYCLOAK_ISSUER_URI)/.well-known/openid-configuration"
+            # ResourceServer issuer
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: KEYCLOAK_ISSUER_URI
+              value: "$(KEYCLOAK_ISSUER_URI)"

@@ -1,0 +1,17 @@
+# OPTIONAL: Làm cho hostname "keycloak.internal" resolve được trong cluster (khớp issuer đang trả về từ Keycloak)
+# Cơ chế: kube-dns sẽ thử keycloak.internal.svc.cluster.local => Service "keycloak" trong namespace "internal"
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: internal
+  labels:
+    app.kubernetes.io/part-of: osdu
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  namespace: internal
+spec:
+  type: ExternalName
+  externalName: keycloak.osdu-identity.svc.cluster.local

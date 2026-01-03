@@ -1,0 +1,64 @@
+# OPTIONAL (Repo-first): Seed partition "osdu" để các service (entitlements, storage...) đọc được cấu hình từ Partition service.
+# Chạy 1 lần sau sync (ArgoCD PostSync hook). Idempotent: nếu partition đã tồn tại thì exit 0.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: seed-osdu-partition
+  namespace: osdu-core
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  backoffLimit: 6
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: seed
+          image: curlimages/curl:8.5.0
+          env:
+            - name: PG_USER
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-postgres-secret
+                  key: postgres-username
+            - name: PG_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-postgres-secret
+                  key: postgres-password
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: POSTGRES_HOST
+            - name: POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: POSTGRES_PORT
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              set -euo pipefail
+              BASE="http://osdu-partition:8080/api/partition/v1"
+              echo "Check existing partition osdu..."
+              if curl -fsS "${BASE}/partitions/osdu" >/dev/null 2>&1; then
+                echo "Partition osdu already exists. Done."
+                exit 0
+              fi
+              echo "Creating partition osdu..."
+              # NOTE: Nếu bạn dùng mô hình DB tách riêng theo service (partition/entitlements/...), bạn có thể thay suffix DB tại đây.
+              # Tối thiểu cần 'osm.postgres.datasource.*' để Entitlements/Storage không fail ngay khi boot.
+              cat <<EOF >/tmp/partition.json
+              {
+                "name": "osdu",
+                "properties": {
+                  "osm.postgres.datasource.url": "jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/partition",
+                  "osm.postgres.datasource.username": "${PG_USER}",
+                  "osm.postgres.datasource.password": "${PG_PASS}"
+                }
+              }
+              EOF
+              curl -fsS -X POST "${BASE}/partitions"                 -H "Content-Type: application/json"                 --data-binary @/tmp/partition.json
+              echo "Created."

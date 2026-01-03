@@ -5,6 +5,9 @@ namespace: osdu-core
 resources:
   - ../../base
   - marker-configmap.yaml
+  # OPTIONAL:
+  # - extra/00-keycloak-internal-dns-alias.yaml
+  # - hooks/postsync-seed-osdu-partition.job.yaml
 
 patchesStrategicMerge:
   - patches/patch-partition-env.yaml
@@ -17,18 +20,18 @@ generatorOptions:
 configMapGenerator:
   - name: osdu-core-env
     literals:
-      # --- CẤU HÌNH DATABASE & INFRA ---
+      # --- CẤU HÌNH DATABASE & INFRA (theo output kubectl của bạn) ---
       - POSTGRES_HOST=osdu-postgres.osdu-data.svc.cluster.local
       - POSTGRES_PORT=5432
-      - REDIS_HOST=osdu-redis-master.osdu-data.svc.cluster.local
-      - KAFKA_BOOTSTRAP_SERVERS=osdu-kafka-kafka-bootstrap.osdu-data.svc.cluster.local:9092
-      - OPENSEARCH_HOST=osdu-opensearch-cluster-master.osdu-data.svc.cluster.local
+      - REDIS_HOST=osdu-redis.osdu-data.svc.cluster.local
+      - KAFKA_BOOTSTRAP_SERVERS=osdu-kafka.osdu-data.svc.cluster.local:9092
+      - OPENSEARCH_HOST=osdu-opensearch.osdu-data.svc.cluster.local
       - OPENSEARCH_PORT=9200
-      
+
       # --- CẤU HÌNH IDENTITY ---
-      # Lưu ý: Dùng địa chỉ nội bộ K8s để service gọi nhau nhanh hơn
-      - KEYCLOAK_ISSUER_URI=http://keycloak.osdu-identity.svc.cluster.local/realms/osdu
-      
-      # --- CẤU HÌNH JAVA ---
+      # Khuyến nghị: dùng issuer đúng như /.well-known/openid-configuration đang trả về
+      - KEYCLOAK_ISSUER_URI=http://keycloak.internal/realms/osdu
+
+      # --- JAVA / PORT ---
       - JAVA_OPTS=-Xms256m -Xmx512m
       - SERVER_PORT=8080
