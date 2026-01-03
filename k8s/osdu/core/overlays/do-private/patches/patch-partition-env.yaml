@@ -8,14 +8,43 @@ spec:
       containers:
         - name: osdu-partition
           env:
-            # Đảm bảo issuer được set rõ ràng (không phụ thuộc envFrom)
+            # Repo-first: nếu đang chạy internal/no-auth thì tắt security mặc định để tránh BasicAuth 401
+            - name: SPRING_AUTOCONFIGURE_EXCLUDE
+              value: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
+            # Chuẩn hoá issuer để đồng bộ với keycloak .well-known (issuer=keycloak.internal)
             - name: KEYCLOAK_ISSUER_URI
               valueFrom:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: KEYCLOAK_ISSUER_URI
+
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              value: "$(KEYCLOAK_ISSUER_URI)"
-            # (Tuỳ chọn) log rõ hơn khi troubleshoot
-            - name: LOGGING_LEVEL_ROOT
-              value: INFO
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
+
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: mgmt
+              containerPort: 8081
+
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 6
+
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 6

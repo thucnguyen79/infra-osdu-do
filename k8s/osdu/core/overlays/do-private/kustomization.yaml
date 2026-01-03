@@ -4,23 +4,23 @@ namespace: osdu-core
 
 resources:
   - ../../base
+  # - namespace.yaml
   - marker-configmap.yaml
-  # OPTIONAL:
-  - extra/00-keycloak-internal-dns-alias.yaml
-  - hooks/postsync-seed-osdu-partition.job.yaml
 
 patchesStrategicMerge:
   - patches/patch-partition-env.yaml
   - patches/patch-storage-openid.yaml
   - patches/patch-entitlements.yaml
 
-generatorOptions:
-  disableNameSuffixHash: true
+# Khuyến nghị: ĐỪNG disableNameSuffixHash để mỗi lần đổi env -> configmap đổi tên -> rollout tự động,
+# tránh bạn phải rollout restart thủ công (dễ gây OutOfSync).
+# generatorOptions:
+#   disableNameSuffixHash: true
 
 configMapGenerator:
   - name: osdu-core-env
     literals:
-      # --- CẤU HÌNH DATABASE & INFRA (theo output kubectl của bạn) ---
+      # --- DATABASE & INFRA (khớp osdu-data thực tế) ---
       - POSTGRES_HOST=osdu-postgres.osdu-data.svc.cluster.local
       - POSTGRES_PORT=5432
       - REDIS_HOST=osdu-redis.osdu-data.svc.cluster.local
@@ -28,10 +28,11 @@ configMapGenerator:
       - OPENSEARCH_HOST=osdu-opensearch.osdu-data.svc.cluster.local
       - OPENSEARCH_PORT=9200
 
-      # --- CẤU HÌNH IDENTITY ---
-      # Khuyến nghị: dùng issuer đúng như /.well-known/openid-configuration đang trả về
+      # --- IDENTITY ---
+      # Bạn curl .well-known thấy issuer trả về: http://keycloak.internal/realms/osdu
+      # => issuer-uri nên khớp cái này, nếu không JWT issuer mismatch.
       - KEYCLOAK_ISSUER_URI=http://keycloak.internal/realms/osdu
 
-      # --- JAVA / PORT ---
+      # --- JAVA ---
       - JAVA_OPTS=-Xms256m -Xmx512m
       - SERVER_PORT=8080
