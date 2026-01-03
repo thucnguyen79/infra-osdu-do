@@ -6,8 +6,8 @@ resources:
   - ../../base
   - marker-configmap.yaml
   # OPTIONAL:
-  # - extra/00-keycloak-internal-dns-alias.yaml
-  # - hooks/postsync-seed-osdu-partition.job.yaml
+  - extra/00-keycloak-internal-dns-alias.yaml
+  - hooks/postsync-seed-osdu-partition.job.yaml
 
 patchesStrategicMerge:
   - patches/patch-partition-env.yaml
