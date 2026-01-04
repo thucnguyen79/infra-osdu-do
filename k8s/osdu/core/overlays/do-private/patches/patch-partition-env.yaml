@@ -7,33 +7,36 @@ spec:
     spec:
       containers:
         - name: partition
-          # QUAN TRỌNG: Khai báo lại Image để đảm bảo nó không bị mất khi Merge
           image: community.opengroup.org:5555/osdu/platform/system/partition/core-plus-partition-release:923ea1cd
           env:
-            # Repo-first: nếu đang chạy internal/no-auth thì tắt security mặc định để tránh BasicAuth 401
-            - name: SPRING_AUTOCONFIGURE_EXCLUDE
-              value: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+            # FIX 1: Xóa 'value' cũ của Base đi (gán null) để dùng được 'valueFrom' mới
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: null
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
 
-            # Chuẩn hoá issuer để đồng bộ với keycloak .well-known (issuer=keycloak.internal)
+            # Các biến khác
             - name: KEYCLOAK_ISSUER_URI
               valueFrom:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: KEYCLOAK_ISSUER_URI
+            
+            - name: SPRING_AUTOCONFIGURE_EXCLUDE
+              value: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
-            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: KEYCLOAK_ISSUER_URI
-
+          # Cập nhật Port
           ports:
             - name: http
               containerPort: 8080
             - name: mgmt
               containerPort: 8081
 
+          # FIX 2: Xóa 'tcpSocket' cũ của Base đi (gán null) để dùng 'httpGet'
           readinessProbe:
+            tcpSocket: null
             httpGet:
               path: /actuator/health
               port: 8081
