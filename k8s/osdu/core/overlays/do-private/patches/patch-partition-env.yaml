@@ -7,6 +7,8 @@ spec:
     spec:
       containers:
         - name: osdu-partition
+          # QUAN TRỌNG: Khai báo lại Image để đảm bảo nó không bị mất khi Merge
+          image: community.opengroup.org:5555/osdu/platform/system/partition/core-plus-partition-release:923ea1cd
           env:
             # Repo-first: nếu đang chạy internal/no-auth thì tắt security mặc định để tránh BasicAuth 401
             - name: SPRING_AUTOCONFIGURE_EXCLUDE
