@@ -26,7 +26,7 @@ spec:
       #         echo "[wait] Timed out waiting for partition 'osdu'."
       #         exit 1
       containers:
-        - name: osdu-entitlements
+        - name: entitlements
           env:
             # Đảm bảo Partition API đúng path chuẩn của service Partition
             - name: PARTITION_API

@@ -6,7 +6,7 @@ spec:
   template:
     spec:
       containers:
-        - name: osdu-storage
+        - name: storage
           env:
             - name: KEYCLOAK_ISSUER_URI
               valueFrom:
