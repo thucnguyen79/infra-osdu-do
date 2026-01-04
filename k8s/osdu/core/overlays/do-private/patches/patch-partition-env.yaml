@@ -6,7 +6,7 @@ spec:
   template:
     spec:
       containers:
-        - name: osdu-partition
+        - name: partition
           # QUAN TRỌNG: Khai báo lại Image để đảm bảo nó không bị mất khi Merge
           image: community.opengroup.org:5555/osdu/platform/system/partition/core-plus-partition-release:923ea1cd
           env:
