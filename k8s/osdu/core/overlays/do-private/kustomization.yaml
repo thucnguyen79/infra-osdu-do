@@ -1,14 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
 namespace: osdu-core
 
 resources:
   - ../../base
-  # - namespace.yaml
   - marker-configmap.yaml
-  # THÊM DÒNG NÀY:
   - extra/00-keycloak-internal-dns-alias.yaml
-  # (Giữ dòng hooks/postsync... nếu bạn đã dùng seed job)
   - hooks/postsync-seed-osdu-partition.job.yaml
 
 patchesStrategicMerge:
@@ -16,15 +14,13 @@ patchesStrategicMerge:
   - patches/patch-storage-openid.yaml
   - patches/patch-entitlements.yaml
 
-# Khuyến nghị: ĐỪNG disableNameSuffixHash để mỗi lần đổi env -> configmap đổi tên -> rollout tự động,
-# tránh bạn phải rollout restart thủ công (dễ gây OutOfSync).
-# generatorOptions:
-#   disableNameSuffixHash: true
+generatorOptions:
+  disableNameSuffixHash: true
 
 configMapGenerator:
   - name: osdu-core-env
     literals:
-      # --- DATABASE & INFRA (khớp osdu-data thực tế) ---
+      # Data services in osdu-data
       - POSTGRES_HOST=osdu-postgres.osdu-data.svc.cluster.local
       - POSTGRES_PORT=5432
       - REDIS_HOST=osdu-redis.osdu-data.svc.cluster.local
@@ -33,14 +29,10 @@ configMapGenerator:
       - OPENSEARCH_HOST=osdu-opensearch.osdu-data.svc.cluster.local
       - OPENSEARCH_PORT=9200
 
-      # --- IDENTITY ---
-      # Bạn curl .well-known thấy issuer trả về: http://keycloak.internal/realms/osdu
-      # Chạy lệnh: kubectl -n osdu-core exec deploy/osdu-toolbox -- curl -s http://keycloak.osdu-identity.svc.cluster.local/realms/osdu/.well-known/openid-configuration | jq -r .issuer
-      # => issuer-uri nên khớp cái này, nếu không JWT issuer mismatch.
+      # Keycloak issuer
       - KEYCLOAK_ISSUER_URI=http://keycloak.internal/realms/osdu
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak.internal/realms/osdu
 
-      # --- JAVA ---
-      - JAVA_OPTS=-Xms256m -Xmx512m
+      # JVM / server defaults
+      - JAVA_OPTS=-Xms256m -Xmx512m -Djava.security.egd=file:/dev/./urandom
       - SERVER_PORT=8080
-      # --- SECURITY FIX (QUAN TRỌNG NHẤT: Đặt ở đây để đảm bảo ăn 100%) ---
-      - SPRING_AUTOCONFIGURE_EXCLUDE=org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration

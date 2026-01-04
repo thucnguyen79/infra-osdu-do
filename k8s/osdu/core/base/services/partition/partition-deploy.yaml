@@ -16,38 +16,50 @@ spec:
     spec:
       containers:
         - name: partition
-          # DÙNG CHÍNH XÁC IMAGE DÀI NÀY (Không rút gọn, không sửa tag)
           image: community.opengroup.org:5555/osdu/platform/system/partition/core-plus-partition-release:923ea1cd
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+              name: http
+            - containerPort: 8081
+              name: mgmt
           envFrom:
             - configMapRef:
                 name: osdu-core-env
+            - secretRef:
+                name: osdu-core-secrets
           env:
-            # Cấu hình chuẩn cho Core Plus
-            - name: SPRING_DATASOURCE_URL
-              value: "jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/partition"
-            - name: SPRING_DATASOURCE_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: osdu-postgres-secret
-                  key: POSTGRES_USER
-            - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: osdu-postgres-secret
-                  key: POSTGRES_PASSWORD
-            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              value: "$(KEYCLOAK_ISSUER_URI)"
-            # Tạm tắt Auth để test
-            - name: PARTITION_AUTH_ENABLED
-              value: "false"
-            # Cấu hình Provider cho Core Plus
+            # Keep these "service-specific" values in the Deployment
             - name: CLOUD_PROVIDER
               value: "minio"
+            - name: PARTITION_AUTH_ENABLED
+              value: "false"
+            - name: PARTITION_API
+              value: "core-plus"
+            - name: PARTITION_OAUTH2_CLIENT_ID
+              value: "partition-service"
+            - name: PARTITION_OAUTH2_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-core-secrets
+                  key: partition-client-secret
+            - name: PARTITION_OAUTH2_ENDPOINT
+              value: "http://keycloak.internal/realms/osdu/protocol/openid-connect/token"
+
+          # The app exposes a management web server on 8081.
           readinessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 20
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 10
             periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8081
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 6
