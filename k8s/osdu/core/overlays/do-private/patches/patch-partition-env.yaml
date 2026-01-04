@@ -7,9 +7,14 @@ spec:
     spec:
       containers:
         - name: partition
+          # Giữ Image để tránh lỗi ArgoCD
           image: community.opengroup.org:5555/osdu/platform/system/partition/core-plus-partition-release:923ea1cd
           env:
-            # FIX 1: Xóa 'value' cũ của Base đi (gán null) để dùng được 'valueFrom' mới
+            # FIX QUAN TRỌNG: Tắt Security để Probe health check được (KHÔNG ĐƯỢC THIẾU DÒNG NÀY)
+            - name: SPRING_AUTOCONFIGURE_EXCLUDE
+              value: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
+            # Fix xung đột: Xóa value cũ trước khi set valueFrom
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: null
               valueFrom:
@@ -17,24 +22,33 @@ spec:
                   name: osdu-core-env
                   key: KEYCLOAK_ISSUER_URI
 
-            # Các biến khác
             - name: KEYCLOAK_ISSUER_URI
               valueFrom:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: KEYCLOAK_ISSUER_URI
             
-            - name: SPRING_AUTOCONFIGURE_EXCLUDE
-              value: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+            # Cấu hình DB
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/partition"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-postgres-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-postgres-secret
+                  key: POSTGRES_PASSWORD
 
-          # Cập nhật Port
           ports:
             - name: http
               containerPort: 8080
             - name: mgmt
               containerPort: 8081
 
-          # FIX 2: Xóa 'tcpSocket' cũ của Base đi (gán null) để dùng 'httpGet'
+          # Fix xung đột Probe: Xóa tcpSocket cũ
           readinessProbe:
             tcpSocket: null
             httpGet:
