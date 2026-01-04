@@ -42,3 +42,5 @@ configMapGenerator:
       # --- JAVA ---
       - JAVA_OPTS=-Xms256m -Xmx512m
       - SERVER_PORT=8080
+      # --- SECURITY FIX (QUAN TRỌNG NHẤT: Đặt ở đây để đảm bảo ăn 100%) ---
+      - SPRING_AUTOCONFIGURE_EXCLUDE=org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration

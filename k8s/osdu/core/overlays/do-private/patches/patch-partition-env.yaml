@@ -11,8 +11,8 @@ spec:
           image: community.opengroup.org:5555/osdu/platform/system/partition/core-plus-partition-release:923ea1cd
           env:
             # FIX QUAN TRỌNG: Tắt Security để Probe health check được (KHÔNG ĐƯỢC THIẾU DÒNG NÀY)
-            - name: SPRING_AUTOCONFIGURE_EXCLUDE
-              value: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+            # - name: SPRING_AUTOCONFIGURE_EXCLUDE
+            #   value: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
             # Fix xung đột: Xóa value cũ trước khi set valueFrom
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
