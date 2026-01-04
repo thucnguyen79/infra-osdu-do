@@ -1,13 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 namespace: osdu-core
 
 resources:
   - ../../base
   - marker-configmap.yaml
+  # - hooks/postsync-seed-osdu-partition.job.yaml
+  # BẮT BUỘC nếu issuer của Keycloak là "http://keycloak.internal/realms/osdu"
   - extra/00-keycloak-internal-dns-alias.yaml
-  - hooks/postsync-seed-osdu-partition.job.yaml
 
 patchesStrategicMerge:
   - patches/patch-partition-env.yaml
@@ -20,7 +20,7 @@ generatorOptions:
 configMapGenerator:
   - name: osdu-core-env
     literals:
-      # Data services in osdu-data
+      # --- DATABASE & INFRA (khớp đúng tên svc ở namespace osdu-data) ---
       - POSTGRES_HOST=osdu-postgres.osdu-data.svc.cluster.local
       - POSTGRES_PORT=5432
       - REDIS_HOST=osdu-redis.osdu-data.svc.cluster.local
@@ -29,10 +29,9 @@ configMapGenerator:
       - OPENSEARCH_HOST=osdu-opensearch.osdu-data.svc.cluster.local
       - OPENSEARCH_PORT=9200
 
-      # Keycloak issuer
+      # --- IDENTITY (PHẢI khớp EXACT issuer trả về từ .well-known) ---
       - KEYCLOAK_ISSUER_URI=http://keycloak.internal/realms/osdu
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak.internal/realms/osdu
 
-      # JVM / server defaults
-      - JAVA_OPTS=-Xms256m -Xmx512m -Djava.security.egd=file:/dev/./urandom
+      # --- JAVA ---
+      - JAVA_OPTS=-Xms256m -Xmx512m
       - SERVER_PORT=8080

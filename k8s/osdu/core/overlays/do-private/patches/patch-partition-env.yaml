@@ -8,6 +8,11 @@ spec:
       containers:
         - name: partition
           env:
-            # Make Spring Security use Keycloak
+            # Issuer phải khớp với .well-known của Keycloak (thường là keycloak.internal)
+            - name: KEYCLOAK_ISSUER_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              value: "http://keycloak.internal/realms/osdu"
+              value: "$(KEYCLOAK_ISSUER_URI)"
