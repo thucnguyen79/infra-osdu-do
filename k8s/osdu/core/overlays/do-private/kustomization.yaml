@@ -4,8 +4,12 @@ namespace: osdu-core
 
 resources:
   - ../../base
-  - namespace.yaml
+  # - namespace.yaml
   - marker-configmap.yaml
+  # THÊM DÒNG NÀY:
+  - extra/00-keycloak-internal-dns-alias.yaml
+  # (Giữ dòng hooks/postsync... nếu bạn đã dùng seed job)
+  - hooks/postsync-seed-osdu-partition.job.yaml
 
 patchesStrategicMerge:
   - patches/patch-partition-env.yaml
@@ -24,12 +28,14 @@ configMapGenerator:
       - POSTGRES_HOST=osdu-postgres.osdu-data.svc.cluster.local
       - POSTGRES_PORT=5432
       - REDIS_HOST=osdu-redis.osdu-data.svc.cluster.local
+      - REDIS_PORT=6379
       - KAFKA_BOOTSTRAP_SERVERS=osdu-kafka.osdu-data.svc.cluster.local:9092
       - OPENSEARCH_HOST=osdu-opensearch.osdu-data.svc.cluster.local
       - OPENSEARCH_PORT=9200
 
       # --- IDENTITY ---
       # Bạn curl .well-known thấy issuer trả về: http://keycloak.internal/realms/osdu
+      # Chạy lệnh: kubectl -n osdu-core exec deploy/osdu-toolbox -- curl -s http://keycloak.osdu-identity.svc.cluster.local/realms/osdu/.well-known/openid-configuration | jq -r .issuer
       # => issuer-uri nên khớp cái này, nếu không JWT issuer mismatch.
       - KEYCLOAK_ISSUER_URI=http://keycloak.internal/realms/osdu
 
