@@ -8,47 +8,32 @@ spec:
       containers:
         - name: storage
           env:
-            # --- FIX 1: Giữ lại Secret giả để tránh lỗi NullPointer (Đã OK) ---
+            # --- FIX LỖI SECRET ---
             - name: OPENID_PROVIDER_CLIENT_SECRET
               value: "dummy-secret-value"
             
-            # --- FIX 2: Bổ sung Redis Host tường minh để tránh lỗi "Host must not be empty" ---
+            # --- FIX LỖI REDIS (Gán giá trị trực tiếp, không dùng tham chiếu $) ---
             - name: REDIS_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: REDIS_HOST
+              value: "osdu-redis.osdu-data.svc.cluster.local"
             - name: REDIS_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: REDIS_PORT
-            
-            # Thêm cả biến Spring chuẩn (đề phòng code dùng thư viện Spring Data Redis mặc định)
+              value: "6379"
             - name: SPRING_REDIS_HOST
-              value: "$(REDIS_HOST)"
+              value: "osdu-redis.osdu-data.svc.cluster.local"
             - name: SPRING_REDIS_PORT
-              value: "$(REDIS_PORT)"
-
-            # --- CẤU HÌNH CŨ (GIỮ NGUYÊN) ---
-            - name: KEYCLOAK_ISSUER_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: KEYCLOAK_ISSUER_URI
-            # Các biến cho plugin OpenID (thêm alias để tránh lệch tên property giữa các bản build)
-            - name: OPENID_PROVIDER_URL
-              value: "$(KEYCLOAK_ISSUER_URI)"
-            - name: OPENID_PROVIDER_ISSUER
-              value: "$(KEYCLOAK_ISSUER_URI)"
-            - name: OPENID_PROVIDER_ISSUER_URI
-              value: "$(KEYCLOAK_ISSUER_URI)"
-            - name: OPENID_PROVIDER_DISCOVERY_URL
-              value: "$(KEYCLOAK_ISSUER_URI)/.well-known/openid-configuration"
-            # ResourceServer issuer
-            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              value: "$(KEYCLOAK_ISSUER_URI)"
+              value: "6379"
             
-            # Bổ sung Scope
+            # --- CẤU HÌNH ĐỊNH DANH (GIỮ NGUYÊN) ---
+            - name: KEYCLOAK_ISSUER_URI
+              value: "http://keycloak.internal/realms/osdu"
+            - name: OPENID_PROVIDER_URL
+              value: "http://keycloak.internal/realms/osdu"
+            - name: OPENID_PROVIDER_ISSUER
+              value: "http://keycloak.internal/realms/osdu"
+            - name: OPENID_PROVIDER_ISSUER_URI
+              value: "http://keycloak.internal/realms/osdu"
+            - name: OPENID_PROVIDER_DISCOVERY_URL
+              value: "http://keycloak.internal/realms/osdu/.well-known/openid-configuration"
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: "http://keycloak.internal/realms/osdu"
             - name: OPENID_PROVIDER_SCOPES
               value: "openid profile email"
