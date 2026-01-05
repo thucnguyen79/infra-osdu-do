@@ -26,6 +26,8 @@ spec:
                 name: osdu-core-env
             - secretRef:
                 name: osdu-objectstore-secret
+            - secretRef:
+                name: osdu-core-secrets
           env:
             # --- KHAI BÁO CÁC BIẾN GỐC ĐỂ DÙNG LẠI (QUAN TRỌNG) ---
             - name: POSTGRES_HOST
