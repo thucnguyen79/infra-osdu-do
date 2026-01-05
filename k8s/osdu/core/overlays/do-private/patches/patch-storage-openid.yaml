@@ -8,12 +8,36 @@ spec:
       containers:
         - name: storage
           env:
+            # --- FIX 1: Secret giả để tránh lỗi NullPointer ---
+            - name: OPENID_PROVIDER_CLIENT_SECRET
+              value: "dummy-secret-value"
+            
+            # --- FIX 2: Khai báo Redis TƯỜNG MINH (Tránh lỗi Host empty) ---
+            # Dùng valueFrom để lấy giá trị từ ConfigMap (cho chuẩn GitOps)
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_PORT
+            
+            # Thêm cả biến Spring chuẩn (đề phòng code dùng thư viện Spring Data Redis mặc định)
+            - name: SPRING_REDIS_HOST
+              value: "$(REDIS_HOST)"
+            - name: SPRING_REDIS_PORT
+              value: "$(REDIS_PORT)"
+
+            # --- CẤU HÌNH CŨ (GIỮ NGUYÊN) ---
             - name: KEYCLOAK_ISSUER_URI
               valueFrom:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: KEYCLOAK_ISSUER_URI
-            # Các biến cho plugin OpenID (thêm alias để tránh lệch tên property giữa các bản build)
+# Các biến cho plugin OpenID (thêm alias để tránh lệch tên property giữa các bản build)
             - name: OPENID_PROVIDER_URL
               value: "$(KEYCLOAK_ISSUER_URI)"
             - name: OPENID_PROVIDER_ISSUER
@@ -23,5 +47,7 @@ spec:
             - name: OPENID_PROVIDER_DISCOVERY_URL
               value: "$(KEYCLOAK_ISSUER_URI)/.well-known/openid-configuration"
             # ResourceServer issuer
-            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+- name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: "$(KEYCLOAK_ISSUER_URI)"
+            - name: OPENID_PROVIDER_SCOPES
+              value: "openid profile email"
