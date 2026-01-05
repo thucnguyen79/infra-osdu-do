@@ -8,12 +8,11 @@ spec:
       containers:
         - name: storage
           env:
-            # --- FIX 1: Secret giả để tránh lỗi NullPointer ---
+            # --- FIX 1: Giữ lại Secret giả để tránh lỗi NullPointer (Đã OK) ---
             - name: OPENID_PROVIDER_CLIENT_SECRET
               value: "dummy-secret-value"
             
-            # --- FIX 2: Khai báo Redis TƯỜNG MINH (Tránh lỗi Host empty) ---
-            # Dùng valueFrom để lấy giá trị từ ConfigMap (cho chuẩn GitOps)
+            # --- FIX 2: Bổ sung Redis Host tường minh để tránh lỗi "Host must not be empty" ---
             - name: REDIS_HOST
               valueFrom:
                 configMapKeyRef:
@@ -37,7 +36,7 @@ spec:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: KEYCLOAK_ISSUER_URI
-# Các biến cho plugin OpenID (thêm alias để tránh lệch tên property giữa các bản build)
+            # Các biến cho plugin OpenID (thêm alias để tránh lệch tên property giữa các bản build)
             - name: OPENID_PROVIDER_URL
               value: "$(KEYCLOAK_ISSUER_URI)"
             - name: OPENID_PROVIDER_ISSUER
@@ -47,7 +46,9 @@ spec:
             - name: OPENID_PROVIDER_DISCOVERY_URL
               value: "$(KEYCLOAK_ISSUER_URI)/.well-known/openid-configuration"
             # ResourceServer issuer
-- name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: "$(KEYCLOAK_ISSUER_URI)"
+            
+            # Bổ sung Scope
             - name: OPENID_PROVIDER_SCOPES
               value: "openid profile email"
