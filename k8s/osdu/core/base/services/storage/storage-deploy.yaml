@@ -50,6 +50,16 @@ spec:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: REDIS_PORT
+            - name: CACHE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_HOST
+            - name: CACHE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_PORT
             - name: SPRING_DATA_REDIS_HOST
               valueFrom:
                 configMapKeyRef:
