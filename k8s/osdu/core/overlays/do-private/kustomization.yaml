@@ -25,6 +25,10 @@ configMapGenerator:
       - POSTGRES_PORT=5432
       - REDIS_HOST=osdu-redis.osdu-data.svc.cluster.local
       - REDIS_PORT=6379
+      - CACHE_REDIS_HOST=osdu-redis.osdu-data.svc.cluster.local
+      - CACHE_REDIS_PORT=6379
+      - CACHE_HOST=osdu-redis.osdu-data.svc.cluster.local
+      - CACHE_PORT=6379
       - KAFKA_BOOTSTRAP_SERVERS=osdu-kafka.osdu-data.svc.cluster.local:9092
       - OPENSEARCH_HOST=osdu-opensearch.osdu-data.svc.cluster.local
       - OPENSEARCH_PORT=9200
