@@ -16,7 +16,6 @@ spec:
     spec:
       containers:
         - name: storage
-          # SỬA LẠI TÊN IMAGE CHUẨN (dcc4c072)
           image: community.opengroup.org:5555/osdu/platform/system/storage/core-plus-storage-core-plus-release:dcc4c072
           imagePullPolicy: IfNotPresent
           ports:
@@ -28,8 +27,50 @@ spec:
                 name: osdu-objectstore-secret
             - secretRef:
                 name: osdu-core-secrets
+                optional: true
           env:
-            # --- KHAI BÁO CÁC BIẾN GỐC ĐỂ DÙNG LẠI (QUAN TRỌNG) ---
+            # === REDIS (tất cả variants) ===
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_PORT
+            - name: CACHE_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_HOST
+            - name: CACHE_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_PORT
+            - name: SPRING_DATA_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_HOST
+            - name: SPRING_DATA_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_PORT
+            - name: REDIS_GROUP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_HOST
+            - name: REDIS_GROUP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_PORT
+            # === POSTGRES ===
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
@@ -40,12 +81,6 @@ spec:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: POSTGRES_PORT
-            - name: KEYCLOAK_ISSUER_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: KEYCLOAK_ISSUER_URI
-            # ------------------------------------------------------
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/storage"
             - name: SPRING_DATASOURCE_USERNAME
@@ -58,29 +93,40 @@ spec:
                 secretKeyRef:
                   name: osdu-postgres-secret
                   key: POSTGRES_PASSWORD
+            # === KEYCLOAK / OPENID ===
+            - name: KEYCLOAK_ISSUER_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              value: "$(KEYCLOAK_ISSUER_URI)"
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
             - name: OPENID_PROVIDER_URL
-              value: "$(KEYCLOAK_ISSUER_URI)"
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
+            - name: OPENID_PROVIDER_ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
             - name: OPENID_PROVIDER_CLIENT_ID
               value: "osdu"
+            - name: OPENID_PROVIDER_CLIENT_SECRET
+              value: "dummy-secret-value"
+            - name: OPENID_PROVIDER_SCOPES
+              value: "openid profile email"
+            # === OTHER ===
             - name: PARTITION_API
               value: "http://osdu-partition:8080"
             - name: STORAGE_AUTH_ENABLED
               value: "false"
             - name: CLOUD_PROVIDER
               value: "minio"
-            # Bổ sung REDIS
-            - name: REDIS_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: REDIS_HOST
-            - name: REDIS_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: REDIS_PORT
           readinessProbe:
             tcpSocket:
               port: 8080
