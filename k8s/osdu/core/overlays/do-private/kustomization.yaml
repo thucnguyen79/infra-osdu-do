@@ -9,10 +9,10 @@ resources:
   # BẮT BUỘC nếu issuer của Keycloak là "http://keycloak.internal/realms/osdu"
   - extra/00-keycloak-internal-dns-alias.yaml
 
-patchesStrategicMerge:
-  - patches/patch-partition-env.yaml
-  - patches/patch-storage-openid.yaml
-  - patches/patch-entitlements.yaml
+patches:
+  - path: patches/patch-partition-env.yaml
+  # - path: patches/patch-storage-openid.yaml
+  - path: patches/patch-entitlements.yaml
 
 generatorOptions:
   disableNameSuffixHash: true
