@@ -16,7 +16,6 @@ generatorOptions:
 
 configMapGenerator:
   - name: osdu-core-env
-    behavior: replace
     literals:
       - POSTGRES_HOST=osdu-postgres.osdu-data.svc.cluster.local
       - POSTGRES_PORT=5432
