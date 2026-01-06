@@ -132,7 +132,7 @@ spec:
               value: "openid profile email"
             # === OTHER ===
             - name: PARTITION_API
-              value: "http://osdu-partition:8080"
+              value: "http://osdu-partition:8080/api/partition/v1"
             - name: STORAGE_AUTH_ENABLED
               value: "false"
             - name: CLOUD_PROVIDER
