@@ -8,6 +8,12 @@ spec:
       containers:
         - name: storage
           env:
+            # ===========================================
+            # FIX: REDIS CONFIG cho Core Plus Storage
+            # Core Plus dùng CacheConfigurationProperties với prefix "cache"
+            # ===========================================
+            
+            # 1. Khai báo biến gốc trước (để có thể reference)
             - name: REDIS_HOST
               valueFrom:
                 configMapKeyRef:
@@ -18,6 +24,8 @@ spec:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: REDIS_PORT
+            
+            # 2. Các biến Core Plus CacheConfigurationProperties cần (prefix: cache)
             - name: CACHE_REDIS_HOST
               valueFrom:
                 configMapKeyRef:
@@ -28,6 +36,8 @@ spec:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: REDIS_PORT
+            
+            # 3. Spring Data Redis (backup - một số version dùng)
             - name: SPRING_DATA_REDIS_HOST
               valueFrom:
                 configMapKeyRef:
@@ -38,6 +48,8 @@ spec:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: REDIS_PORT
+            
+            # 4. Legacy Spring Redis (backup)
             - name: SPRING_REDIS_HOST
               valueFrom:
                 configMapKeyRef:
@@ -48,16 +60,29 @@ spec:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: REDIS_PORT
+            
+            # 5. Biến REDIS_GROUP_HOST (một số service Core Plus dùng)
             - name: REDIS_GROUP_HOST
               valueFrom:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: REDIS_HOST
+            - name: REDIS_GROUP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_PORT
+            
+            # ===========================================
+            # KEYCLOAK / OPENID CONFIG
+            # ===========================================
             - name: KEYCLOAK_ISSUER_URI
               valueFrom:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: KEYCLOAK_ISSUER_URI
+            
+            # OpenID Provider URLs (tất cả aliases)
             - name: OPENID_PROVIDER_URL
               valueFrom:
                 configMapKeyRef:
@@ -68,12 +93,23 @@ spec:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: KEYCLOAK_ISSUER_URI
+            - name: OPENID_PROVIDER_ISSUER_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
+            
+            # Spring Security ResourceServer
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               valueFrom:
                 configMapKeyRef:
                   name: osdu-core-env
                   key: KEYCLOAK_ISSUER_URI
+            
+            # OpenID Client Secret (dummy để tránh NullPointer)
             - name: OPENID_PROVIDER_CLIENT_SECRET
               value: "dummy-secret-value"
+            
+            # OpenID Scopes
             - name: OPENID_PROVIDER_SCOPES
               value: "openid profile email"
