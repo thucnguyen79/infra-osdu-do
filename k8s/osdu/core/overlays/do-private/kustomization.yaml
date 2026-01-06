@@ -5,13 +5,10 @@ namespace: osdu-core
 resources:
   - ../../base
   - marker-configmap.yaml
-  # - hooks/postsync-seed-osdu-partition.job.yaml
-  # BẮT BUỘC nếu issuer của Keycloak là "http://keycloak.internal/realms/osdu"
   - extra/00-keycloak-internal-dns-alias.yaml
 
 patches:
   - path: patches/patch-partition-env.yaml
-  # - path: patches/patch-storage-openid.yaml
   - path: patches/patch-entitlements.yaml
 
 generatorOptions:
@@ -19,23 +16,19 @@ generatorOptions:
 
 configMapGenerator:
   - name: osdu-core-env
+    behavior: replace
     literals:
-      # --- DATABASE & INFRA (khớp đúng tên svc ở namespace osdu-data) ---
       - POSTGRES_HOST=osdu-postgres.osdu-data.svc.cluster.local
       - POSTGRES_PORT=5432
       - REDIS_HOST=osdu-redis.osdu-data.svc.cluster.local
       - REDIS_PORT=6379
-      - CACHE_REDIS_HOST=osdu-redis.osdu-data.svc.cluster.local
-      - CACHE_REDIS_PORT=6379
-      - CACHE_HOST=osdu-redis.osdu-data.svc.cluster.local
-      - CACHE_PORT=6379
+      - REDIS_STORAGE_HOST=osdu-redis.osdu-data.svc.cluster.local
+      - REDIS_STORAGE_PORT=6379
+      - REDIS_GROUP_HOST=osdu-redis.osdu-data.svc.cluster.local
+      - REDIS_GROUP_PORT=6379
       - KAFKA_BOOTSTRAP_SERVERS=osdu-kafka.osdu-data.svc.cluster.local:9092
       - OPENSEARCH_HOST=osdu-opensearch.osdu-data.svc.cluster.local
       - OPENSEARCH_PORT=9200
-
-      # --- IDENTITY (PHẢI khớp EXACT issuer trả về từ .well-known) ---
       - KEYCLOAK_ISSUER_URI=http://keycloak.internal/realms/osdu
-
-      # --- JAVA ---
       - JAVA_OPTS=-Xms256m -Xmx512m
       - SERVER_PORT=8080
