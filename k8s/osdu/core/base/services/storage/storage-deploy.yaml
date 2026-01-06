@@ -70,6 +70,17 @@ spec:
               value: "false"
             - name: CLOUD_PROVIDER
               value: "minio"
+            # Bổ sung REDIS
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_PORT
           readinessProbe:
             tcpSocket:
               port: 8080
