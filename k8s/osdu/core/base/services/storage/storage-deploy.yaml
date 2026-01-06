@@ -137,6 +137,8 @@ spec:
               value: "false"
             - name: CLOUD_PROVIDER
               value: "minio"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Dcache.host=osdu-redis.osdu-data.svc.cluster.local -Dcache.port=6379"
           readinessProbe:
             tcpSocket:
               port: 8080
