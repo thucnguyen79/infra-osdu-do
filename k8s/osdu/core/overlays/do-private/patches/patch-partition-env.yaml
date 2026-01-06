@@ -17,12 +17,12 @@ spec:
               value: "$(KEYCLOAK_ISSUER_URI)"
             - name: PARTITION_POSTGRES_URL
               value: "jdbc:postgresql://osdu-postgres.osdu-data.svc.cluster.local:5432/partition"
-            - name: PARTITION_POSTGRES_USERNAME
+            - name: PARTITION_POSTGRESQL_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: osdu-postgres-secret
                   key: POSTGRES_USER
-            - name: PARTITION_POSTGRES_PASSWORD
+            - name: PARTITION_POSTGRESQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: osdu-postgres-secret
