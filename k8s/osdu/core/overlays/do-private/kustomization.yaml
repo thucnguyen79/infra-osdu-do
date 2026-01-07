@@ -29,5 +29,6 @@ configMapGenerator:
       - OPENSEARCH_HOST=osdu-opensearch.osdu-data.svc.cluster.local
       - OPENSEARCH_PORT=9200
       - KEYCLOAK_ISSUER_URI=http://keycloak.internal/realms/osdu
+      - PARTITION_API=http://osdu-partition:8080/api/partition/v1
       - JAVA_OPTS=-Xms256m -Xmx512m
       - SERVER_PORT=8080
