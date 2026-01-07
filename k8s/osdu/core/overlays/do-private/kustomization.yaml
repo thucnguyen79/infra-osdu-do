@@ -10,6 +10,9 @@ resources:
 patches:
   - path: patches/patch-partition-env.yaml
   - path: patches/patch-entitlements.yaml
+  - path: patches/patch-entitlements-db.yaml
+  - path: patches/patch-schema-env.yaml
+  - path: patches/patch-file-env.yaml
 
 generatorOptions:
   disableNameSuffixHash: true

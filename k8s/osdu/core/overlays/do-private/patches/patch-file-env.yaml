@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-file
+spec:
+  template:
+    spec:
+      containers:
+        - name: file
+          env:
+            - name: PARTITION_API
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: PARTITION_API
