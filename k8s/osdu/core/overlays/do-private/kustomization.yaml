@@ -11,6 +11,7 @@ patches:
   - path: patches/patch-partition-env.yaml
   - path: patches/patch-entitlements.yaml
   - path: patches/patch-entitlements-db.yaml
+  - path: patches/patch-revision-history.yaml
 
 generatorOptions:
   disableNameSuffixHash: true
