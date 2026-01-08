@@ -41,6 +41,8 @@ spec:
               value: "$(KEYCLOAK_ISSUER_URI)"
             - name: PARTITION_SERVICE_ENDPOINT
               value: "http://osdu-partition:8080"
+            - name: LEGAL_AUTH_ENABLED
+              value: "false"
           readinessProbe:
             tcpSocket:
               port: 8080

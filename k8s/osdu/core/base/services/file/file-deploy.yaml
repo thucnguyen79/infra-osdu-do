@@ -47,6 +47,8 @@ spec:
             # Cấu hình MinIO
             - name: CLOUD_PROVIDER
               value: "minio"
+            - name: FILE_AUTH_ENABLED
+              value: "false"
           readinessProbe:
             tcpSocket:
               port: 8080
