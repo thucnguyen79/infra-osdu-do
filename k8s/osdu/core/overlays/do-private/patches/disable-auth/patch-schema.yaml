@@ -10,3 +10,7 @@ spec:
           env:
             - name: SCHEMA_AUTH_ENABLED
               value: "false"
+            - name: SERVICE_SECURITY_ENABLED
+              value: "false"
+            - name: SPRING_AUTOCONFIGURE_EXCLUDE
+              value: "org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration,org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration"
