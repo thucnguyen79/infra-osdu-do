@@ -14,3 +14,11 @@ spec:
               value: "false"
             - name: SPRING_AUTOCONFIGURE_EXCLUDE
               value: "org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration,org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration"
+            - name: SECURITY_HTTPS_CERTIFICATE_TRUST
+              value: "false"
+            - name: SERVER_SSL_ENABLED
+              value: "false"
+            - name: SECURITY_REQUIRE_SSL
+              value: "false"
+            - name: SERVER_TOMCAT_REMOTEIP_PROTOCOL_HEADER_HTTPS_VALUE
+              value: "http"
