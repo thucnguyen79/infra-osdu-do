@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-legal
+spec:
+  template:
+    spec:
+      containers:
+        - name: legal
+          env:
+            - name: LEGAL_AUTH_ENABLED
+              value: "false"

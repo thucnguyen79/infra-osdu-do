@@ -18,6 +18,10 @@ patches:
   - path: patches/revision-history/patch-schema.yaml
   - path: patches/revision-history/patch-file.yaml
   - path: patches/revision-history/patch-toolbox.yaml
+  - path: patches/disable-auth/patch-legal.yaml
+  - path: patches/disable-auth/patch-storage.yaml
+  - path: patches/disable-auth/patch-schema.yaml
+  - path: patches/disable-auth/patch-file.yaml
 
 generatorOptions:
   disableNameSuffixHash: true
