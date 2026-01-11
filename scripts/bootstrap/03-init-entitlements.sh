@@ -1,12 +1,10 @@
 #!/bin/bash
 # 03-init-entitlements.sh - Bootstrap entitlements groups and users
 # Usage: ./03-init-entitlements.sh [USER_EMAIL] [PARTITION_NAME]
-
 set -e
 
 USER_EMAIL="${1:-test@osdu.internal}"
 PARTITION_NAME="${2:-osdu}"
-TOOLBOX_POD="deploy/osdu-toolbox"
 NAMESPACE="osdu-core"
 PG_HOST="osdu-postgres.osdu-data.svc.cluster.local"
 PG_USER="osduadmin"
@@ -14,8 +12,8 @@ PG_PASS="CHANGE_ME_STRONG"
 
 echo "=== Bootstrapping Entitlements for user: $USER_EMAIL, partition: $PARTITION_NAME ==="
 
-kubectl -n $NAMESPACE exec -it $TOOLBOX_POD -- bash -c "
-PGPASSWORD=$PG_PASS psql -h $PG_HOST -U $PG_USER -d entitlements << 'EOF'
+kubectl -n $NAMESPACE exec -it deploy/osdu-toolbox -- bash -c "
+PGPASSWORD=$PG_PASS psql -h $PG_HOST -U $PG_USER -d entitlements << 'EOSQL'
 -- Insert user
 INSERT INTO member (email, partition_id) 
 VALUES ('$USER_EMAIL', '$PARTITION_NAME')
@@ -46,9 +44,9 @@ WHERE m.email = '$USER_EMAIL'
 AND g.partition_id = '$PARTITION_NAME'
 ON CONFLICT (member_id, group_id) DO NOTHING;
 
-SELECT 'User ' || '$USER_EMAIL' || ' added to ' || count(*) || ' groups' FROM member_to_group 
+SELECT 'User added to ' || count(*) || ' groups' FROM member_to_group 
 WHERE member_id = (SELECT id FROM member WHERE email = '$USER_EMAIL');
-EOF
+EOSQL
 "
 
 echo "=== Entitlements bootstrap completed ==="

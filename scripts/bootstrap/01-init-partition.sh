@@ -1,30 +1,14 @@
 #!/bin/bash
 # 01-init-partition.sh - Initialize OSDU Partition with required properties
 # Usage: ./01-init-partition.sh [PARTITION_NAME]
-
 set -e
 
 PARTITION_NAME="${1:-osdu}"
-TOOLBOX_POD="deploy/osdu-toolbox"
 NAMESPACE="osdu-core"
 
 echo "=== Initializing partition: $PARTITION_NAME ==="
 
-# Check if partition exists
-EXISTING=$(kubectl -n $NAMESPACE exec -it $TOOLBOX_POD -- \
-  curl -s "http://osdu-partition:8080/api/partition/v1/partitions/$PARTITION_NAME" \
-  -H "data-partition-id: $PARTITION_NAME" 2>/dev/null || echo "")
-
-if [[ "$EXISTING" == *"dataPartitionId"* ]]; then
-  echo "Partition exists, using PATCH to update..."
-  METHOD="PATCH"
-else
-  echo "Partition not found, using POST to create..."
-  METHOD="POST"
-fi
-
-# Create/Update partition
-kubectl -n $NAMESPACE exec -it $TOOLBOX_POD -- curl -s -X $METHOD \
+kubectl -n $NAMESPACE exec -it deploy/osdu-toolbox -- curl -s -X PATCH \
   "http://osdu-partition:8080/api/partition/v1/partitions/$PARTITION_NAME" \
   -H "Content-Type: application/json" \
   -H "data-partition-id: $PARTITION_NAME" \

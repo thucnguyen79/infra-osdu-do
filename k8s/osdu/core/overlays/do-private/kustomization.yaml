@@ -8,9 +8,21 @@ resources:
   - extra/00-keycloak-internal-dns-alias.yaml
 
 patches:
+  # Partition patches
   - path: patches/patch-partition-env.yaml
+  
+  # Entitlements patches
   - path: patches/patch-entitlements.yaml
   - path: patches/patch-entitlements-db.yaml
+  - path: patches/patch-entitlements-redis.yaml
+  
+  # Legal patches
+  - path: patches/patch-legal-env.yaml
+  
+  # Storage patches
+  - path: patches/patch-storage-openid.yaml
+  
+  # Revision history patches (resource management)
   - path: patches/revision-history/patch-partition.yaml
   - path: patches/revision-history/patch-entitlements.yaml
   - path: patches/revision-history/patch-storage.yaml
@@ -33,10 +45,10 @@ configMapGenerator:
       - REDIS_STORAGE_PORT=6379
       - REDIS_GROUP_HOST=osdu-redis.osdu-data.svc.cluster.local
       - REDIS_GROUP_PORT=6379
-      - KAFKA_BOOTSTRAP_SERVERS=osdu-kafka.osdu-data.svc.cluster.local:9092
+      - KAFKA_BOOTSTRAP_SERVERS=osdu-redpanda.osdu-data.svc.cluster.local:9093
       - OPENSEARCH_HOST=osdu-opensearch.osdu-data.svc.cluster.local
       - OPENSEARCH_PORT=9200
-      - KEYCLOAK_ISSUER_URI=http://keycloak.internal/realms/osdu
+      - KEYCLOAK_ISSUER_URI=http://keycloak.osdu-identity.svc.cluster.local/realms/osdu
       - PARTITION_API=http://osdu-partition:8080/api/partition/v1
       - JAVA_OPTS=-Xms256m -Xmx512m
       - SERVER_PORT=8080
