@@ -514,3 +514,63 @@ Triển khai 6 OSDU Core Services: Partition, Entitlements, Storage, Legal, Sche
 - [x] Seed script: `scripts/seed-partition-osdu.sh`
 
 **Tài liệu chi tiết:** `docs/osdu/36-step18-osdu-core-services-runbook.md`
+
+## Step 19 - OSDU Core Services Smoke Tests & Bootstrap
+
+### A. Prerequisites
+- [ ] Step 14 (Keycloak) completed - có user test với token
+- [ ] Step 15 (Ceph) completed - S3 storage ready
+- [ ] Step 16 (OSDU Deps) completed - Postgres, OpenSearch, Redis, Redpanda running
+- [ ] Step 18 (OSDU Core Deploy) completed - 6 core services running
+
+### B. Bootstrap Database Schemas (One-time)
+- [ ] Entitlements DB schema created (`scripts/bootstrap/02-init-db-schemas.sh`)
+  - [ ] Table `member` with `partition_id` column
+  - [ ] Table `"group"` with `partition_id` column
+  - [ ] Table `member_to_group`
+  - [ ] Table `embedded_group` (parent_id, child_id)
+- [ ] Legal DB schema created
+  - [ ] Schema `osdu` exists
+  - [ ] Table `osdu."LegalTagOsm"` with `pk BIGSERIAL`
+
+### C. Initialize Partition Properties
+- [ ] Run `scripts/bootstrap/01-init-partition.sh osdu`
+- [ ] Verify partition has all required properties:
+  - [ ] TenantInfo: name, dataPartitionId, projectId, crmAccountID (JSON array!)
+  - [ ] complianceRuleSet (camelCase), domain, gcpProjectId
+  - [ ] osm.postgres.datasource.* properties
+  - [ ] obm.minio.* properties (endpoint, accessKey, secretKey, bucket)
+  - [ ] legal-tag-allowed-* properties
+  - [ ] All service datasource properties
+
+### D. Configure Service Environment Variables
+- [ ] Entitlements service env vars (Repo-first: update deployment YAML)
+  - [ ] REDIS_USER_INFO_HOST, REDIS_USER_INFO_PORT
+  - [ ] REDIS_USER_GROUPS_HOST, REDIS_USER_GROUPS_PORT
+  - [ ] POSTGRES_PASSWORD
+- [ ] Legal service env vars (Repo-first: update deployment YAML)
+  - [ ] PARTITION_HOST, PARTITION_API, PARTITION_SERVICE_ENDPOINT
+  - [ ] ENTITLEMENTS_HOST, ENTITLEMENTS_URL, AUTHORIZE_API
+  - [ ] OBM_MINIO_SECRET_KEY (from Ceph secret)
+- [ ] Restart services after env changes
+
+### E. Bootstrap Entitlements Data
+- [ ] Run `scripts/bootstrap/03-init-entitlements.sh test@osdu.internal osdu`
+- [ ] Verify user email matches JWT claim (check Keycloak user email)
+- [ ] Verify groups created:
+  - [ ] users, users.datalake.ops, users.datalake.admins
+  - [ ] service.legal.user, service.legal.admin, service.legal.editor
+  - [ ] service.storage.*, service.schema-service.*
+
+### F. Smoke Tests
+- [ ] Entitlements: GET /api/entitlements/v2/groups → 200 with groups list
+- [ ] Legal: POST /api/legal/v1/legaltags → 201 (create tag)
+- [ ] Legal: GET /api/legal/v1/legaltags → 200 with tags list
+- [ ] Schema: GET /api/schema-service/v1/info → 200
+- [ ] Storage: GET /api/storage/v2/info → 200
+
+### G. Evidence & Documentation
+- [ ] Save test outputs to `artifacts/step19-smoke-tests/`
+- [ ] Update deployment YAMLs with env vars (Repo-first)
+- [ ] Commit bootstrap scripts
+- [ ] Document troubleshooting notes if any
