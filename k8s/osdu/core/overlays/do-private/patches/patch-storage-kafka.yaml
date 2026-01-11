@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-storage
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: storage
+          env:
+            - name: OQM_DRIVER
+              value: "kafka"
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "osdu-redpanda.osdu-data.svc.cluster.local:9092"

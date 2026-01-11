@@ -18,7 +18,7 @@ patches:
   - path: patches/patch-legal-all.yaml
   
   # Storage
-  - path: patches/patch-storage-openid.yaml
+  - path: patches/patch-storage-kafka.yaml
   
   # Revision history
   - path: patches/revision-history/patch-partition.yaml
