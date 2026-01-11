@@ -1,0 +1,53 @@
+# patch-entitlements-all.yaml
+# Hợp nhất tất cả cấu hình cho Entitlements Core Plus
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-entitlements
+spec:
+  template:
+    spec:
+      containers:
+        - name: entitlements
+          env:
+            # === PARTITION API ===
+            - name: PARTITION_API
+              value: "http://osdu-partition:8080/api/partition/v1"
+            
+            # === KEYCLOAK/JWT ===
+            - name: KEYCLOAK_ISSUER_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: "$(KEYCLOAK_ISSUER_URI)"
+            
+            # === REDIS CACHING ===
+            - name: REDIS_USER_INFO_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_HOST
+            - name: REDIS_USER_INFO_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_PORT
+            - name: REDIS_USER_GROUPS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_HOST
+            - name: REDIS_USER_GROUPS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_PORT
+            
+            # === DATABASE (bổ sung cho Core Plus) ===
+            - name: ENTITLEMENTS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-postgres-secret
+                  key: POSTGRES_PASSWORD
