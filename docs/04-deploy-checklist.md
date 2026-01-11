@@ -574,3 +574,105 @@ Triển khai 6 OSDU Core Services: Partition, Entitlements, Storage, Legal, Sche
 - [ ] Update deployment YAMLs with env vars (Repo-first)
 - [ ] Commit bootstrap scripts
 - [ ] Document troubleshooting notes if any
+
+## Step 19 - OSDU Core Services Complete (UPDATED)
+
+### A. Prerequisites
+- [x] Step 14 (Keycloak) completed - có user test với token
+- [x] Step 15 (Ceph) completed - S3 storage ready
+- [x] Step 16 (OSDU Deps) completed - Postgres, OpenSearch, Redis, Redpanda running
+- [x] Step 18 (OSDU Core Deploy) completed - 6 core services deployed
+
+### B. Kustomize Patch Consolidation
+- [x] Issue: Multiple patches per deployment caused merge conflicts
+  - [x] Error: `valueFrom: Invalid value: may not be specified when value is not empty`
+- [x] Solution: Consolidated patches into single files per service
+  - [x] Created `patch-entitlements-all.yaml` (merged 3 files)
+  - [x] Created `patch-legal-all.yaml` (merged 1 file)
+- [x] Removed old patch files:
+  - [x] `patch-entitlements.yaml`
+  - [x] `patch-entitlements-db.yaml`
+  - [x] `patch-entitlements-redis.yaml`
+  - [x] `patch-legal-env.yaml`
+
+### C. Legal Service - Ceph Secret
+- [x] Issue: `secret "rook-ceph-object-user-osdu-store-osdu-s3-user" not found`
+- [x] Solution: Copy secret from rook-ceph to osdu-core namespace
+```bash
+  kubectl get secret rook-ceph-object-user-osdu-store-osdu-s3-user \
+    -n rook-ceph -o yaml | grep -v "namespace:" | kubectl apply -n osdu-core -f -
+```
+
+### D. Storage Service - Messaging Backend Migration
+- [x] Issue: CrashLoopBackOff with `RabbitMQ Retry Mechanism has a wrong configuration`
+- [x] Root cause: Core Plus image has hardcoded RabbitMQ validation
+- [x] Failed attempts:
+  - [x] Configure RabbitMQ with DLX/DLQ - validation still failed
+  - [x] Add env vars to disable retry - no effect (hardcoded)
+  - [x] Try different queue naming conventions - still failed
+- [x] Solution: Migrate from RabbitMQ to Kafka/Redpanda
+  - [x] Delete partition: `curl -X DELETE .../partitions/osdu`
+  - [x] Recreate partition with ONLY `oqm.kafka.*` properties (no `oqm.rabbitmq.*`)
+  - [x] Flush Redis cache: `redis-cli FLUSHALL`
+  - [x] Create `patch-storage-kafka.yaml` with `OQM_DRIVER=kafka`
+  - [x] Apply and verify Storage pod Running
+
+### E. Final Partition Properties (OQM)
+- [x] `oqm.kafka.bootstrap-servers`: `osdu-redpanda.osdu-data.svc.cluster.local:9092`
+- [x] `oqm.kafka.partition-count`: `1`
+- [x] `oqm.kafka.replication-factor`: `1`
+- [x] `oqm.kafka.security.protocol`: `PLAINTEXT`
+- [x] No `oqm.rabbitmq.*` properties (removed)
+
+### F. Services Status - ALL OPERATIONAL
+- [x] Partition:    HTTP 200 ✅
+- [x] Entitlements: HTTP 200 ✅
+- [x] Legal:        HTTP 200 ✅
+- [x] Schema:       HTTP 200 ✅
+- [x] File:         HTTP 200 ✅
+- [x] Storage:      HTTP 200 ✅
+
+### G. Smoke Test Script
+```bash
+kubectl -n osdu-core exec deploy/osdu-toolbox -- bash -c '
+TOKEN=$(curl -s -X POST "http://keycloak:80/realms/osdu/protocol/openid-connect/token" \
+  -d "grant_type=password&client_id=osdu-cli&username=test&password=Test@12345" | \
+  grep -o "\"access_token\":\"[^\"]*" | cut -d"\"" -f4)
+echo "1. Partition:    $(curl -s -w "%{http_code}" -o /dev/null http://osdu-partition:8080/api/partition/v1/partitions/osdu -H "data-partition-id: osdu")"
+echo "2. Entitlements: $(curl -s -w "%{http_code}" -o /dev/null http://osdu-entitlements:8080/api/entitlements/v2/groups -H "data-partition-id: osdu" -H "Authorization: Bearer $TOKEN")"
+echo "3. Legal:        $(curl -s -w "%{http_code}" -o /dev/null http://osdu-legal:8080/api/legal/v1/legaltags -H "data-partition-id: osdu" -H "X-Forwarded-Proto: https" -H "Authorization: Bearer $TOKEN")"
+echo "4. Schema:       $(curl -s -w "%{http_code}" -o /dev/null http://osdu-schema:8080/api/schema-service/v1/info -H "data-partition-id: osdu" -H "Authorization: Bearer $TOKEN")"
+echo "5. File:         $(curl -s -w "%{http_code}" -o /dev/null http://osdu-file:8080/api/file/v2/info -H "data-partition-id: osdu" -H "Authorization: Bearer $TOKEN")"
+echo "6. Storage:      $(curl -s -w "%{http_code}" -o /dev/null http://osdu-storage:8080/api/storage/v2/info -H "data-partition-id: osdu" -H "Authorization: Bearer $TOKEN")"
+'
+```
+
+### H. Production Readiness Assessment
+- [x] Current setup: **POC/UAT only**
+- [ ] Production requirements (future):
+  - [ ] Redpanda: 3-node cluster with persistent storage
+  - [ ] Replication factor: 3
+  - [ ] TLS + SASL/SCRAM authentication
+  - [ ] Monitoring & alerting
+
+### I. Git Commits
+- [x] `e51ccf1` - Step 19: OSDU Core Services POC complete (5/6)
+- [x] `65d3334` - Cleanup: Remove old patch files
+- [x] `efa7f61` - Step 19 COMPLETE: All 6 OSDU Core Services operational
+
+### J. Files Changed
+```
+k8s/osdu/core/overlays/do-private/
+├── kustomization.yaml (updated)
+└── patches/
+    ├── patch-entitlements-all.yaml (NEW - consolidated)
+    ├── patch-legal-all.yaml (NEW - consolidated)
+    ├── patch-storage-kafka.yaml (NEW - Kafka driver)
+    └── patch-partition-env.yaml (existing)
+```
+
+### K. Artifacts
+- [x] Documentation: `docs/40-step19-osdu-core-services.md`
+- [x] Partition backup: `/tmp/partition-backup.json` (on ToolServer01)
+
+**Tài liệu chi tiết:** `docs/osdu/40-step19-osdu-core-services.md`
