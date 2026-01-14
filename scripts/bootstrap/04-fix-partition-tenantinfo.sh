@@ -19,7 +19,8 @@ $TOOLBOX curl -s -X PATCH \
       "gcpProjectId": {"sensitive": false, "value": "osdu-poc"},
       "domain": {"sensitive": false, "value": "osdu.internal"},
       "crmAccountID": {"sensitive": false, "value": "[\"'"$PARTITION"'\"]"},
-      "complianceRuleSet": {"sensitive": false, "value": "shared"}
+      "complianceRuleSet": {"sensitive": false, "value": "shared"},
+      "serviceAccount": {"sensitive": false, "value": "osdu-service@osdu-poc.iam.gserviceaccount.com"}
     }
   }'
 
@@ -27,7 +28,7 @@ echo ""
 echo "=== Verifying properties ==="
 $TOOLBOX curl -s \
   "http://osdu-partition:8080/api/partition/v1/partitions/$PARTITION" \
-  -H "data-partition-id: $PARTITION" | jq '{dataPartitionId, projectId, domain, crmAccountID, complianceRuleSet}'
+  -H "data-partition-id: $PARTITION" | jq '{dataPartitionId, projectId, domain, crmAccountID, complianceRuleSet, serviceAccount}'
 
 echo ""
 echo "=== Flushing Redis cache ==="
