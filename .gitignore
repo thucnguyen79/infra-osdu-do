@@ -4,7 +4,7 @@
 adminpc.conf
 .venv/
 ansible/collections/
-
+.claude/
 
 # Do not commit kubeadm init outputs (tokens/certs)
 artifacts-private/
