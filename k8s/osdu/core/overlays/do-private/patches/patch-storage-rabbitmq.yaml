@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-storage
+spec:
+  template:
+    spec:
+      containers:
+        - name: osdu-storage
+          env:
+            - name: OQM_RABBITMQ_RABBITMQRETRYDELAY
+              value: "0"
+            - name: RABBITMQ_RETRY_DELAY
+              value: "0"
+            - name: OQM_RABBITMQ_RETRY_DELAY
+              value: "0"
+            - name: OQM_RABBITMQ_RETRY_ENABLED
+              value: "false"
+            - name: RABBITMQ_RETRY_ENABLED
+              value: "false"

@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: osdu-rabbitmq-secret
+  namespace: osdu-data
+type: Opaque
+stringData:
+  RABBITMQ_DEFAULT_USER: osdu
+  RABBITMQ_DEFAULT_PASS: osdu123
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: osdu-rabbitmq-config
+  namespace: osdu-data
+data:
+  enabled_plugins: |
+    [rabbitmq_management,rabbitmq_prometheus].
+  rabbitmq.conf: |
+    default_user = osdu
+    default_pass = osdu123
+    default_vhost = /
+    loopback_users.guest = false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-rabbitmq
+  namespace: osdu-data
+  labels:
+    app: osdu-rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-rabbitmq
+  template:
+    metadata:
+      labels:
+        app: osdu-rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3.12-management-alpine
+          ports:
+            - containerPort: 5672
+              name: amqp
+            - containerPort: 15672
+              name: management
+          envFrom:
+            - secretRef:
+                name: osdu-rabbitmq-secret
+          volumeMounts:
+            - name: config
+              mountPath: /etc/rabbitmq/enabled_plugins
+              subPath: enabled_plugins
+            - name: config
+              mountPath: /etc/rabbitmq/rabbitmq.conf
+              subPath: rabbitmq.conf
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          readinessProbe:
+            exec:
+              command: ["rabbitmq-diagnostics", "check_running"]
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["rabbitmq-diagnostics", "ping"]
+            initialDelaySeconds: 30
+            periodSeconds: 30
+      volumes:
+        - name: config
+          configMap:
+            name: osdu-rabbitmq-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: osdu-rabbitmq
+  namespace: osdu-data
+  labels:
+    app: osdu-rabbitmq
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5672
+      targetPort: 5672
+      name: amqp
+    - port: 15672
+      targetPort: 15672
+      name: management
+  selector:
+    app: osdu-rabbitmq

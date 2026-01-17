@@ -10,16 +10,20 @@ resources:
 patches:
   # Partition
   - path: patches/patch-partition-env.yaml
-  
-  # Entitlements - HỢP NHẤT
+
+  # Entitlements
   - path: patches/patch-entitlements-all.yaml
-  
-  # Legal - HỢP NHẤT
+
+  # Legal
   - path: patches/patch-legal-all.yaml
-  
-  # Storage
+
+  # Storage - Kafka + RabbitMQ retry bypass (Step 20)
   - path: patches/patch-storage-kafka.yaml
-  
+  - path: patches/patch-storage-rabbitmq.yaml
+
+  # File - Entitlements config (Step 20)
+  - path: patches/patch-file-entitlements.yaml
+
   # Revision history
   - path: patches/revision-history/patch-partition.yaml
   - path: patches/revision-history/patch-entitlements.yaml

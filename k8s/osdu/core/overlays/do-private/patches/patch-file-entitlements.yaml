@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-file
+spec:
+  template:
+    spec:
+      containers:
+        - name: osdu-file
+          env:
+            - name: ENTITLEMENTS_HOST
+              value: "http://osdu-entitlements:8080"
+            - name: ENTITLEMENTS_PATH
+              value: "/api/entitlements/v2/"
+            - name: AUTHORIZE_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2/"
