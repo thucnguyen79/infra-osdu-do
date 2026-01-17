@@ -27,7 +27,16 @@ spec:
             - configMapRef:
                 name: osdu-core-env
           env:
-            # === OpenSearch Connection (hardcoded to avoid valueFrom issues) ===
+            # === SSL/TLS Disabled (OpenSearch is HTTP only) ===
+            - name: ELASTIC_SCHEME
+              value: "http"
+            - name: ELASTICSEARCH_HTTPS_ENABLED
+              value: "false"
+            - name: OPENSEARCH_SECURITY_DISABLED
+              value: "true"
+            - name: SPRING_ELASTICSEARCH_REST_SSL_ENABLED
+              value: "false"
+            # === OpenSearch Connection ===
             - name: ELASTIC_HOST
               value: "osdu-opensearch.osdu-data.svc.cluster.local"
             - name: ELASTIC_PORT
@@ -66,7 +75,6 @@ spec:
             # === Keycloak/OAuth ===
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
-          # === Use TCP probe instead of HTTP to avoid path issues ===
           readinessProbe:
             tcpSocket:
               port: 8080
