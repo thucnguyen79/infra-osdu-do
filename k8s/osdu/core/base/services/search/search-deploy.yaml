@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: search
-          image: community.opengroup.org:5555/osdu/platform/system/search-service/core-plus-search-release:3f5a5f52
+          image: community.opengroup.org:5555/osdu/platform/system/search-service/core-plus-search-release:20f18adf
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
