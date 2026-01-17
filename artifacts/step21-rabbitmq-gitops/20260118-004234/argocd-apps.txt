@@ -1,0 +1,10 @@
+NAME                        SYNC STATUS   HEALTH STATUS   REVISION                                   PROJECT
+app-of-apps-observability   Synced        Healthy         3a56dbe2f7292a93b73d9f8e7f3c7e29b41f027e   default
+app-of-apps-osdu            Synced        Healthy         3a56dbe2f7292a93b73d9f8e7f3c7e29b41f027e   osdu
+obs-ingress                 Synced        Healthy         3a56dbe2f7292a93b73d9f8e7f3c7e29b41f027e   default
+obs-kube-prometheus-stack   Synced        Healthy         3a56dbe2f7292a93b73d9f8e7f3c7e29b41f027e   default
+obs-loki                    Synced        Healthy         3a56dbe2f7292a93b73d9f8e7f3c7e29b41f027e   default
+osdu-ceph                   Synced        Healthy         3a56dbe2f7292a93b73d9f8e7f3c7e29b41f027e   default
+osdu-core                   Synced        Healthy         3a56dbe2f7292a93b73d9f8e7f3c7e29b41f027e   osdu
+osdu-deps                   Synced        Healthy         3a56dbe2f7292a93b73d9f8e7f3c7e29b41f027e   osdu
+osdu-identity               Synced        Healthy         3a56dbe2f7292a93b73d9f8e7f3c7e29b41f027e   osdu

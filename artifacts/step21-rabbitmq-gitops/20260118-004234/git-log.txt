@@ -1,0 +1,5 @@
+3a56dbe Step 21: Fix RabbitMQ probe timeouts
+cbdf8d6 Step 21: Integrate RabbitMQ into osdu-deps GitOps
+28066ae Step 21: Fix strategic merge patch container names
+34cf08b Step 20: Update checklist
+71bbe14 Step 20: Smoke test

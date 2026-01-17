@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/tracking-id: osdu-deps:apps/Deployment:osdu-data/osdu-rabbitmq
+    deployment.kubernetes.io/revision: "4"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"osdu-deps:apps/Deployment:osdu-data/osdu-rabbitmq"},"labels":{"app":"osdu-rabbitmq"},"name":"osdu-rabbitmq","namespace":"osdu-data"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"osdu-rabbitmq"}},"template":{"metadata":{"labels":{"app":"osdu-rabbitmq"}},"spec":{"containers":[{"envFrom":[{"secretRef":{"name":"osdu-rabbitmq-secret"}}],"image":"rabbitmq:3.12-management-alpine","livenessProbe":{"exec":{"command":["rabbitmq-diagnostics","ping"]},"failureThreshold":3,"initialDelaySeconds":60,"periodSeconds":30,"timeoutSeconds":10},"name":"rabbitmq","ports":[{"containerPort":5672,"name":"amqp"},{"containerPort":15672,"name":"management"}],"readinessProbe":{"exec":{"command":["rabbitmq-diagnostics","check_running"]},"failureThreshold":3,"initialDelaySeconds":30,"periodSeconds":15,"timeoutSeconds":10},"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"256Mi"}},"volumeMounts":[{"mountPath":"/etc/rabbitmq/enabled_plugins","name":"config","subPath":"enabled_plugins"},{"mountPath":"/etc/rabbitmq/rabbitmq.conf","name":"config","subPath":"rabbitmq.conf"}]}],"volumes":[{"configMap":{"name":"osdu-rabbitmq-config"},"name":"config"}]}}}}
+  creationTimestamp: "2026-01-15T06:45:41Z"
+  generation: 4
+  labels:
+    app: osdu-rabbitmq
+  name: osdu-rabbitmq
+  namespace: osdu-data
+  resourceVersion: "5771477"
+  uid: c9e5e088-0bf9-44b1-8961-8581543d592b
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: osdu-rabbitmq
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: osdu-rabbitmq
+    spec:
+      containers:
+      - envFrom:
+        - secretRef:
+            name: osdu-rabbitmq-secret
+        image: rabbitmq:3.12-management-alpine
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - rabbitmq-diagnostics
+            - ping
+          failureThreshold: 3
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: rabbitmq
+        ports:
+        - containerPort: 5672
+          name: amqp
+          protocol: TCP
+        - containerPort: 15672
+          name: management
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - rabbitmq-diagnostics
+            - check_running
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 256Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/rabbitmq/enabled_plugins
+          name: config
+          subPath: enabled_plugins
+        - mountPath: /etc/rabbitmq/rabbitmq.conf
+          name: config
+          subPath: rabbitmq.conf
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: osdu-rabbitmq-config
+        name: config
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2026-01-17T17:38:49Z"
+    lastUpdateTime: "2026-01-17T17:38:49Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2026-01-17T17:37:48Z"
+    lastUpdateTime: "2026-01-17T17:38:49Z"
+    message: ReplicaSet "osdu-rabbitmq-76646f77fc" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 4
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

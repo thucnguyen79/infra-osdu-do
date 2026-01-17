@@ -1,0 +1,5 @@
+NAME                       DESIRED   CURRENT   READY   AGE
+osdu-rabbitmq-6448d8967f   0         0         0       2d10h
+osdu-rabbitmq-674fff55d8   0         0         0       43m
+osdu-rabbitmq-76646f77fc   1         1         1       4m49s
+osdu-rabbitmq-d548784dc    0         0         0       6h15m
