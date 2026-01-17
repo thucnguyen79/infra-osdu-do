@@ -22,14 +22,9 @@ spec:
           env:
             - name: discovery.type
               value: single-node
-
-            # them 2 dong
             - name: DISABLE_INSTALL_DEMO_CONFIG
               value: "true"
-            - name: DISABLE_SECURITY_PLUGIN
-              value: "true"
-            # - name: plugins.security.disabled
-            #   value: "true"
+            # Security plugin ENABLED for TLS
             - name: OPENSEARCH_JAVA_OPTS
               value: "-Xms1g -Xmx1g"
           ports:
@@ -38,6 +33,41 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /usr/share/opensearch/data
+            - name: certs
+              mountPath: /usr/share/opensearch/config/certs
+              readOnly: true
+            - name: security-config
+              mountPath: /usr/share/opensearch/config/opensearch.yml
+              subPath: opensearch.yml
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsUser: 1000
+            runAsGroup: 1000
+      initContainers:
+        - name: init-opensearch-data-perms
+          image: busybox:1.36
+          command: ["sh", "-c"]
+          args:
+            - |
+              set -eux
+              mkdir -p /usr/share/opensearch/data/nodes
+              chown -R 1000:1000 /usr/share/opensearch/data
+              chmod -R g+rwX /usr/share/opensearch/data
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/opensearch/data
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+      volumes:
+        - name: certs
+          secret:
+            secretName: opensearch-tls-secret
+        - name: security-config
+          configMap:
+            name: opensearch-security-config
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -59,4 +89,6 @@ spec:
     - name: http
       port: 9200
       targetPort: 9200
-
+    - name: https
+      port: 9443
+      targetPort: 9200

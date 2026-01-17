@@ -1,0 +1,29 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: opensearch-tls
+  namespace: osdu-data
+spec:
+  secretName: opensearch-tls-secret
+  duration: 8760h
+  renewBefore: 720h
+  subject:
+    organizations:
+      - osdu
+  commonName: osdu-opensearch
+  dnsNames:
+    - osdu-opensearch
+    - osdu-opensearch.osdu-data
+    - osdu-opensearch.osdu-data.svc
+    - osdu-opensearch.osdu-data.svc.cluster.local
+    - osdu-opensearch-0
+    - localhost
+  ipAddresses:
+    - 127.0.0.1
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  issuerRef:
+    name: internal-ca
+    kind: ClusterIssuer
+    group: cert-manager.io

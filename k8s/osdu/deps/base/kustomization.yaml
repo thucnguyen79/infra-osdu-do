@@ -1,15 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 resources:
   - namespace/namespace.yaml
-
   - postgres/postgres-svc.yaml
   - postgres/postgres-sts.yaml
   - postgres-initdb/postgres-initdb-job.yaml
-
+  - opensearch/opensearch-certificate.yaml
+  - opensearch/opensearch-security-config.yaml
   - opensearch/opensearch.yaml
   - redpanda/redpanda.yaml
   - redis/redis.yaml
   - objectstore/objectstore-config.yaml
-
