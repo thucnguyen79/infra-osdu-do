@@ -676,3 +676,34 @@ k8s/osdu/core/overlays/do-private/
 - [x] Partition backup: `/tmp/partition-backup.json` (on ToolServer01)
 
 **Tài liệu chi tiết:** `docs/osdu/40-step19-osdu-core-services.md`
+
+
+## Step 20: Smoke Tests & POC Validation
+Objective: Deploy required messaging infrastructure (RabbitMQ), configure core services for end-to-end validation, and perform smoke tests.
+
+### 1. Repository & Configuration Management
+[ ] Copy rabbitmq-deploy.yaml to k8s/osdu/deps/rabbitmq/.
+[ ] Add patch-storage-rabbitmq.yaml and patch-file-entitlements.yaml to the patches directory.
+[ ] Update kustomization.yaml to include the new RabbitMQ and Entitlements patches.
+[ ] Grant execution permissions to the bootstrap script: chmod +x scripts/bootstrap/bootstrap-step20.sh.
+
+### 2. Infrastructure Deployment
+[ ] Deploy RabbitMQ to the osdu-data namespace.
+[ ] Verify RabbitMQ deployment is successfully rolled out.
+[ ] Apply core service patches via Kustomize (kubectl apply -k).
+
+### 3. Data Bootstrapping & Manual Fixes
+[ ] Execute scripts/bootstrap/bootstrap-step20.sh to seed RabbitMQ properties and Search groups.
+[ ] Verify the creation of S3 buckets: osdu-storage and osdu-file.
+[ ] Run manual SQL updates to correct the Search group domain from @osdu.group to @osdu.osdu.local.
+[ ] Ensure the test user is added as a MEMBER to all search groups in the database.
+
+### 4. Service Verification (Smoke Tests)
+[ ] Perform a rollout restart for osdu-storage and osdu-file services.
+[ ] Confirm osdu-storage is running by verifying the RabbitMQ retry bypass (rabbitmqRetryDelay=0) is active.
+[ ] Verify HTTP 200 OK status for Partition, Entitlements, Legal, and Schema services.
+[ ] Confirm File service returns HTTP 401 (expected status until Search service is deployed).
+
+### 5. Finalizing Step 20
+[ ] Commit all Step 20 changes (RabbitMQ, patches, bootstrap script, and docs) to Git.
+[ ] Push the commit to the remote main branch.
