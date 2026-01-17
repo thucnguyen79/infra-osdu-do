@@ -22,104 +22,12 @@ data:
     plugins.security.ssl.http.pemkey_filepath: /usr/share/opensearch/config/certs/tls.key
     plugins.security.ssl.http.pemtrustedcas_filepath: /usr/share/opensearch/config/certs/ca.crt
 
-    # Anonymous auth enabled
+    # Security settings
     plugins.security.allow_default_init_securityindex: true
-    plugins.security.allow_unsafe_democertificates: false
     plugins.security.authcz.admin_dn:
       - "CN=osdu-opensearch,O=osdu"
-    
-    plugins.security.http.anonymous_auth_enabled: true
-    
+
     plugins.security.audit.type: internal_opensearch
     plugins.security.enable_snapshot_restore_privilege: true
     plugins.security.check_snapshot_restore_write_privileges: true
     plugins.security.restapi.roles_enabled: ["all_access", "security_rest_api_access"]
-
-  # Security config that maps anonymous to all_access
-  config.yml: |
-    _meta:
-      type: "config"
-      config_version: 2
-    config:
-      dynamic:
-        http:
-          anonymous_auth_enabled: true
-        authc:
-          basic_internal_auth_domain:
-            http_enabled: true
-            transport_enabled: true
-            order: 1
-            http_authenticator:
-              type: basic
-              challenge: false
-            authentication_backend:
-              type: internal
-        authz:
-          roles_from_myldap:
-            http_enabled: false
-            transport_enabled: false
-
-  internal_users.yml: |
-    _meta:
-      type: "internalusers"
-      config_version: 2
-    admin:
-      hash: "$2y$12$QJjwqnJjYQBbMRECYm7o8.Gx8mQ5RdvNzrULg/8q5VeZTm3pMo7G2"
-      reserved: true
-      backend_roles:
-        - "admin"
-      description: "Demo admin user"
-
-  roles.yml: |
-    _meta:
-      type: "roles"
-      config_version: 2
-    all_access:
-      reserved: false
-      hidden: false
-      cluster_permissions:
-        - "*"
-      index_permissions:
-        - index_patterns:
-            - "*"
-          allowed_actions:
-            - "*"
-      tenant_permissions:
-        - tenant_patterns:
-            - "*"
-          allowed_actions:
-            - "*"
-
-  roles_mapping.yml: |
-    _meta:
-      type: "rolesmapping"
-      config_version: 2
-    all_access:
-      reserved: false
-      hidden: false
-      backend_roles:
-        - "admin"
-      users:
-        - "admin"
-        - "opendistro_security_anonymous"
-      and_backend_roles: []
-
-  action_groups.yml: |
-    _meta:
-      type: "actiongroups"
-      config_version: 2
-
-  tenants.yml: |
-    _meta:
-      type: "tenants"
-      config_version: 2
-
-  nodes_dn.yml: |
-    _meta:
-      type: "nodesdn"
-      config_version: 2
-
-  whitelist.yml: |
-    _meta:
-      type: "whitelist"
-      config_version: 2
