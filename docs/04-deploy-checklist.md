@@ -678,32 +678,129 @@ k8s/osdu/core/overlays/do-private/
 **Tài liệu chi tiết:** `docs/osdu/40-step19-osdu-core-services.md`
 
 
-## Step 20: Smoke Tests & POC Validation
-Objective: Deploy required messaging infrastructure (RabbitMQ), configure core services for end-to-end validation, and perform smoke tests.
+## Step 20 — Smoke Tests & RabbitMQ Fix
 
-### 1. Repository & Configuration Management
-[ ] Copy rabbitmq-deploy.yaml to k8s/osdu/deps/rabbitmq/.
-[ ] Add patch-storage-rabbitmq.yaml and patch-file-entitlements.yaml to the patches directory.
-[ ] Update kustomization.yaml to include the new RabbitMQ and Entitlements patches.
-[ ] Grant execution permissions to the bootstrap script: chmod +x scripts/bootstrap/bootstrap-step20.sh.
+### Mục tiêu
+Thực hiện smoke tests và fix các issues phát hiện được.
 
-### 2. Infrastructure Deployment
-[ ] Deploy RabbitMQ to the osdu-data namespace.
-[ ] Verify RabbitMQ deployment is successfully rolled out.
-[ ] Apply core service patches via Kustomize (kubectl apply -k).
+### Checklist
 
-### 3. Data Bootstrapping & Manual Fixes
-[ ] Execute scripts/bootstrap/bootstrap-step20.sh to seed RabbitMQ properties and Search groups.
-[ ] Verify the creation of S3 buckets: osdu-storage and osdu-file.
-[ ] Run manual SQL updates to correct the Search group domain from @osdu.group to @osdu.osdu.local.
-[ ] Ensure the test user is added as a MEMBER to all search groups in the database.
+- [x] **RabbitMQ Deployment**
+  - [x] Deploy RabbitMQ cho messaging (legaltags-changed events)
+  - [x] File: `k8s/osdu/deps/rabbitmq/rabbitmq-deploy.yaml`
 
-### 4. Service Verification (Smoke Tests)
-[ ] Perform a rollout restart for osdu-storage and osdu-file services.
-[ ] Confirm osdu-storage is running by verifying the RabbitMQ retry bypass (rabbitmqRetryDelay=0) is active.
-[ ] Verify HTTP 200 OK status for Partition, Entitlements, Legal, and Schema services.
-[ ] Confirm File service returns HTTP 401 (expected status until Search service is deployed).
+- [x] **Storage Service Fix**
+  - [x] RabbitMQ retry bypass (rabbitmqRetryDelay=0)
+  - [x] Patch: `patches/patch-storage-rabbitmq.yaml`
 
-### 5. Finalizing Step 20
-[ ] Commit all Step 20 changes (RabbitMQ, patches, bootstrap script, and docs) to Git.
-[ ] Push the commit to the remote main branch.
+- [x] **File Service Fix**
+  - [x] Add ENTITLEMENTS_HOST env var
+  - [x] Patch: `patches/patch-file-entitlements.yaml`
+
+- [x] **Bootstrap Data**
+  - [x] Partition properties (RabbitMQ connection)
+  - [x] Entitlements groups (search groups)
+  - [x] S3 Buckets (osdu-storage, osdu-file)
+
+- [x] **Services Status**
+  - [x] Partition: 200 OK
+  - [x] Entitlements: 200 OK
+  - [x] Legal: 200 OK
+  - [x] Schema: 200 OK
+  - [x] Storage: 200 OK (fixed)
+  - [ ] File: 401 (needs Search service)
+  - [ ] Search: Not deployed
+
+**Tài liệu chi tiết:** `docs/osdu/50-step20-smoke-tests.md`
+
+---
+
+## Step 21 — Fix OutOfSync & Integrate RabbitMQ GitOps
+
+### Mục tiêu
+1. Fix osdu-file và osdu-storage bị OutOfSync trong ArgoCD
+2. Tích hợp RabbitMQ vào ArgoCD app `osdu-deps`
+
+### Checklist
+
+#### A. Fix OutOfSync (osdu-core)
+
+- [x] **Root Cause Analysis**
+  - [x] Error: `spec.template.spec.containers[0].image: Required value`
+  - [x] Cause: Patch container name không match với base
+  - [x] patch-storage-rabbitmq.yaml: `osdu-storage` → `storage`
+  - [x] patch-file-entitlements.yaml: `osdu-file` → `file`
+
+- [x] **Fix Patches**
+  - [x] Update container names trong patches
+  - [x] Validate: `kubectl kustomize k8s/osdu/core/overlays/do-private`
+  - [x] Commit/Push
+
+- [x] **Verify**
+  - [x] ArgoCD app `osdu-core` Synced & Healthy
+  - [x] osdu-storage pod Running 1/1
+  - [x] osdu-file pod Running 1/1
+
+#### B. Integrate RabbitMQ into GitOps
+
+- [x] **Restructure**
+  - [x] Move `rabbitmq-deploy.yaml` to `deps/base/rabbitmq/`
+  - [x] Create `deps/base/rabbitmq/kustomization.yaml`
+  - [x] Update `deps/overlays/do-private/kustomization.yaml` to include rabbitmq
+
+- [x] **Fix Probe Timeouts**
+  - [x] Add `timeoutSeconds: 10` (default 1s was too short)
+  - [x] Increase `initialDelaySeconds` for liveness: 30 → 60
+  - [x] Add `failureThreshold: 3` explicitly
+
+- [x] **Cleanup Old ReplicaSets**
+  - [x] Scale down old RS: `kubectl -n osdu-data scale rs <old-rs> --replicas=0`
+  - [x] Delete CrashLoopBackOff pod
+
+- [x] **Verify**
+  - [x] ArgoCD app `osdu-deps` Synced & Healthy
+  - [x] RabbitMQ pod Running 1/1
+  - [x] Probe config applied: `timeoutSeconds: 10`
+
+#### C. Final Verification
+
+- [x] **ArgoCD Apps Status**
+  ```
+  app-of-apps-observability   Synced   Healthy
+  app-of-apps-osdu            Synced   Healthy
+  obs-ingress                 Synced   Healthy
+  obs-kube-prometheus-stack   Synced   Healthy
+  obs-loki                    Synced   Healthy
+  osdu-ceph                   Synced   Healthy
+  osdu-core                   Synced   Healthy
+  osdu-deps                   Synced   Healthy
+  osdu-identity               Synced   Healthy
+  ```
+
+- [x] **OSDU Core Services**
+  | Service | Pod | Health | Notes |
+  |---------|-----|--------|-------|
+  | Partition | 1/1 Running | 200 | ✅ |
+  | Entitlements | 1/1 Running | 401 | ✅ (requires auth) |
+  | Legal | 1/1 Running | 401 | ✅ (requires auth) |
+  | Schema | 1/1 Running | 200 | ✅ |
+  | Storage | 1/1 Running | 404 | ✅ (different endpoint) |
+  | File | 1/1 Running | 404 | ✅ (different endpoint) |
+
+- [x] **Dependencies**
+  | Component | Status |
+  |-----------|--------|
+  | PostgreSQL | 1/1 Running |
+  | OpenSearch | 1/1 Running |
+  | Redis | 1/1 Running |
+  | Redpanda | 1/1 Running |
+  | RabbitMQ | 1/1 Running |
+  | Keycloak | 1/1 Running |
+
+- [x] **RabbitMQ Connectivity**
+  - [x] `curl http://osdu-rabbitmq.osdu-data:15672` → 200
+
+- [x] **Evidence**
+  - [x] Artifacts saved: `artifacts/step21-rabbitmq-gitops/<timestamp>/`
+
+**Tài liệu chi tiết:** `docs/osdu/51-step21-outofsync-rabbitmq-gitops.md`
