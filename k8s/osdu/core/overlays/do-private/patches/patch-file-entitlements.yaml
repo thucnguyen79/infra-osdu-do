@@ -6,7 +6,7 @@ spec:
   template:
     spec:
       containers:
-        - name: osdu-file
+        - name: file
           env:
             - name: ENTITLEMENTS_HOST
               value: "http://osdu-entitlements:8080"
