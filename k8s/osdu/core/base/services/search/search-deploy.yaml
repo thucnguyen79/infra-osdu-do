@@ -20,46 +20,31 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+              name: http
+            - containerPort: 8081
+              name: management
           envFrom:
             - configMapRef:
                 name: osdu-core-env
           env:
-            # === OpenSearch Connection ===
+            # === OpenSearch Connection (hardcoded to avoid valueFrom issues) ===
             - name: ELASTIC_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: OPENSEARCH_HOST
+              value: "osdu-opensearch.osdu-data.svc.cluster.local"
             - name: ELASTIC_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: OPENSEARCH_PORT
+              value: "9200"
             - name: OPENSEARCH_URL
               value: "http://osdu-opensearch.osdu-data.svc.cluster.local:9200"
             - name: ELASTIC_CLUSTER_NAME
               value: "docker-cluster"
             # === Redis Cache ===
             - name: REDIS_SEARCH_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: REDIS_HOST
+              value: "osdu-redis.osdu-data.svc.cluster.local"
             - name: REDIS_SEARCH_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: REDIS_PORT
+              value: "6379"
             - name: SPRING_DATA_REDIS_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: REDIS_HOST
+              value: "osdu-redis.osdu-data.svc.cluster.local"
             - name: SPRING_DATA_REDIS_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: REDIS_PORT
+              value: "6379"
             # === Partition Service ===
             - name: PARTITION_SERVICE_ENDPOINT
               value: "http://osdu-partition:8080/api/partition/v1"
@@ -75,30 +60,31 @@ spec:
               value: "false"
             - name: POLICY_SERVICE_ENABLED
               value: "false"
-            # === Security / JWT ===
+            # === Auth (disabled for POC) ===
+            - name: SEARCH_AUTH_ENABLED
+              value: "false"
+            # === Keycloak/OAuth ===
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: KEYCLOAK_ISSUER_URI
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
+          # === Use TCP probe instead of HTTP to avoid path issues ===
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
           resources:
             requests:
               memory: "512Mi"
-              cpu: "200m"
+              cpu: "250m"
             limits:
               memory: "1Gi"
               cpu: "1000m"
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 8081
-            initialDelaySeconds: 30
-            periodSeconds: 15
-            timeoutSeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8081
-            initialDelaySeconds: 60
-            periodSeconds: 30
-            timeoutSeconds: 10
