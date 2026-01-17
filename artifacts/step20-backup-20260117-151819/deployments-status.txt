@@ -1,0 +1,7 @@
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS     IMAGES                                                                                                                       SELECTOR
+osdu-entitlements   1/1     1            1           6d    entitlements   community.opengroup.org:5555/osdu/platform/security-and-compliance/entitlements/core-plus-entitlements-v2-release:9e5865f1   app=osdu-entitlements
+osdu-file           1/1     1            1           13d   file           community.opengroup.org:5555/osdu/platform/system/file/core-plus-file-release:8531906d                                       app=osdu-file
+osdu-legal          1/1     1            1           6d    legal          community.opengroup.org:5555/osdu/platform/security-and-compliance/legal/core-plus-legal-release:340be643                    app=osdu-legal
+osdu-partition      1/1     1            1           12d   partition      community.opengroup.org:5555/osdu/platform/system/partition/core-plus-partition-release:923ea1cd                             app=osdu-partition
+osdu-schema         1/1     1            1           13d   schema         community.opengroup.org:5555/osdu/platform/system/schema-service/core-plus-schema-release:b19664d2                           app=osdu-schema
+osdu-toolbox        1/1     1            1           13d   toolbox        postgres:16-alpine                                                                                                           app=osdu-toolbox

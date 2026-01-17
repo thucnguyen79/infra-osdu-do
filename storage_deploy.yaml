@@ -1,0 +1,196 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/tracking-id: osdu-core:apps/Deployment:osdu-core/osdu-storage
+    deployment.kubernetes.io/revision: "19"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"osdu-core:apps/Deployment:osdu-core/osdu-storage"},"labels":{"app":"osdu-storage"},"name":"osdu-storage","namespace":"osdu-core"},"spec":{"replicas":1,"revisionHistoryLimit":3,"selector":{"matchLabels":{"app":"osdu-storage"}},"template":{"metadata":{"labels":{"app":"osdu-storage"}},"spec":{"containers":[{"env":[{"name":"OQM_DRIVER","value":"kafka"},{"name":"KAFKA_BOOTSTRAP_SERVERS","value":"osdu-redpanda.osdu-data.svc.cluster.local:9092"},{"name":"REDIS_HOST","valueFrom":{"configMapKeyRef":{"key":"REDIS_HOST","name":"osdu-core-env"}}},{"name":"REDIS_PORT","valueFrom":{"configMapKeyRef":{"key":"REDIS_PORT","name":"osdu-core-env"}}},{"name":"CACHE_REDIS_HOST","valueFrom":{"configMapKeyRef":{"key":"REDIS_HOST","name":"osdu-core-env"}}},{"name":"CACHE_REDIS_PORT","valueFrom":{"configMapKeyRef":{"key":"REDIS_PORT","name":"osdu-core-env"}}},{"name":"CACHE_HOST","valueFrom":{"configMapKeyRef":{"key":"REDIS_HOST","name":"osdu-core-env"}}},{"name":"CACHE_PORT","valueFrom":{"configMapKeyRef":{"key":"REDIS_PORT","name":"osdu-core-env"}}},{"name":"SPRING_DATA_REDIS_HOST","valueFrom":{"configMapKeyRef":{"key":"REDIS_HOST","name":"osdu-core-env"}}},{"name":"SPRING_DATA_REDIS_PORT","valueFrom":{"configMapKeyRef":{"key":"REDIS_PORT","name":"osdu-core-env"}}},{"name":"REDIS_GROUP_HOST","valueFrom":{"configMapKeyRef":{"key":"REDIS_HOST","name":"osdu-core-env"}}},{"name":"REDIS_GROUP_PORT","valueFrom":{"configMapKeyRef":{"key":"REDIS_PORT","name":"osdu-core-env"}}},{"name":"POSTGRES_HOST","valueFrom":{"configMapKeyRef":{"key":"POSTGRES_HOST","name":"osdu-core-env"}}},{"name":"POSTGRES_PORT","valueFrom":{"configMapKeyRef":{"key":"POSTGRES_PORT","name":"osdu-core-env"}}},{"name":"SPRING_DATASOURCE_URL","value":"jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/storage"},{"name":"SPRING_DATASOURCE_USERNAME","valueFrom":{"secretKeyRef":{"key":"POSTGRES_USER","name":"osdu-postgres-secret"}}},{"name":"SPRING_DATASOURCE_PASSWORD","valueFrom":{"secretKeyRef":{"key":"POSTGRES_PASSWORD","name":"osdu-postgres-secret"}}},{"name":"KEYCLOAK_ISSUER_URI","valueFrom":{"configMapKeyRef":{"key":"KEYCLOAK_ISSUER_URI","name":"osdu-core-env"}}},{"name":"SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI","valueFrom":{"configMapKeyRef":{"key":"KEYCLOAK_ISSUER_URI","name":"osdu-core-env"}}},{"name":"OPENID_PROVIDER_URL","valueFrom":{"configMapKeyRef":{"key":"KEYCLOAK_ISSUER_URI","name":"osdu-core-env"}}},{"name":"OPENID_PROVIDER_ISSUER","valueFrom":{"configMapKeyRef":{"key":"KEYCLOAK_ISSUER_URI","name":"osdu-core-env"}}},{"name":"OPENID_PROVIDER_CLIENT_ID","value":"osdu"},{"name":"OPENID_PROVIDER_CLIENT_SECRET","value":"dummy-secret-value"},{"name":"OPENID_PROVIDER_SCOPES","value":"openid profile email"},{"name":"PARTITION_API","value":"http://osdu-partition:8080/api/partition/v1"},{"name":"STORAGE_AUTH_ENABLED","value":"false"},{"name":"CLOUD_PROVIDER","value":"minio"},{"name":"JAVA_TOOL_OPTIONS","value":"-Dcache.host=osdu-redis.osdu-data.svc.cluster.local -Dcache.port=6379"},{"name":"SPRING_APPLICATION_JSON","value":"{\"cache\":{\"redis\":{\"host\":\"osdu-redis.osdu-data.svc.cluster.local\",\"port\":6379},\"host\":\"osdu-redis.osdu-data.svc.cluster.local\",\"port\":6379}}"}],"envFrom":[{"configMapRef":{"name":"osdu-core-env"}},{"secretRef":{"name":"osdu-objectstore-secret"}},{"secretRef":{"name":"osdu-core-secrets","optional":true}}],"image":"community.opengroup.org:5555/osdu/platform/system/storage/core-plus-storage-core-plus-release:dcc4c072","imagePullPolicy":"IfNotPresent","name":"storage","ports":[{"containerPort":8080}],"readinessProbe":{"initialDelaySeconds":20,"periodSeconds":10,"tcpSocket":{"port":8080}}}]}}}}
+  creationTimestamp: "2026-01-11T08:22:43Z"
+  generation: 22
+  labels:
+    app: osdu-storage
+  name: osdu-storage
+  namespace: osdu-core
+  resourceVersion: "5151661"
+  uid: 15216d92-8391-4a1d-ba75-963b3b664c78
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: osdu-storage
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: osdu-storage
+    spec:
+      containers:
+      - env:
+        - name: OQM_DRIVER
+          value: kafka
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: osdu-redpanda.osdu-data.svc.cluster.local:9092
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_HOST
+              name: osdu-core-env
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_PORT
+              name: osdu-core-env
+        - name: CACHE_REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_HOST
+              name: osdu-core-env
+        - name: CACHE_REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_PORT
+              name: osdu-core-env
+        - name: CACHE_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_HOST
+              name: osdu-core-env
+        - name: CACHE_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_PORT
+              name: osdu-core-env
+        - name: SPRING_DATA_REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_HOST
+              name: osdu-core-env
+        - name: SPRING_DATA_REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_PORT
+              name: osdu-core-env
+        - name: REDIS_GROUP_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_HOST
+              name: osdu-core-env
+        - name: REDIS_GROUP_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: REDIS_PORT
+              name: osdu-core-env
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_HOST
+              name: osdu-core-env
+        - name: POSTGRES_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_PORT
+              name: osdu-core-env
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/storage
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_USER
+              name: osdu-postgres-secret
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: osdu-postgres-secret
+        - name: KEYCLOAK_ISSUER_URI
+          valueFrom:
+            configMapKeyRef:
+              key: KEYCLOAK_ISSUER_URI
+              name: osdu-core-env
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          valueFrom:
+            configMapKeyRef:
+              key: KEYCLOAK_ISSUER_URI
+              name: osdu-core-env
+        - name: OPENID_PROVIDER_URL
+          valueFrom:
+            configMapKeyRef:
+              key: KEYCLOAK_ISSUER_URI
+              name: osdu-core-env
+        - name: OPENID_PROVIDER_ISSUER
+          valueFrom:
+            configMapKeyRef:
+              key: KEYCLOAK_ISSUER_URI
+              name: osdu-core-env
+        - name: OPENID_PROVIDER_CLIENT_ID
+          value: osdu
+        - name: OPENID_PROVIDER_CLIENT_SECRET
+          value: dummy-secret-value
+        - name: OPENID_PROVIDER_SCOPES
+          value: openid profile email
+        - name: PARTITION_API
+          value: http://osdu-partition:8080/api/partition/v1
+        - name: STORAGE_AUTH_ENABLED
+          value: "false"
+        - name: CLOUD_PROVIDER
+          value: minio
+        - name: JAVA_TOOL_OPTIONS
+          value: -Dcache.host=osdu-redis.osdu-data.svc.cluster.local -Dcache.port=6379
+        - name: SPRING_APPLICATION_JSON
+          value: '{"cache":{"redis":{"host":"osdu-redis.osdu-data.svc.cluster.local","port":6379},"host":"osdu-redis.osdu-data.svc.cluster.local","port":6379}}'
+        envFrom:
+        - configMapRef:
+            name: osdu-core-env
+        - secretRef:
+            name: osdu-objectstore-secret
+        - secretRef:
+            name: osdu-core-secrets
+            optional: true
+        image: community.opengroup.org:5555/osdu/platform/system/storage/core-plus-storage-core-plus-release:dcc4c072
+        imagePullPolicy: IfNotPresent
+        name: storage
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 8080
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  conditions:
+  - lastTransitionTime: "2026-01-15T05:42:04Z"
+    lastUpdateTime: "2026-01-15T05:42:04Z"
+    message: ReplicaSet "osdu-storage-5dc48c6684" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2026-01-15T05:50:49Z"
+    lastUpdateTime: "2026-01-15T05:50:49Z"
+    message: Deployment does not have minimum availability.
+    reason: MinimumReplicasUnavailable
+    status: "False"
+    type: Available
+  observedGeneration: 22
+  replicas: 1
+  unavailableReplicas: 1
+  updatedReplicas: 1

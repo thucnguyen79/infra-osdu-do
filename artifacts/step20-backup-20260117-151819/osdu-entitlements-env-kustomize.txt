@@ -1,0 +1,100 @@
+      - env:
+        - name: PARTITION_API
+          value: http://osdu-partition:8080/api/partition/v1
+        - name: KEYCLOAK_ISSUER_URI
+          valueFrom:
+--
+              key: KEYCLOAK_ISSUER_URI
+              name: osdu-core-env
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          value: $(KEYCLOAK_ISSUER_URI)
+        - name: REDIS_USER_INFO_HOST
+          valueFrom:
+--
+              key: REDIS_HOST
+              name: osdu-core-env
+        - name: REDIS_USER_INFO_PORT
+          valueFrom:
+--
+              key: REDIS_PORT
+              name: osdu-core-env
+        - name: REDIS_USER_GROUPS_HOST
+          valueFrom:
+--
+              key: REDIS_HOST
+              name: osdu-core-env
+        - name: REDIS_USER_GROUPS_PORT
+          valueFrom:
+--
+              key: REDIS_PORT
+              name: osdu-core-env
+        - name: ENTITLEMENTS_DB_PASSWORD
+          valueFrom:
+--
+              key: POSTGRES_PASSWORD
+              name: osdu-postgres-secret
+        - name: POSTGRES_HOST
+          valueFrom:
+--
+              key: POSTGRES_HOST
+              name: osdu-core-env
+        - name: POSTGRES_PORT
+          valueFrom:
+--
+              key: POSTGRES_PORT
+              name: osdu-core-env
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/entitlements
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+--
+              key: POSTGRES_USER
+              name: osdu-postgres-secret
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+--
+              key: POSTGRES_PASSWORD
+              name: osdu-postgres-secret
+        - name: ENTITLEMENTS_AUTH_ENABLED
+          value: "false"
+--
+        - configMapRef:
+            name: osdu-core-env
+        image: community.opengroup.org:5555/osdu/platform/security-and-compliance/entitlements/core-plus-entitlements-v2-release:9e5865f1
+        imagePullPolicy: IfNotPresent
+        name: entitlements
+        ports:
+--
+    app: osdu-file
+  name: osdu-file
+  namespace: osdu-core
+--
+      - env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/file
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+--
+              key: POSTGRES_USER
+              name: osdu-postgres-secret
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+--
+              key: POSTGRES_PASSWORD
+              name: osdu-postgres-secret
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+          value: $(KEYCLOAK_ISSUER_URI)
+        - name: PARTITION_SERVICE_ENDPOINT
+          value: http://osdu-partition:8080
+        - name: CLOUD_PROVIDER
+          value: minio
+        - name: FILE_AUTH_ENABLED
+          value: "false"
+--
+        - configMapRef:
+            name: osdu-core-env
+        - secretRef:
+            name: osdu-objectstore-secret
+        image: community.opengroup.org:5555/osdu/platform/system/file/core-plus-file-release:8531906d
+        imagePullPolicy: IfNotPresent
+        name: file

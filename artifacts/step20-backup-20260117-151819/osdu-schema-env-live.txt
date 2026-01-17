@@ -1,0 +1,14 @@
+SPRING_DATASOURCE_URL=jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/schema
+SPRING_DATASOURCE_USERNAME=
+SPRING_DATASOURCE_PASSWORD=
+SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak.internal/realms/osdu
+PARTITION_SERVICE_ENDPOINT=http://osdu-partition:8080
+SCHEMA_AUTH_ENABLED=false
+PARTITION_API=http://osdu-partition:8080/api/partition/v1
+POSTGRES_PASSWORD=CHANGE_ME_STRONG
+SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak.osdu-identity.svc.cluster.local:80/realms/osdu/protocol/openid-connect/certs
+AUTHORIZE_API=http://osdu-entitlements.osdu-core.svc.cluster.local:8080/api/entitlements/v2
+ENTITLEMENTS_BASE_URL=http://osdu-entitlements:8080/api/entitlements/v2
+LOGGING_LEVEL_ORG_OPENGROUP_OSDU=DEBUG
+LOGGING_LEVEL_ROOT=DEBUG
+KEYCLOAK_ISSUER_URI=http://keycloak.internal/realms/osdu
