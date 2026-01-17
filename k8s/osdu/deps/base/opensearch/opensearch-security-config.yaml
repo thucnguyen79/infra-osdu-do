@@ -9,25 +9,5 @@ data:
     network.host: 0.0.0.0
     discovery.type: single-node
 
-    # Security plugin with TLS
-    plugins.security.disabled: false
-    plugins.security.ssl.transport.enabled: true
-    plugins.security.ssl.transport.pemcert_filepath: /usr/share/opensearch/config/certs/tls.crt
-    plugins.security.ssl.transport.pemkey_filepath: /usr/share/opensearch/config/certs/tls.key
-    plugins.security.ssl.transport.pemtrustedcas_filepath: /usr/share/opensearch/config/certs/ca.crt
-    plugins.security.ssl.transport.enforce_hostname_verification: false
-
-    plugins.security.ssl.http.enabled: true
-    plugins.security.ssl.http.pemcert_filepath: /usr/share/opensearch/config/certs/tls.crt
-    plugins.security.ssl.http.pemkey_filepath: /usr/share/opensearch/config/certs/tls.key
-    plugins.security.ssl.http.pemtrustedcas_filepath: /usr/share/opensearch/config/certs/ca.crt
-
-    # Security settings
-    plugins.security.allow_default_init_securityindex: true
-    plugins.security.authcz.admin_dn:
-      - "CN=osdu-opensearch,O=osdu"
-
-    plugins.security.audit.type: internal_opensearch
-    plugins.security.enable_snapshot_restore_privilege: true
-    plugins.security.check_snapshot_restore_write_privileges: true
-    plugins.security.restapi.roles_enabled: ["all_access", "security_rest_api_access"]
+    # Disable security plugin completely for POC
+    plugins.security.disabled: true
