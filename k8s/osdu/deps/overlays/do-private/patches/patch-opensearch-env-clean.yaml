@@ -13,4 +13,5 @@ spec:
               $patch: delete
             - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
               $patch: delete
-
+            - name: DISABLE_SECURITY_PLUGIN
+              $patch: delete
