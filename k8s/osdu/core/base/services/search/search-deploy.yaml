@@ -30,12 +30,18 @@ spec:
             # === SSL/TLS Disabled (OpenSearch is HTTP only) ===
             - name: ELASTIC_SCHEME
               value: "http"
+            - name: ELASTIC_SSL_ENABLED
+              value: "false"
+            - name: ELASTICSEARCH_SSL_ENABLED
+              value: "false"
             - name: ELASTICSEARCH_HTTPS_ENABLED
               value: "false"
             - name: OPENSEARCH_SECURITY_DISABLED
               value: "true"
             - name: SPRING_ELASTICSEARCH_REST_SSL_ENABLED
               value: "false"
+            - name: SPRING_ELASTICSEARCH_REST_URIS
+              value: "http://osdu-opensearch.osdu-data.svc.cluster.local:9200"
             # === OpenSearch Connection ===
             - name: ELASTIC_HOST
               value: "osdu-opensearch.osdu-data.svc.cluster.local"
