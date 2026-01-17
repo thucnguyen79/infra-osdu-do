@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-search
+  labels:
+    app: osdu-search
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-search
+  template:
+    metadata:
+      labels:
+        app: osdu-search
+    spec:
+      containers:
+        - name: search
+          image: community.opengroup.org:5555/osdu/platform/system/search-service/core-plus-search-release:3f5a5f52
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: osdu-core-env
+          env:
+            # === OpenSearch Connection ===
+            - name: ELASTIC_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: OPENSEARCH_HOST
+            - name: ELASTIC_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: OPENSEARCH_PORT
+            - name: OPENSEARCH_URL
+              value: "http://osdu-opensearch.osdu-data.svc.cluster.local:9200"
+            - name: ELASTIC_CLUSTER_NAME
+              value: "docker-cluster"
+            # === Redis Cache ===
+            - name: REDIS_SEARCH_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_HOST
+            - name: REDIS_SEARCH_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_PORT
+            - name: SPRING_DATA_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_HOST
+            - name: SPRING_DATA_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: REDIS_PORT
+            # === Partition Service ===
+            - name: PARTITION_SERVICE_ENDPOINT
+              value: "http://osdu-partition:8080/api/partition/v1"
+            # === Entitlements Service ===
+            - name: ENTITLEMENTS_HOST
+              value: "http://osdu-entitlements:8080"
+            - name: ENTITLEMENTS_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+            - name: AUTHORIZE_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+            # === Policy Service (disabled for POC) ===
+            - name: POLICY_ENABLED
+              value: "false"
+            - name: POLICY_SERVICE_ENABLED
+              value: "false"
+            # === Security / JWT ===
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "200m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
