@@ -1,0 +1,15 @@
+            # === FORCE HTTP (override any defaults) ===
+            - name: ELASTIC_PROTOCOL_SCHEME
+              value: "http"
+            - name: ELASTICSEARCH_PROTOCOL_SCHEME  
+              value: "http"
+            - name: PROTOCOL_SCHEME
+              value: "http"
+            - name: SECURITY_HTTPS_ENABLED
+              value: "false"
+            - name: ELASTIC_SECURITY_HTTPS_ENABLED
+              value: "false"
+            - name: OSDU_SECURITY_HTTPS_ENABLED
+              value: "false"
+            - name: SEARCH_ELASTIC_SCHEME
+              value: "http"
