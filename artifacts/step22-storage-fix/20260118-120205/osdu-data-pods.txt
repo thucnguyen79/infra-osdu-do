@@ -1,0 +1,6 @@
+NAME                             READY   STATUS    RESTARTS   AGE     IP                NODE           NOMINATED NODE   READINESS GATES
+osdu-opensearch-0                1/1     Running   0          5h33m   192.168.246.249   workernode02   <none>           <none>
+osdu-postgres-0                  1/1     Running   0          19d     192.168.246.254   workernode02   <none>           <none>
+osdu-rabbitmq-7b955b46f5-fq5z9   1/1     Running   0          83m     192.168.246.208   workernode02   <none>           <none>
+osdu-redis-54df55c6bd-4rhfk      1/1     Running   0          19d     192.168.246.196   workernode02   <none>           <none>
+osdu-redpanda-0                  1/1     Running   0          19d     192.168.52.151    workernode01   <none>           <none>

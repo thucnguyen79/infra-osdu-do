@@ -1,0 +1,9 @@
+NAME                                READY   STATUS    RESTARTS   AGE     IP                NODE           NOMINATED NODE   READINESS GATES
+osdu-entitlements-65d4c45b9-vxk9f   1/1     Running   0          5h      192.168.246.248   workernode02   <none>           <none>
+osdu-file-776fc96b77-q7khh          1/1     Running   0          5h      192.168.52.153    workernode01   <none>           <none>
+osdu-legal-7c8999645d-b8l6n         1/1     Running   0          5h      192.168.246.231   workernode02   <none>           <none>
+osdu-partition-599455945f-kfdlz     1/1     Running   0          47m     192.168.52.136    workernode01   <none>           <none>
+osdu-schema-7fc6bc9454-c7492        1/1     Running   0          5h      192.168.246.235   workernode02   <none>           <none>
+osdu-search-559485579-m9zzr         1/1     Running   0          4h16m   192.168.52.155    workernode01   <none>           <none>
+osdu-storage-6db477fd96-hvtg2       1/1     Running   0          18m     192.168.246.195   workernode02   <none>           <none>
+osdu-toolbox-5c94b84546-zm2lk       1/1     Running   0          3h9m    192.168.52.146    workernode01   <none>           <none>

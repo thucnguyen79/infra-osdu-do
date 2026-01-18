@@ -1,0 +1,27 @@
+Listing bindings for vhost /...
+source_name	destination_name	routing_key
+	storage-oqm-replaytopic	storage-oqm-replaytopic
+	dead-lettering-replay-subscription	dead-lettering-replay-subscription
+	osdu.replaytopicsubscription-exchange	osdu.replaytopicsubscription-exchange
+	storage-oqm-legaltags-changed	storage-oqm-legaltags-changed
+	osdu.dead-lettering-replay-subscription	osdu.dead-lettering-replay-subscription
+	osdu.storage-oqm-legaltags-changed	osdu.storage-oqm-legaltags-changed
+	replaytopicsubscription	replaytopicsubscription
+	storage-oqm-replaytopic.dlq	storage-oqm-replaytopic.dlq
+	osdu.storage-oqm-replaytopic	osdu.storage-oqm-replaytopic
+	storage-oqm-legaltags-changed.dlq	storage-oqm-legaltags-changed.dlq
+	replaytopicsubscription-exchange	replaytopicsubscription-exchange
+	records-changed-subscription	records-changed-subscription
+	osdu.records-changed-subscription	osdu.records-changed-subscription
+dead-lettering-replay	dead-lettering-replay-subscription	#
+dead-lettering-replay-subscription	dead-lettering-replay-subscription	#
+legaltags-changed	storage-oqm-legaltags-changed	#
+osdu.dead-lettering-replay	osdu.dead-lettering-replay-subscription	#
+osdu.dead-lettering-replay-subscription	osdu.dead-lettering-replay-subscription	#
+osdu.legaltags-changed	osdu.storage-oqm-legaltags-changed	#
+osdu.records-changed	osdu.records-changed-subscription	#
+osdu.replaytopicsubscription-exchange	osdu.replaytopicsubscription-exchange	#
+records-changed	records-changed-subscription	#
+replaytopic	replaytopicsubscription	#
+replaytopic	storage-oqm-replaytopic	#
+replaytopicsubscription-exchange	replaytopicsubscription-exchange	#
