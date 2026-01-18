@@ -27,7 +27,7 @@ data:
     {
       "vhosts": [{"name": "/"}],
       "users": [
-        {"name": "osdu", "password_hash": "osdu123", "hashing_algorithm": "rabbit_password_hashing_sha256", "tags": ["administrator"]}
+        {"name": "osdu", "password": "osdu123", "tags": "administrator"}
       ],
       "permissions": [
         {"user": "osdu", "vhost": "/", "configure": ".*", "write": ".*", "read": ".*"}
