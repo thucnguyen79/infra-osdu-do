@@ -19,7 +19,7 @@ spec:
               value: "false"
             - name: RABBITMQ_RETRY_ENABLED
               value: "false"
-            # RabbitMQ connection - CRITICAL: vhost must be "/"
+            # RabbitMQ connection - ALL possible vhost variants
             - name: SPRING_RABBITMQ_HOST
               value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
             - name: SPRING_RABBITMQ_PORT
@@ -30,9 +30,44 @@ spec:
               value: "osdu123"
             - name: SPRING_RABBITMQ_VIRTUAL_HOST
               value: "/"
+            - name: SPRING_RABBITMQ_VIRTUALHOST
+              value: "/"
+            - name: OQM_RABBITMQ_AMQP_HOST
+              value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
+            - name: OQM_RABBITMQ_AMQP_PORT
+              value: "5672"
+            - name: OQM_RABBITMQ_AMQP_USERNAME
+              value: "osdu"
+            - name: OQM_RABBITMQ_AMQP_PASSWORD
+              value: "osdu123"
             - name: OQM_RABBITMQ_AMQP_VIRTUAL_HOST
+              value: "/"
+            - name: OQM_RABBITMQ_AMQP_VHOST
+              value: "/"
+            - name: OQM_RABBITMQ_AMQP_PATH
               value: "/"
             - name: OQM_RABBITMQ_VHOST
               value: "/"
+            - name: OQM_RABBITMQ_VIRTUALHOST
+              value: "/"
+            - name: OQM_RABBITMQ_VIRTUAL_HOST
+              value: "/"
             - name: RABBITMQ_VHOST
               value: "/"
+            - name: RABBITMQ_VIRTUALHOST
+              value: "/"
+            - name: RABBITMQ_VIRTUAL_HOST
+              value: "/"
+            # Admin API
+            - name: OQM_RABBITMQ_ADMIN_HOST
+              value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
+            - name: OQM_RABBITMQ_ADMIN_PORT
+              value: "15672"
+            - name: OQM_RABBITMQ_ADMIN_SCHEMA
+              value: "http"
+            - name: OQM_RABBITMQ_ADMIN_USERNAME
+              value: "osdu"
+            - name: OQM_RABBITMQ_ADMIN_PASSWORD
+              value: "osdu123"
+            - name: OQM_RABBITMQ_ADMIN_PATH
+              value: "/api"
