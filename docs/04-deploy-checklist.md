@@ -804,3 +804,39 @@ Thực hiện smoke tests và fix các issues phát hiện được.
   - [x] Artifacts saved: `artifacts/step21-rabbitmq-gitops/<timestamp>/`
 
 **Tài liệu chi tiết:** `docs/osdu/51-step21-outofsync-rabbitmq-gitops.md`
+
+
+## Step 22 — Storage Service RabbitMQ Fix
+
+**Goal:** Khắc phục lỗi khởi động của Storage Service liên quan đến cơ chế Dead Lettering và Replay của RabbitMQ trên Image Core Plus.
+
+### A. Hạ tầng RabbitMQ (Repo-first)
+- [x] Cập nhật định nghĩa RabbitMQ trong `k8s/osdu/deps/base/rabbitmq/rabbitmq-deploy.yaml`:
+  - [x] Thêm exchange `dead-lettering-replay` (topic).
+  - [x] Thêm exchange `dead-lettering-replay-subscription` (topic).
+  - [x] Thêm queue `dead-lettering-replay-subscription`.
+  - [x] Cấu hình các Bindings cần thiết cho luồng Dead Lettering.
+- [x] Áp dụng cấu hình RabbitMQ mới qua ArgoCD (`osdu-deps`).
+
+### B. Cấu hình Storage Service (Repo-first)
+- [x] Cập nhật bản vá `k8s/osdu/core/overlays/do-private/patches/patch-storage-rabbitmq.yaml` để bypass các check không cần thiết cho POC:
+  - [x] Thiết lập `FEATURE_REPLAY_ENABLED=false`.
+  - [x] Thiết lập `DEAD_LETTERING_REQUIRED=false`.
+- [x] Đẩy các thay đổi lên Git và kiểm tra trạng thái Sync trên ArgoCD.
+
+### C. Khởi tạo dữ liệu và Runtime (Bootstrap)
+- [x] Cập nhật Partition Properties để bao gồm các thông số Replay/Dead-lettering cho RabbitMQ:
+  - [x] `oqm.rabbitmq.replay.topic/subscription`.
+  - [x] `oqm.rabbitmq.dead-lettering.topic/subscription`.
+- [x] Thực hiện lệnh xóa cache: `redis-cli -h osdu-redis FLUSHALL`.
+- [ ] Hoàn thiện script bootstrap tự động: `scripts/bootstrap/init-partition-osdu.sh`.
+
+### D. Nghiệm thu
+- [x] Xác nhận Pod `osdu-storage` chuyển trạng thái sang **1/1 Running**.
+- [x] Kiểm tra log không còn lỗi `Required subscription not exists`.
+
+### E. Evidence
+- [x] Artifacts saved: `artifacts/step22-storage-fix/`
+- [x] Documentation: `docs/osdu/42-step22-storage-rabbitmq-fix.md`
+
+**Tài liệu chi tiết:** `docs/osdu/52-step22-storage-rabbitmq-fix.md`
