@@ -14,9 +14,15 @@ spec:
     spec:
       containers:
         - name: toolbox
-          image: postgres:16-alpine
+          image: nicolaka/netshoot:latest
           imagePullPolicy: IfNotPresent
-          command: ["sh","-c"]
+          command: ["sh", "-c"]
           args: ["sleep infinity"]
-          # postgres image có sẵn psql/pg_isready.
-          # Khi cần curl/jq/nslookup: apk add --no-cache curl jq bind-tools
+          # netshoot có sẵn: curl, jq, dig, nslookup, ping, nc, tcpdump, iperf, etc.
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
