@@ -71,3 +71,8 @@ spec:
               value: "osdu123"
             - name: OQM_RABBITMQ_ADMIN_PATH
               value: "/api"
+            # Disable replay feature for POC (bypass dead-lettering check)
+            - name: FEATURE_REPLAY_ENABLED
+              value: "false"
+            - name: DEAD_LETTERING_REQUIRED
+              value: "false"
