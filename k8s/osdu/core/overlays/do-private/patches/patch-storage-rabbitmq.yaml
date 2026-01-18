@@ -8,6 +8,7 @@ spec:
       containers:
         - name: storage
           env:
+            # RabbitMQ retry bypass
             - name: OQM_RABBITMQ_RABBITMQRETRYDELAY
               value: "0"
             - name: RABBITMQ_RETRY_DELAY
@@ -18,3 +19,20 @@ spec:
               value: "false"
             - name: RABBITMQ_RETRY_ENABLED
               value: "false"
+            # RabbitMQ connection - CRITICAL: vhost must be "/"
+            - name: SPRING_RABBITMQ_HOST
+              value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+            - name: SPRING_RABBITMQ_USERNAME
+              value: "osdu"
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: "osdu123"
+            - name: SPRING_RABBITMQ_VIRTUAL_HOST
+              value: "/"
+            - name: OQM_RABBITMQ_AMQP_VIRTUAL_HOST
+              value: "/"
+            - name: OQM_RABBITMQ_VHOST
+              value: "/"
+            - name: RABBITMQ_VHOST
+              value: "/"
