@@ -40,20 +40,24 @@ data:
         {"name": "records-changed", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
         {"name": "dead-lettering-replay", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
         {"name": "dead-lettering-replay-subscription", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
+        {"name": "replaytopicsubscription-exchange", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
         {"name": "osdu.legaltags-changed", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
         {"name": "osdu.records-changed", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
         {"name": "osdu.dead-lettering-replay", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
-        {"name": "osdu.dead-lettering-replay-subscription", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false, "internal": false, "arguments": {}}
+        {"name": "osdu.dead-lettering-replay-subscription", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false, "internal": false, "arguments": {}},
+        {"name": "osdu.replaytopicsubscription-exchange", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false, "internal": false, "arguments": {}}
       ],
       "queues": [
         {"name": "dead-lettering-replay-subscription", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
-        {"name": "osdu.dead-lettering-replay-subscription", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
+        {"name": "replaytopicsubscription-exchange", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
         {"name": "storage-oqm-legaltags-changed", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
         {"name": "storage-oqm-legaltags-changed.dlq", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
         {"name": "storage-oqm-replaytopic", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
         {"name": "storage-oqm-replaytopic.dlq", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
         {"name": "replaytopicsubscription", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
         {"name": "records-changed-subscription", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
+        {"name": "osdu.dead-lettering-replay-subscription", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
+        {"name": "osdu.replaytopicsubscription-exchange", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
         {"name": "osdu.storage-oqm-legaltags-changed", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
         {"name": "osdu.storage-oqm-replaytopic", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
         {"name": "osdu.records-changed-subscription", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}}
@@ -61,12 +65,14 @@ data:
       "bindings": [
         {"source": "dead-lettering-replay", "vhost": "/", "destination": "dead-lettering-replay-subscription", "destination_type": "queue", "routing_key": "#", "arguments": {}},
         {"source": "dead-lettering-replay-subscription", "vhost": "/", "destination": "dead-lettering-replay-subscription", "destination_type": "queue", "routing_key": "#", "arguments": {}},
-        {"source": "osdu.dead-lettering-replay", "vhost": "/", "destination": "osdu.dead-lettering-replay-subscription", "destination_type": "queue", "routing_key": "#", "arguments": {}},
-        {"source": "osdu.dead-lettering-replay-subscription", "vhost": "/", "destination": "osdu.dead-lettering-replay-subscription", "destination_type": "queue", "routing_key": "#", "arguments": {}},
+        {"source": "replaytopicsubscription-exchange", "vhost": "/", "destination": "replaytopicsubscription-exchange", "destination_type": "queue", "routing_key": "#", "arguments": {}},
         {"source": "legaltags-changed", "vhost": "/", "destination": "storage-oqm-legaltags-changed", "destination_type": "queue", "routing_key": "#", "arguments": {}},
         {"source": "replaytopic", "vhost": "/", "destination": "storage-oqm-replaytopic", "destination_type": "queue", "routing_key": "#", "arguments": {}},
         {"source": "replaytopic", "vhost": "/", "destination": "replaytopicsubscription", "destination_type": "queue", "routing_key": "#", "arguments": {}},
         {"source": "records-changed", "vhost": "/", "destination": "records-changed-subscription", "destination_type": "queue", "routing_key": "#", "arguments": {}},
+        {"source": "osdu.dead-lettering-replay", "vhost": "/", "destination": "osdu.dead-lettering-replay-subscription", "destination_type": "queue", "routing_key": "#", "arguments": {}},
+        {"source": "osdu.dead-lettering-replay-subscription", "vhost": "/", "destination": "osdu.dead-lettering-replay-subscription", "destination_type": "queue", "routing_key": "#", "arguments": {}},
+        {"source": "osdu.replaytopicsubscription-exchange", "vhost": "/", "destination": "osdu.replaytopicsubscription-exchange", "destination_type": "queue", "routing_key": "#", "arguments": {}},
         {"source": "osdu.legaltags-changed", "vhost": "/", "destination": "osdu.storage-oqm-legaltags-changed", "destination_type": "queue", "routing_key": "#", "arguments": {}},
         {"source": "osdu.records-changed", "vhost": "/", "destination": "osdu.records-changed-subscription", "destination_type": "queue", "routing_key": "#", "arguments": {}}
       ]
