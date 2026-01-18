@@ -1,149 +1,20 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: osdu-rabbitmq-secret
-  namespace: osdu-data
-type: Opaque
-stringData:
-  RABBITMQ_DEFAULT_USER: osdu
-  RABBITMQ_DEFAULT_PASS: osdu123
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: osdu-rabbitmq-config
-  namespace: osdu-data
-data:
-  enabled_plugins: |
-    [rabbitmq_management,rabbitmq_prometheus].
-  rabbitmq.conf: |
-    default_user = osdu
-    default_pass = osdu123
-    default_vhost = /
-    loopback_users.guest = false
-    # Load definitions on startup
-    load_definitions = /etc/rabbitmq/definitions.json
-  definitions.json: |
-    {
-      "vhosts": [{"name": "/"}],
-      "users": [
-        {"name": "osdu", "password": "osdu123", "tags": "administrator"}
-      ],
-      "permissions": [
-        {"user": "osdu", "vhost": "/", "configure": ".*", "write": ".*", "read": ".*"}
-      ],
-      "exchanges": [
-        {"name": "legaltags-changed", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
-        {"name": "legaltags-changed.dlx", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
-        {"name": "replaytopic", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
-        {"name": "replaytopic.dlx", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
-        {"name": "records-changed", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
-        {"name": "dead-lettering-replay", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
-        {"name": "dead-lettering-replay-subscription", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
-        {"name": "replaytopicsubscription-exchange", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false}
-      ],
-      "queues": [
-        {"name": "storage-oqm-legaltags-changed", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {"x-dead-letter-exchange": "legaltags-changed.dlx", "x-dead-letter-routing-key": "dlq"}},
-        {"name": "storage-oqm-legaltags-changed.dlq", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
-        {"name": "storage-oqm-replaytopic", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
-        {"name": "storage-oqm-replaytopic.dlq", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
-        {"name": "replaytopicsubscription", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
-        {"name": "records-changed-subscription", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
-        {"name": "dead-lettering-replay-subscription", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
-        {"name": "replaytopicsubscription-exchange", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}}
-      ],
-      "bindings": [
-        {"source": "legaltags-changed", "vhost": "/", "destination": "storage-oqm-legaltags-changed", "destination_type": "queue", "routing_key": "#"},
-        {"source": "legaltags-changed.dlx", "vhost": "/", "destination": "storage-oqm-legaltags-changed.dlq", "destination_type": "queue", "routing_key": "#"},
-        {"source": "replaytopic", "vhost": "/", "destination": "storage-oqm-replaytopic", "destination_type": "queue", "routing_key": "#"},
-        {"source": "replaytopic", "vhost": "/", "destination": "replaytopicsubscription", "destination_type": "queue", "routing_key": "#"},
-        {"source": "replaytopic.dlx", "vhost": "/", "destination": "storage-oqm-replaytopic.dlq", "destination_type": "queue", "routing_key": "#"},
-        {"source": "records-changed", "vhost": "/", "destination": "records-changed-subscription", "destination_type": "queue", "routing_key": "#"},
-        {"source": "dead-lettering-replay", "vhost": "/", "destination": "dead-lettering-replay-subscription", "destination_type": "queue", "routing_key": "#"},
-        {"source": "dead-lettering-replay-subscription", "vhost": "/", "destination": "dead-lettering-replay-subscription", "destination_type": "queue", "routing_key": "#"},
-        {"source": "replaytopicsubscription-exchange", "vhost": "/", "destination": "replaytopicsubscription-exchange", "destination_type": "queue", "routing_key": "#"}
-      ]
-    }
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: osdu-rabbitmq
-  namespace: osdu-data
-  labels:
-    app: osdu-rabbitmq
+  name: osdu-storage
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: osdu-rabbitmq
   template:
-    metadata:
-      labels:
-        app: osdu-rabbitmq
     spec:
       containers:
-        - name: rabbitmq
-          image: rabbitmq:3.12-management-alpine
-          ports:
-            - containerPort: 5672
-              name: amqp
-            - containerPort: 15672
-              name: management
-          envFrom:
-            - secretRef:
-                name: osdu-rabbitmq-secret
-          volumeMounts:
-            - name: config
-              mountPath: /etc/rabbitmq/enabled_plugins
-              subPath: enabled_plugins
-            - name: config
-              mountPath: /etc/rabbitmq/rabbitmq.conf
-              subPath: rabbitmq.conf
-            - name: config
-              mountPath: /etc/rabbitmq/definitions.json
-              subPath: definitions.json
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "100m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
-          readinessProbe:
-            exec:
-              command: ["rabbitmq-diagnostics", "check_running"]
-            initialDelaySeconds: 30
-            periodSeconds: 15
-            timeoutSeconds: 10
-            failureThreshold: 3
-          livenessProbe:
-            exec:
-              command: ["rabbitmq-diagnostics", "ping"]
-            initialDelaySeconds: 60
-            periodSeconds: 30
-            timeoutSeconds: 10
-            failureThreshold: 3
-      volumes:
-        - name: config
-          configMap:
-            name: osdu-rabbitmq-config
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: osdu-rabbitmq
-  namespace: osdu-data
-  labels:
-    app: osdu-rabbitmq
-spec:
-  type: ClusterIP
-  ports:
-    - port: 5672
-      targetPort: 5672
-      name: amqp
-    - port: 15672
-      targetPort: 15672
-      name: management
-  selector:
-    app: osdu-rabbitmq
+        - name: storage
+          env:
+            - name: OQM_RABBITMQ_RABBITMQRETRYDELAY
+              value: "0"
+            - name: RABBITMQ_RETRY_DELAY
+              value: "0"
+            - name: OQM_RABBITMQ_RETRY_DELAY
+              value: "0"
+            - name: OQM_RABBITMQ_RETRY_ENABLED
+              value: "false"
+            - name: RABBITMQ_RETRY_ENABLED
+              value: "false"
