@@ -21,6 +21,49 @@ data:
     default_pass = osdu123
     default_vhost = /
     loopback_users.guest = false
+    # Load definitions on startup
+    load_definitions = /etc/rabbitmq/definitions.json
+  definitions.json: |
+    {
+      "vhosts": [{"name": "/"}],
+      "users": [
+        {"name": "osdu", "password_hash": "osdu123", "hashing_algorithm": "rabbit_password_hashing_sha256", "tags": ["administrator"]}
+      ],
+      "permissions": [
+        {"user": "osdu", "vhost": "/", "configure": ".*", "write": ".*", "read": ".*"}
+      ],
+      "exchanges": [
+        {"name": "legaltags-changed", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
+        {"name": "legaltags-changed.dlx", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
+        {"name": "replaytopic", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
+        {"name": "replaytopic.dlx", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
+        {"name": "records-changed", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
+        {"name": "dead-lettering-replay", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
+        {"name": "dead-lettering-replay-subscription", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false},
+        {"name": "replaytopicsubscription-exchange", "vhost": "/", "type": "topic", "durable": true, "auto_delete": false}
+      ],
+      "queues": [
+        {"name": "storage-oqm-legaltags-changed", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {"x-dead-letter-exchange": "legaltags-changed.dlx", "x-dead-letter-routing-key": "dlq"}},
+        {"name": "storage-oqm-legaltags-changed.dlq", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
+        {"name": "storage-oqm-replaytopic", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
+        {"name": "storage-oqm-replaytopic.dlq", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
+        {"name": "replaytopicsubscription", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
+        {"name": "records-changed-subscription", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
+        {"name": "dead-lettering-replay-subscription", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}},
+        {"name": "replaytopicsubscription-exchange", "vhost": "/", "durable": true, "auto_delete": false, "arguments": {}}
+      ],
+      "bindings": [
+        {"source": "legaltags-changed", "vhost": "/", "destination": "storage-oqm-legaltags-changed", "destination_type": "queue", "routing_key": "#"},
+        {"source": "legaltags-changed.dlx", "vhost": "/", "destination": "storage-oqm-legaltags-changed.dlq", "destination_type": "queue", "routing_key": "#"},
+        {"source": "replaytopic", "vhost": "/", "destination": "storage-oqm-replaytopic", "destination_type": "queue", "routing_key": "#"},
+        {"source": "replaytopic", "vhost": "/", "destination": "replaytopicsubscription", "destination_type": "queue", "routing_key": "#"},
+        {"source": "replaytopic.dlx", "vhost": "/", "destination": "storage-oqm-replaytopic.dlq", "destination_type": "queue", "routing_key": "#"},
+        {"source": "records-changed", "vhost": "/", "destination": "records-changed-subscription", "destination_type": "queue", "routing_key": "#"},
+        {"source": "dead-lettering-replay", "vhost": "/", "destination": "dead-lettering-replay-subscription", "destination_type": "queue", "routing_key": "#"},
+        {"source": "dead-lettering-replay-subscription", "vhost": "/", "destination": "dead-lettering-replay-subscription", "destination_type": "queue", "routing_key": "#"},
+        {"source": "replaytopicsubscription-exchange", "vhost": "/", "destination": "replaytopicsubscription-exchange", "destination_type": "queue", "routing_key": "#"}
+      ]
+    }
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -57,6 +100,9 @@ spec:
             - name: config
               mountPath: /etc/rabbitmq/rabbitmq.conf
               subPath: rabbitmq.conf
+            - name: config
+              mountPath: /etc/rabbitmq/definitions.json
+              subPath: definitions.json
           resources:
             requests:
               memory: "256Mi"
