@@ -1,0 +1,160 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-indexer
+  labels:
+    app: osdu-indexer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-indexer
+  template:
+    metadata:
+      labels:
+        app: osdu-indexer
+    spec:
+      containers:
+        - name: indexer
+          image: community.opengroup.org:5555/osdu/platform/system/indexer-service/core-plus-indexer-release:cc95bbfc
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+            - containerPort: 8081
+              name: management
+          envFrom:
+            - configMapRef:
+                name: osdu-core-env
+          env:
+            # === OQM Driver (RabbitMQ) ===
+            - name: OQM_DRIVER
+              value: "rabbitmq"
+            # === RabbitMQ Connection ===
+            - name: SPRING_RABBITMQ_HOST
+              value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+            - name: SPRING_RABBITMQ_USERNAME
+              value: "osdu"
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: "osdu123"
+            - name: SPRING_RABBITMQ_VIRTUAL_HOST
+              value: "/"
+            - name: OQM_RABBITMQ_AMQP_HOST
+              value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
+            - name: OQM_RABBITMQ_AMQP_PORT
+              value: "5672"
+            - name: OQM_RABBITMQ_AMQP_USERNAME
+              value: "osdu"
+            - name: OQM_RABBITMQ_AMQP_PASSWORD
+              value: "osdu123"
+            - name: OQM_RABBITMQ_AMQP_VHOST
+              value: "/"
+            - name: OQM_RABBITMQ_ADMIN_HOST
+              value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
+            - name: OQM_RABBITMQ_ADMIN_PORT
+              value: "15672"
+            - name: OQM_RABBITMQ_ADMIN_USERNAME
+              value: "osdu"
+            - name: OQM_RABBITMQ_ADMIN_PASSWORD
+              value: "osdu123"
+            - name: OQM_RABBITMQ_ADMIN_SCHEMA
+              value: "http"
+            # === RabbitMQ Retry Settings ===
+            - name: OQM_RABBITMQ_RETRY_ENABLED
+              value: "false"
+            - name: OQM_RABBITMQ_RETRY_DELAY
+              value: "0"
+            - name: OQM_RABBITMQ_RABBITMQRETRYDELAY
+              value: "0"
+            - name: RABBITMQ_RETRY_ENABLED
+              value: "false"
+            - name: RABBITMQ_RETRY_DELAY
+              value: "0"
+            # === OpenSearch Connection (SSL Disabled) ===
+            - name: ELASTIC_HOST
+              value: "osdu-opensearch.osdu-data.svc.cluster.local"
+            - name: ELASTIC_PORT
+              value: "9200"
+            - name: ELASTIC_SCHEME
+              value: "http"
+            - name: ELASTIC_SSL_ENABLED
+              value: "false"
+            - name: ELASTICSEARCH_SSL_ENABLED
+              value: "false"
+            - name: OPENSEARCH_SECURITY_DISABLED
+              value: "true"
+            - name: SPRING_ELASTICSEARCH_REST_SSL_ENABLED
+              value: "false"
+            - name: SPRING_ELASTICSEARCH_REST_URIS
+              value: "http://osdu-opensearch.osdu-data.svc.cluster.local:9200"
+            - name: OPENSEARCH_URL
+              value: "http://osdu-opensearch.osdu-data.svc.cluster.local:9200"
+            - name: ELASTIC_CLUSTER_NAME
+              value: "docker-cluster"
+            # === Redis Cache ===
+            - name: REDIS_HOST
+              value: "osdu-redis.osdu-data.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: SPRING_DATA_REDIS_HOST
+              value: "osdu-redis.osdu-data.svc.cluster.local"
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+            # === Partition Service ===
+            - name: PARTITION_SERVICE_ENDPOINT
+              value: "http://osdu-partition:8080/api/partition/v1"
+            - name: PARTITION_API
+              value: "http://osdu-partition:8080/api/partition/v1"
+            # === Entitlements Service ===
+            - name: ENTITLEMENTS_HOST
+              value: "http://osdu-entitlements:8080"
+            - name: ENTITLEMENTS_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+            - name: AUTHORIZE_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+            # === Storage Service ===
+            - name: STORAGE_HOST
+              value: "http://osdu-storage:8080"
+            - name: STORAGE_API
+              value: "http://osdu-storage:8080/api/storage/v2"
+            # === Schema Service ===
+            - name: SCHEMA_HOST
+              value: "http://osdu-schema:8080"
+            - name: SCHEMA_API
+              value: "http://osdu-schema:8080/api/schema-service/v1"
+            # === Legal Service ===
+            - name: LEGAL_HOST
+              value: "http://osdu-legal:8080"
+            - name: LEGAL_API
+              value: "http://osdu-legal:8080/api/legal/v1"
+            # === Policy Service (disabled for POC) ===
+            - name: POLICY_ENABLED
+              value: "false"
+            - name: POLICY_SERVICE_ENABLED
+              value: "false"
+            # === Keycloak/OAuth ===
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"

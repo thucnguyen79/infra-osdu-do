@@ -33,6 +33,7 @@ patches:
   - path: patches/revision-history/patch-file.yaml
   - path: patches/revision-history/patch-toolbox.yaml
   - path: patches/revision-history/patch-search.yaml
+  - path: patches/revision-history/patch-indexer.yaml
 
 generatorOptions:
   disableNameSuffixHash: true

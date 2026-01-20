@@ -19,3 +19,6 @@ resources:
   # search service (Step 22)
   - services/search/search-deploy.yaml
   - services/search/search-svc.yaml
+  # indexer service (Step 23)
+  - services/indexer/indexer-deploy.yaml
+  - services/indexer/indexer-svc.yaml
