@@ -29,6 +29,9 @@ spec:
           env:
             # === JVM Override for OQM virtualHost bug ===
             - name: JAVA_TOOL_OPTIONS
+              value: "-Doqm.rabbitmq.amqp.virtualHost=/ -Dspring.rabbitmq.virtual-host=/"
+            # === JVM Override for OQM virtualHost bug ===
+            - name: JAVA_TOOL_OPTIONS
               value: "-Doqm.rabbitmq.amqp.virtualHost=/"
             # ===========================================
             # KEYCLOAK / OPENID CONFIG
