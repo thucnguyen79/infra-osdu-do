@@ -28,23 +28,14 @@ spec:
                 name: osdu-core-env
           env:
             # ===========================================
-            # KEYCLOAK / OPENID CONFIG (Required for apd-openid plugin)
+            # KEYCLOAK / OPENID CONFIG (Hardcoded - required for apd-openid)
             # ===========================================
             - name: KEYCLOAK_ISSUER_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: KEYCLOAK_ISSUER_URI
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
             - name: OPENID_PROVIDER_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: KEYCLOAK_ISSUER_URI
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
             - name: OPENID_PROVIDER_ISSUER
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: KEYCLOAK_ISSUER_URI
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
             - name: OPENID_PROVIDER_CLIENT_ID
               value: "osdu"
             - name: OPENID_PROVIDER_CLIENT_SECRET
@@ -52,16 +43,12 @@ spec:
             - name: OPENID_PROVIDER_SCOPES
               value: "openid profile email"
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: osdu-core-env
-                  key: KEYCLOAK_ISSUER_URI
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
             # ===========================================
             # OQM Driver (RabbitMQ)
             # ===========================================
             - name: OQM_DRIVER
               value: "rabbitmq"
-            # === RabbitMQ Connection ===
             - name: SPRING_RABBITMQ_HOST
               value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
             - name: SPRING_RABBITMQ_PORT
@@ -92,7 +79,6 @@ spec:
               value: "osdu123"
             - name: OQM_RABBITMQ_ADMIN_SCHEMA
               value: "http"
-            # === RabbitMQ Retry Settings ===
             - name: OQM_RABBITMQ_RETRY_ENABLED
               value: "false"
             - name: OQM_RABBITMQ_RETRY_DELAY
