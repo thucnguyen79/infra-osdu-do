@@ -80,6 +80,11 @@ spec:
             - name: OQM_RABBITMQ_AMQP_VIRTUAL_HOST
               value: "/"
             # === RabbitMQ OQM Config ===
+            # === RabbitMQ PATH Config (missing vs Storage) ===
+            - name: OQM_RABBITMQ_AMQP_PATH
+              value: "/"
+            - name: OQM_RABBITMQ_ADMIN_PATH
+              value: "/api"
             - name: OQM_RABBITMQ_AMQP_HOST
               value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
             - name: OQM_RABBITMQ_AMQP_PORT
