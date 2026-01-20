@@ -27,6 +27,9 @@ spec:
             - configMapRef:
                 name: osdu-core-env
           env:
+            # === JVM Override for OQM virtualHost bug ===
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Doqm.rabbitmq.amqp.virtualHost=/"
             # ===========================================
             # KEYCLOAK / OPENID CONFIG
             # ===========================================
