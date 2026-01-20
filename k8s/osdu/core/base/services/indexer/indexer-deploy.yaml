@@ -27,7 +27,38 @@ spec:
             - configMapRef:
                 name: osdu-core-env
           env:
-            # === OQM Driver (RabbitMQ) ===
+            # ===========================================
+            # KEYCLOAK / OPENID CONFIG (Required for apd-openid plugin)
+            # ===========================================
+            - name: KEYCLOAK_ISSUER_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
+            - name: OPENID_PROVIDER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
+            - name: OPENID_PROVIDER_ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
+            - name: OPENID_PROVIDER_CLIENT_ID
+              value: "osdu"
+            - name: OPENID_PROVIDER_CLIENT_SECRET
+              value: "dummy-secret-value"
+            - name: OPENID_PROVIDER_SCOPES
+              value: "openid profile email"
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: osdu-core-env
+                  key: KEYCLOAK_ISSUER_URI
+            # ===========================================
+            # OQM Driver (RabbitMQ)
+            # ===========================================
             - name: OQM_DRIVER
               value: "rabbitmq"
             # === RabbitMQ Connection ===
@@ -72,7 +103,9 @@ spec:
               value: "false"
             - name: RABBITMQ_RETRY_DELAY
               value: "0"
-            # === OpenSearch Connection (SSL Disabled) ===
+            # ===========================================
+            # OpenSearch Connection (SSL Disabled)
+            # ===========================================
             - name: ELASTIC_HOST
               value: "osdu-opensearch.osdu-data.svc.cluster.local"
             - name: ELASTIC_PORT
@@ -93,7 +126,9 @@ spec:
               value: "http://osdu-opensearch.osdu-data.svc.cluster.local:9200"
             - name: ELASTIC_CLUSTER_NAME
               value: "docker-cluster"
-            # === Redis Cache ===
+            # ===========================================
+            # Redis Cache
+            # ===========================================
             - name: REDIS_HOST
               value: "osdu-redis.osdu-data.svc.cluster.local"
             - name: REDIS_PORT
@@ -102,41 +137,38 @@ spec:
               value: "osdu-redis.osdu-data.svc.cluster.local"
             - name: SPRING_DATA_REDIS_PORT
               value: "6379"
-            # === Partition Service ===
+            # ===========================================
+            # Service Endpoints
+            # ===========================================
             - name: PARTITION_SERVICE_ENDPOINT
               value: "http://osdu-partition:8080/api/partition/v1"
             - name: PARTITION_API
               value: "http://osdu-partition:8080/api/partition/v1"
-            # === Entitlements Service ===
             - name: ENTITLEMENTS_HOST
               value: "http://osdu-entitlements:8080"
             - name: ENTITLEMENTS_API
               value: "http://osdu-entitlements:8080/api/entitlements/v2"
             - name: AUTHORIZE_API
               value: "http://osdu-entitlements:8080/api/entitlements/v2"
-            # === Storage Service ===
             - name: STORAGE_HOST
               value: "http://osdu-storage:8080"
             - name: STORAGE_API
               value: "http://osdu-storage:8080/api/storage/v2"
-            # === Schema Service ===
             - name: SCHEMA_HOST
               value: "http://osdu-schema:8080"
             - name: SCHEMA_API
               value: "http://osdu-schema:8080/api/schema-service/v1"
-            # === Legal Service ===
             - name: LEGAL_HOST
               value: "http://osdu-legal:8080"
             - name: LEGAL_API
               value: "http://osdu-legal:8080/api/legal/v1"
-            # === Policy Service (disabled for POC) ===
+            # ===========================================
+            # Policy Service (disabled for POC)
+            # ===========================================
             - name: POLICY_ENABLED
               value: "false"
             - name: POLICY_SERVICE_ENABLED
               value: "false"
-            # === Keycloak/OAuth ===
-            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
           readinessProbe:
             tcpSocket:
               port: 8080
