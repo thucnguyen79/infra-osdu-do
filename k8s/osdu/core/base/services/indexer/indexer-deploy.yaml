@@ -28,7 +28,7 @@ spec:
                 name: osdu-core-env
           env:
             # ===========================================
-            # KEYCLOAK / OPENID CONFIG (Hardcoded - required for apd-openid)
+            # KEYCLOAK / OPENID CONFIG
             # ===========================================
             - name: KEYCLOAK_ISSUER_URI
               value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
@@ -49,6 +49,7 @@ spec:
             # ===========================================
             - name: OQM_DRIVER
               value: "rabbitmq"
+            # === RabbitMQ Connection ===
             - name: SPRING_RABBITMQ_HOST
               value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
             - name: SPRING_RABBITMQ_PORT
@@ -57,8 +58,28 @@ spec:
               value: "osdu"
             - name: SPRING_RABBITMQ_PASSWORD
               value: "osdu123"
+            # === RabbitMQ VHOST (ALL VARIANTS - Critical!) ===
             - name: SPRING_RABBITMQ_VIRTUAL_HOST
               value: "/"
+            - name: SPRING_RABBITMQ_VIRTUALHOST
+              value: "/"
+            - name: RABBITMQ_VHOST
+              value: "/"
+            - name: RABBITMQ_VIRTUALHOST
+              value: "/"
+            - name: RABBITMQ_VIRTUAL_HOST
+              value: "/"
+            - name: OQM_RABBITMQ_VHOST
+              value: "/"
+            - name: OQM_RABBITMQ_VIRTUALHOST
+              value: "/"
+            - name: OQM_RABBITMQ_VIRTUAL_HOST
+              value: "/"
+            - name: OQM_RABBITMQ_AMQP_VHOST
+              value: "/"
+            - name: OQM_RABBITMQ_AMQP_VIRTUAL_HOST
+              value: "/"
+            # === RabbitMQ OQM Config ===
             - name: OQM_RABBITMQ_AMQP_HOST
               value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
             - name: OQM_RABBITMQ_AMQP_PORT
@@ -67,8 +88,6 @@ spec:
               value: "osdu"
             - name: OQM_RABBITMQ_AMQP_PASSWORD
               value: "osdu123"
-            - name: OQM_RABBITMQ_AMQP_VHOST
-              value: "/"
             - name: OQM_RABBITMQ_ADMIN_HOST
               value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
             - name: OQM_RABBITMQ_ADMIN_PORT
@@ -79,6 +98,7 @@ spec:
               value: "osdu123"
             - name: OQM_RABBITMQ_ADMIN_SCHEMA
               value: "http"
+            # === RabbitMQ Retry Settings ===
             - name: OQM_RABBITMQ_RETRY_ENABLED
               value: "false"
             - name: OQM_RABBITMQ_RETRY_DELAY
