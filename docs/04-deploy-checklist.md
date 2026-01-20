@@ -840,3 +840,183 @@ Thực hiện smoke tests và fix các issues phát hiện được.
 - [x] Documentation: `docs/osdu/42-step22-storage-rabbitmq-fix.md`
 
 **Tài liệu chi tiết:** `docs/osdu/52-step22-storage-rabbitmq-fix.md`
+
+## Step 22: Indexer Deployment Checklist
+
+### Phase 1: Pre-deployment Verification
+
+#### 1.1 Infrastructure Dependencies
+- [x] OpenSearch pod Running (1/1)
+- [x] RabbitMQ pod Running (1/1)
+- [x] Redis pod Running (1/1)
+- [x] PostgreSQL pod Running (1/1)
+
+#### 1.2 OSDU Services Dependencies
+- [x] Partition service healthy (200 OK)
+- [x] Entitlements service healthy (200 OK)
+- [x] Storage service healthy (200 OK)
+- [x] Schema service healthy (200 OK)
+- [x] Search service healthy (200 OK)
+
+---
+
+### Phase 2: RabbitMQ Topology Setup
+
+#### 2.1 Exchanges
+- [x] `records-changed` exchange exists (type: topic, durable: true)
+- [x] `schema-changed` exchange exists (type: topic, durable: true)
+- [x] `reprocess` exchange exists (type: topic, durable: true)
+- [x] `reindex` exchange exists (type: topic, durable: true) — **Created during deployment**
+
+#### 2.2 Queues
+- [x] `indexer-records-changed` queue exists
+- [x] `indexer-schema-changed` queue exists
+- [x] `indexer-reprocess` queue exists — **Created during deployment**
+- [x] `indexer-reindex` queue exists — **Created during deployment**
+
+#### 2.3 Bindings
+- [x] `records-changed` → `indexer-records-changed` (routing_key: #)
+- [x] `schema-changed` → `indexer-schema-changed` (routing_key: #)
+- [x] `reprocess` → `indexer-reprocess` (routing_key: #) — **Created during deployment**
+- [x] `reindex` → `indexer-reindex` (routing_key: #) — **Created during deployment**
+
+#### 2.4 Verification Commands
+```bash
+# Exchanges
+kubectl -n osdu-data exec deploy/osdu-rabbitmq -- rabbitmqctl list_exchanges name type | grep -E "records|schema|reprocess|reindex"
+
+# Queues
+kubectl -n osdu-data exec deploy/osdu-rabbitmq -- rabbitmqctl list_queues name messages | grep indexer
+
+# Bindings
+kubectl -n osdu-data exec deploy/osdu-rabbitmq -- rabbitmqctl list_bindings source_name destination_name | grep -E "reindex|reprocess"
+```
+
+---
+
+### Phase 3: Indexer Configuration
+
+#### 3.1 Redis Environment Variables
+- [x] `REDIS_HOST` = `osdu-redis.osdu-data.svc.cluster.local`
+- [x] `REDIS_PORT` = `6379`
+- [x] `REDIS_SEARCH_HOST` = `osdu-redis.osdu-data.svc.cluster.local` — **Critical fix**
+- [x] `REDIS_SEARCH_PORT` = `6379` — **Critical fix**
+- [x] `REDIS_CACHE_HOST` = `osdu-redis.osdu-data.svc.cluster.local`
+- [x] `SPRING_REDIS_HOST` = `osdu-redis.osdu-data.svc.cluster.local`
+- [x] `SPRING_DATA_REDIS_HOST` = `osdu-redis.osdu-data.svc.cluster.local`
+- [x] `SPRING_DATA_REDIS_PORT` = `6379`
+
+#### 3.2 Other Critical Env Vars
+- [x] `ELASTIC_HOST` configured
+- [x] `ELASTIC_PORT` = `9200`
+- [x] `ELASTIC_SCHEME` = `http`
+- [x] `PARTITION_API` configured
+- [x] `ENTITLEMENTS_API` configured
+- [x] `STORAGE_API` configured
+- [x] `SCHEMA_API` configured
+
+---
+
+### Phase 4: Deployment
+
+#### 4.1 Deploy Indexer
+- [x] ArgoCD sync or kubectl apply
+- [x] Pod created successfully
+- [x] Pod status: Running
+- [x] Ready: 1/1
+
+#### 4.2 Startup Logs Verification
+- [x] `Started IndexerCorePlusApplication` in logs
+- [x] No `UnknownHostException` errors
+- [x] No `404 NOT_FOUND` errors
+- [x] 4x `Subscriber REGISTERED` messages
+
+---
+
+### Phase 5: Post-deployment Verification
+
+#### 5.1 Health Checks
+- [x] Indexer pod Running 1/1
+- [x] No restarts (or minimal)
+- [x] Health endpoint responds
+
+#### 5.2 Functional Verification
+- [x] Consumers listening on all 4 queues
+- [x] Can receive messages from RabbitMQ
+- [x] Can connect to OpenSearch
+- [x] Can connect to Redis
+
+---
+
+### Phase 6: Repo-first Compliance
+
+#### 6.1 Update Repository
+- [ ] Update `indexer-deploy.yaml` with Redis env vars
+- [ ] Export RabbitMQ definitions to `definitions.json`
+- [ ] Commit and push changes
+- [ ] ArgoCD synced with repo
+
+#### 6.2 Documentation
+- [ ] Deployment document created
+- [ ] Checklist completed
+- [ ] Issues documented
+- [ ] Runtime config documented
+
+---
+
+### Issues Encountered & Resolutions
+
+#### Issue #1: Exchange `reindex` missing
+| Field | Value |
+|-------|-------|
+| Symptom | `404 NOT_FOUND` for `/api/exchanges/%2F/reindex` |
+| Root Cause | Exchange not created in RabbitMQ |
+| Resolution | Created via HTTP API |
+| Command | `curl -X PUT ... "http://osdu-rabbitmq:15672/api/exchanges/%2F/reindex"` |
+
+#### Issue #2: Queue `indexer-reprocess` missing
+| Field | Value |
+|-------|-------|
+| Symptom | `NOT_FOUND - no queue 'indexer-reprocess'` |
+| Root Cause | Queue not created, binding missing |
+| Resolution | Created queue via rabbitmqctl, binding via HTTP API |
+
+#### Issue #3: Redis host `redis-cache-search` not found
+| Field | Value |
+|-------|-------|
+| Symptom | `UnknownHostException: redis-cache-search` |
+| Root Cause | Missing `REDIS_SEARCH_HOST` env var |
+| Resolution | Added `REDIS_SEARCH_HOST=osdu-redis.osdu-data.svc.cluster.local` |
+
+#### Issue #4: Spring 6.x incompatibility with OQM plugin
+| Field | Value |
+|-------|-------|
+| Symptom | `NoSuchMethodError: getStatusCode()` |
+| Root Cause | OQM plugin built with Spring 5.x, Indexer uses Spring 6.x |
+| Resolution | Workaround: Create all RabbitMQ topology before startup to avoid 404 |
+
+#### Issue #5: Erlang syntax error in rabbitmqctl eval
+| Field | Value |
+|-------|-------|
+| Symptom | `{:undef, [{:rabbit_exchange, :declare, ...}]}` |
+| Root Cause | Different Erlang syntax required |
+| Resolution | Use HTTP Management API instead of rabbitmqctl eval |
+
+---
+
+### Sign-off
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Deployer | DevOps Team | 2026-01-20 | ✅ |
+| Reviewer | | | |
+| Approver | | | |
+
+---
+
+### Notes
+
+1. **CRITICAL**: Always create RabbitMQ topology BEFORE starting Indexer to avoid Spring 6.x incompatibility issue
+2. **CRITICAL**: `REDIS_SEARCH_HOST` is required - Indexer uses different env var than expected
+3. RabbitMQ definitions should be exported and stored in repo for reproducibility
+4. Consider upgrading OQM plugin to Spring 6.x compatible version in future
