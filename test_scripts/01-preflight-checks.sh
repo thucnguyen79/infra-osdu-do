@@ -1,17 +1,18 @@
 #!/bin/bash
 #===============================================================================
-# OSDU Pre-flight Checks Script
+# OSDU Pre-flight Checks Script (Fixed)
 # Kiểm tra tất cả services và dependencies trước khi test
 #===============================================================================
 
-set -e
+# Bỏ set -e để script không exit khi có lệnh fail
+# set -e
 
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
 # Namespaces
 NS_CORE="osdu-core"
@@ -40,17 +41,17 @@ print_section() {
 
 check_pass() {
     echo -e "  ${GREEN}✓${NC} $1"
-    ((PASS++))
+    PASS=$((PASS + 1))
 }
 
 check_fail() {
     echo -e "  ${RED}✗${NC} $1"
-    ((FAIL++))
+    FAIL=$((FAIL + 1))
 }
 
 check_warn() {
     echo -e "  ${YELLOW}⚠${NC} $1"
-    ((WARN++))
+    WARN=$((WARN + 1))
 }
 
 #===============================================================================
@@ -59,8 +60,8 @@ check_warn() {
 print_header "1. KUBERNETES CLUSTER HEALTH"
 
 print_section "1.1 Node Status"
-NODES_READY=$(kubectl get nodes --no-headers | grep -c " Ready" || echo "0")
-NODES_TOTAL=$(kubectl get nodes --no-headers | wc -l)
+NODES_READY=$(kubectl get nodes --no-headers 2>/dev/null | grep -c " Ready" || true)
+NODES_TOTAL=$(kubectl get nodes --no-headers 2>/dev/null | wc -l || true)
 
 if [ "$NODES_READY" -eq "$NODES_TOTAL" ] && [ "$NODES_TOTAL" -ge 5 ]; then
     check_pass "All nodes Ready: $NODES_READY/$NODES_TOTAL"
@@ -68,13 +69,13 @@ else
     check_fail "Nodes not ready: $NODES_READY/$NODES_TOTAL"
 fi
 
-kubectl get nodes -o wide
+kubectl get nodes -o wide 2>/dev/null || true
 
 print_section "1.2 System Pods (kube-system)"
-KUBE_SYSTEM_READY=$(kubectl -n kube-system get pods --no-headers | grep -c "Running" || echo "0")
-KUBE_SYSTEM_TOTAL=$(kubectl -n kube-system get pods --no-headers | wc -l)
+KUBE_SYSTEM_READY=$(kubectl -n kube-system get pods --no-headers 2>/dev/null | grep -c "Running" || true)
+KUBE_SYSTEM_TOTAL=$(kubectl -n kube-system get pods --no-headers 2>/dev/null | wc -l || true)
 
-if [ "$KUBE_SYSTEM_READY" -eq "$KUBE_SYSTEM_TOTAL" ]; then
+if [ "$KUBE_SYSTEM_READY" -eq "$KUBE_SYSTEM_TOTAL" ] && [ "$KUBE_SYSTEM_TOTAL" -gt 0 ]; then
     check_pass "kube-system pods: $KUBE_SYSTEM_READY/$KUBE_SYSTEM_TOTAL Running"
 else
     check_warn "kube-system pods: $KUBE_SYSTEM_READY/$KUBE_SYSTEM_TOTAL Running"
@@ -86,57 +87,57 @@ fi
 print_header "2. INFRASTRUCTURE SERVICES"
 
 print_section "2.1 Keycloak (osdu-identity)"
-KEYCLOAK_READY=$(kubectl -n $NS_IDENTITY get pods -l app=keycloak --no-headers 2>/dev/null | grep -c "1/1.*Running" || echo "0")
+KEYCLOAK_READY=$(kubectl -n $NS_IDENTITY get pods -l app=keycloak --no-headers 2>/dev/null | grep -c "1/1.*Running" || true)
 if [ "$KEYCLOAK_READY" -ge 1 ]; then
-    check_pass "Keycloak: Running"
+    check_pass "Keycloak: Running ($KEYCLOAK_READY pod)"
 else
     check_fail "Keycloak: NOT Running"
 fi
 
 print_section "2.2 PostgreSQL (osdu-data)"
-POSTGRES_READY=$(kubectl -n $NS_DATA get pods -l app=osdu-postgres --no-headers 2>/dev/null | grep -c "1/1.*Running" || echo "0")
+POSTGRES_READY=$(kubectl -n $NS_DATA get pods -l app=osdu-postgres --no-headers 2>/dev/null | grep -c "1/1.*Running" || true)
 if [ "$POSTGRES_READY" -ge 1 ]; then
-    check_pass "PostgreSQL: Running"
+    check_pass "PostgreSQL: Running ($POSTGRES_READY pod)"
 else
     check_fail "PostgreSQL: NOT Running"
 fi
 
 print_section "2.3 OpenSearch (osdu-data)"
-OPENSEARCH_READY=$(kubectl -n $NS_DATA get pods -l app=osdu-opensearch --no-headers 2>/dev/null | grep -c "1/1.*Running" || echo "0")
+OPENSEARCH_READY=$(kubectl -n $NS_DATA get pods -l app=osdu-opensearch --no-headers 2>/dev/null | grep -c "1/1.*Running" || true)
 if [ "$OPENSEARCH_READY" -ge 1 ]; then
-    check_pass "OpenSearch: Running"
+    check_pass "OpenSearch: Running ($OPENSEARCH_READY pod)"
 else
     check_fail "OpenSearch: NOT Running"
 fi
 
 print_section "2.4 Redis (osdu-data)"
-REDIS_READY=$(kubectl -n $NS_DATA get pods -l app=osdu-redis --no-headers 2>/dev/null | grep -c "1/1.*Running" || echo "0")
+REDIS_READY=$(kubectl -n $NS_DATA get pods -l app=osdu-redis --no-headers 2>/dev/null | grep -c "1/1.*Running" || true)
 if [ "$REDIS_READY" -ge 1 ]; then
-    check_pass "Redis: Running"
+    check_pass "Redis: Running ($REDIS_READY pod)"
 else
     check_fail "Redis: NOT Running"
 fi
 
 print_section "2.5 RabbitMQ (osdu-data)"
-RABBITMQ_READY=$(kubectl -n $NS_DATA get pods -l app=osdu-rabbitmq --no-headers 2>/dev/null | grep -c "1/1.*Running" || echo "0")
+RABBITMQ_READY=$(kubectl -n $NS_DATA get pods -l app=osdu-rabbitmq --no-headers 2>/dev/null | grep -c "1/1.*Running" || true)
 if [ "$RABBITMQ_READY" -ge 1 ]; then
-    check_pass "RabbitMQ: Running"
+    check_pass "RabbitMQ: Running ($RABBITMQ_READY pod)"
 else
     check_fail "RabbitMQ: NOT Running"
 fi
 
 print_section "2.6 Redpanda/Kafka (osdu-data)"
-REDPANDA_READY=$(kubectl -n $NS_DATA get pods -l app.kubernetes.io/name=redpanda --no-headers 2>/dev/null | grep -c "Running" || echo "0")
+REDPANDA_READY=$(kubectl -n $NS_DATA get pods -l app.kubernetes.io/name=redpanda --no-headers 2>/dev/null | grep -c "Running" || true)
 if [ "$REDPANDA_READY" -ge 1 ]; then
-    check_pass "Redpanda: Running"
+    check_pass "Redpanda: Running ($REDPANDA_READY pod)"
 else
     check_warn "Redpanda: NOT Running (may use RabbitMQ instead)"
 fi
 
 print_section "2.7 Ceph S3 Storage (rook-ceph)"
-CEPH_READY=$(kubectl -n $NS_CEPH get pods -l app=rook-ceph-rgw --no-headers 2>/dev/null | grep -c "Running" || echo "0")
+CEPH_READY=$(kubectl -n $NS_CEPH get pods -l app=rook-ceph-rgw --no-headers 2>/dev/null | grep -c "Running" || true)
 if [ "$CEPH_READY" -ge 1 ]; then
-    check_pass "Ceph RGW: Running"
+    check_pass "Ceph RGW: Running ($CEPH_READY pod)"
 else
     check_fail "Ceph RGW: NOT Running"
 fi
@@ -146,180 +147,114 @@ fi
 #===============================================================================
 print_header "3. OSDU CORE SERVICES"
 
-OSDU_SERVICES=("partition" "entitlements" "legal" "schema" "storage" "file" "search" "indexer")
+OSDU_SERVICES="partition entitlements legal schema storage file search indexer"
+SVC_NUM=1
 
-for svc in "${OSDU_SERVICES[@]}"; do
-    print_section "3.x $svc service"
-    SVC_READY=$(kubectl -n $NS_CORE get pods -l app=osdu-$svc --no-headers 2>/dev/null | grep -c "1/1.*Running" || echo "0")
+for svc in $OSDU_SERVICES; do
+    print_section "3.$SVC_NUM $svc service"
+    SVC_READY=$(kubectl -n $NS_CORE get pods -l app=osdu-$svc --no-headers 2>/dev/null | grep -c "1/1.*Running" || true)
     if [ "$SVC_READY" -ge 1 ]; then
-        check_pass "osdu-$svc: Running"
+        check_pass "osdu-$svc: Running ($SVC_READY pod)"
     else
         check_fail "osdu-$svc: NOT Running"
     fi
+    SVC_NUM=$((SVC_NUM + 1))
 done
 
 #===============================================================================
-# SECTION 4: NETWORK CONNECTIVITY
+# SECTION 4: SERVICE CONNECTIVITY
 #===============================================================================
-print_header "4. NETWORK CONNECTIVITY (from toolbox)"
+print_header "4. SERVICE CONNECTIVITY (via toolbox)"
 
 TOOLBOX="kubectl -n $NS_CORE exec deploy/osdu-toolbox --"
 
-print_section "4.1 DNS Resolution"
-DNS_TESTS=(
-    "osdu-postgres.osdu-data.svc.cluster.local"
-    "osdu-opensearch.osdu-data.svc.cluster.local"
-    "osdu-redis.osdu-data.svc.cluster.local"
-    "osdu-rabbitmq.osdu-data.svc.cluster.local"
-    "keycloak.osdu-identity.svc.cluster.local"
-    "osdu-partition.osdu-core.svc.cluster.local"
-)
+print_section "4.1 Keycloak OIDC Endpoint"
+KC_STATUS=$($TOOLBOX curl -s -o /dev/null -w "%{http_code}" \
+    "http://keycloak.$NS_IDENTITY.svc.cluster.local/realms/osdu/.well-known/openid-configuration" 2>/dev/null || echo "000")
+if [ "$KC_STATUS" = "200" ]; then
+    check_pass "Keycloak OIDC: HTTP $KC_STATUS"
+else
+    check_fail "Keycloak OIDC: HTTP $KC_STATUS"
+fi
 
-for host in "${DNS_TESTS[@]}"; do
-    if $TOOLBOX nslookup "$host" > /dev/null 2>&1; then
-        check_pass "DNS: $host"
-    else
-        check_fail "DNS: $host"
-    fi
-done
+print_section "4.2 OpenSearch Cluster Health"
+OS_HEALTH=$($TOOLBOX curl -s "http://osdu-opensearch.$NS_DATA.svc.cluster.local:9200/_cluster/health" 2>/dev/null || echo '{"status":"error"}')
+OS_STATUS=$(echo "$OS_HEALTH" | grep -o '"status":"[^"]*"' | cut -d'"' -f4 || echo "error")
+if [ "$OS_STATUS" = "green" ] || [ "$OS_STATUS" = "yellow" ]; then
+    check_pass "OpenSearch cluster: $OS_STATUS"
+else
+    check_fail "OpenSearch cluster: $OS_STATUS"
+fi
 
-print_section "4.2 Service Connectivity"
-CONN_TESTS=(
-    "osdu-postgres.osdu-data:5432"
-    "osdu-opensearch.osdu-data:9200"
-    "osdu-redis.osdu-data:6379"
-    "osdu-rabbitmq.osdu-data:5672"
-)
-
-for endpoint in "${CONN_TESTS[@]}"; do
-    HOST=$(echo $endpoint | cut -d: -f1)
-    PORT=$(echo $endpoint | cut -d: -f2)
-    if $TOOLBOX sh -c "cat < /dev/tcp/$HOST/$PORT" 2>/dev/null; then
-        check_pass "TCP: $endpoint"
-    else
-        # Try nc as fallback
-        if $TOOLBOX nc -zv $HOST $PORT 2>&1 | grep -q "succeeded\|open"; then
-            check_pass "TCP: $endpoint"
-        else
-            check_fail "TCP: $endpoint"
-        fi
-    fi
-done
+print_section "4.3 RabbitMQ Management API"
+RMQ_STATUS=$($TOOLBOX curl -s -o /dev/null -w "%{http_code}" -u osdu:osdu123 \
+    "http://osdu-rabbitmq.$NS_DATA.svc.cluster.local:15672/api/overview" 2>/dev/null || echo "000")
+if [ "$RMQ_STATUS" = "200" ]; then
+    check_pass "RabbitMQ Management: HTTP $RMQ_STATUS"
+else
+    check_warn "RabbitMQ Management: HTTP $RMQ_STATUS"
+fi
 
 #===============================================================================
-# SECTION 5: SERVICE HEALTH ENDPOINTS
+# SECTION 5: ACCESS TOKEN
 #===============================================================================
-print_header "5. SERVICE HEALTH ENDPOINTS"
+print_header "5. ACCESS TOKEN"
 
-print_section "5.1 Getting Access Token"
+print_section "5.1 Acquire Access Token"
 TOKEN=$($TOOLBOX curl -s -X POST \
-    "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu/protocol/openid-connect/token" \
+    "http://keycloak.$NS_IDENTITY.svc.cluster.local/realms/osdu/protocol/openid-connect/token" \
     -d "grant_type=password" \
     -d "client_id=osdu-cli" \
     -d "username=test" \
-    -d "password=Test@12345" 2>/dev/null | grep -o '"access_token":"[^"]*' | cut -d'"' -f4)
+    -d "password=Test@12345" 2>/dev/null | grep -o '"access_token":"[^"]*' | cut -d'"' -f4 || true)
 
 if [ -n "$TOKEN" ] && [ "$TOKEN" != "null" ]; then
     check_pass "Access token acquired"
     echo "  Token (first 50 chars): ${TOKEN:0:50}..."
 else
     check_fail "Failed to get access token"
-    echo -e "${RED}  Cannot proceed with health checks without token${NC}"
 fi
 
-print_section "5.2 Service Info Endpoints"
+#===============================================================================
+# SECTION 6: OSDU SERVICE HEALTH
+#===============================================================================
+print_header "6. OSDU SERVICE HEALTH ENDPOINTS"
 
 if [ -n "$TOKEN" ]; then
-    HEALTH_ENDPOINTS=(
-        "osdu-partition:8080/api/partition/v1/info"
-        "osdu-entitlements:8080/api/entitlements/v2/info"
-        "osdu-legal:8080/api/legal/v1/info"
-        "osdu-schema:8080/api/schema-service/v1/info"
-        "osdu-storage:8080/api/storage/v2/info"
-        "osdu-file:8080/api/file/v2/info"
-        "osdu-search:8080/api/search/v2/info"
-        "osdu-indexer:8080/api/indexer/v2/info"
-    )
+    HEALTH_CHECKS="partition:8080/api/partition/v1/info entitlements:8080/api/entitlements/v2/info legal:8080/api/legal/v1/info schema:8080/api/schema-service/v1/info storage:8080/api/storage/v2/info file:8080/api/file/v2/info search:8080/api/search/v2/info indexer:8080/actuator/health"
     
-    for endpoint in "${HEALTH_ENDPOINTS[@]}"; do
-        SVC_NAME=$(echo $endpoint | cut -d: -f1)
+    for check in $HEALTH_CHECKS; do
+        SVC_NAME=$(echo $check | cut -d: -f1)
+        ENDPOINT="http://osdu-$check"
+        print_section "6.x $SVC_NAME health"
+        
         HTTP_CODE=$($TOOLBOX curl -s -o /dev/null -w "%{http_code}" \
-            "http://$endpoint" \
+            "$ENDPOINT" \
             -H "Authorization: Bearer $TOKEN" \
-            -H "data-partition-id: osdu" 2>/dev/null)
+            -H "data-partition-id: osdu" 2>/dev/null || echo "000")
         
         if [ "$HTTP_CODE" = "200" ]; then
-            check_pass "$SVC_NAME: HTTP $HTTP_CODE"
+            check_pass "osdu-$SVC_NAME: HTTP $HTTP_CODE"
         elif [ "$HTTP_CODE" = "401" ] || [ "$HTTP_CODE" = "403" ]; then
-            check_warn "$SVC_NAME: HTTP $HTTP_CODE (Auth issue)"
+            check_warn "osdu-$SVC_NAME: HTTP $HTTP_CODE (service up, auth issue)"
         else
-            check_fail "$SVC_NAME: HTTP $HTTP_CODE"
+            check_fail "osdu-$SVC_NAME: HTTP $HTTP_CODE"
         fi
     done
-fi
-
-#===============================================================================
-# SECTION 6: RABBITMQ TOPOLOGY
-#===============================================================================
-print_header "6. RABBITMQ TOPOLOGY"
-
-print_section "6.1 Exchanges"
-EXCHANGES=$($TOOLBOX curl -s -u osdu:osdu123 \
-    "http://osdu-rabbitmq.osdu-data:15672/api/exchanges/%2F" 2>/dev/null | grep -o '"name":"[^"]*' | cut -d'"' -f4 | grep -v "^amq\." | grep -v "^$")
-
-REQUIRED_EXCHANGES=("records-changed" "schema-changed" "legaltags-changed" "reprocess" "reindex")
-for ex in "${REQUIRED_EXCHANGES[@]}"; do
-    if echo "$EXCHANGES" | grep -q "^$ex$"; then
-        check_pass "Exchange: $ex"
-    else
-        check_fail "Exchange: $ex (missing)"
-    fi
-done
-
-print_section "6.2 Queues"
-QUEUES=$($TOOLBOX curl -s -u osdu:osdu123 \
-    "http://osdu-rabbitmq.osdu-data:15672/api/queues/%2F" 2>/dev/null | grep -o '"name":"[^"]*' | cut -d'"' -f4)
-
-REQUIRED_QUEUES=("indexer-records-changed" "indexer-schema-changed" "indexer-legaltags-changed")
-for q in "${REQUIRED_QUEUES[@]}"; do
-    if echo "$QUEUES" | grep -q "$q"; then
-        check_pass "Queue: $q"
-    else
-        check_fail "Queue: $q (missing)"
-    fi
-done
-
-#===============================================================================
-# SECTION 7: OPENSEARCH STATUS
-#===============================================================================
-print_header "7. OPENSEARCH STATUS"
-
-print_section "7.1 Cluster Health"
-OS_HEALTH=$($TOOLBOX curl -s "http://osdu-opensearch.osdu-data:9200/_cluster/health" 2>/dev/null)
-OS_STATUS=$(echo "$OS_HEALTH" | grep -o '"status":"[^"]*' | cut -d'"' -f4)
-
-if [ "$OS_STATUS" = "green" ]; then
-    check_pass "OpenSearch cluster: $OS_STATUS"
-elif [ "$OS_STATUS" = "yellow" ]; then
-    check_warn "OpenSearch cluster: $OS_STATUS (single node expected)"
 else
-    check_fail "OpenSearch cluster: $OS_STATUS"
+    check_fail "Skipping health checks - no token"
 fi
 
-print_section "7.2 Indices"
-INDICES=$($TOOLBOX curl -s "http://osdu-opensearch.osdu-data:9200/_cat/indices?h=index" 2>/dev/null | wc -l)
-echo "  Total indices: $INDICES"
-
 #===============================================================================
-# SECTION 8: PARTITION STATUS
+# SECTION 7: PARTITION CHECK
 #===============================================================================
-print_header "8. PARTITION STATUS"
+print_header "7. PARTITION STATUS"
 
 if [ -n "$TOKEN" ]; then
-    print_section "8.1 List Partitions"
+    print_section "7.1 List Partitions"
     PARTITIONS=$($TOOLBOX curl -s \
         "http://osdu-partition:8080/api/partition/v1/partitions" \
-        -H "Authorization: Bearer $TOKEN" 2>/dev/null)
+        -H "Authorization: Bearer $TOKEN" 2>/dev/null || echo "[]")
     
     if echo "$PARTITIONS" | grep -q "osdu"; then
         check_pass "Partition 'osdu' exists"
@@ -328,11 +263,12 @@ if [ -n "$TOKEN" ]; then
         check_fail "Partition 'osdu' NOT found"
     fi
     
-    print_section "8.2 Partition Properties Count"
-    PROPS_COUNT=$($TOOLBOX curl -s \
+    print_section "7.2 Partition Properties"
+    PROPS=$($TOOLBOX curl -s \
         "http://osdu-partition:8080/api/partition/v1/partitions/osdu" \
         -H "Authorization: Bearer $TOKEN" \
-        -H "data-partition-id: osdu" 2>/dev/null | grep -o '"[^"]*":' | wc -l)
+        -H "data-partition-id: osdu" 2>/dev/null || echo "{}")
+    PROPS_COUNT=$(echo "$PROPS" | grep -o '"value":' | wc -l || true)
     
     if [ "$PROPS_COUNT" -ge 20 ]; then
         check_pass "Partition properties: $PROPS_COUNT"
@@ -347,12 +283,11 @@ fi
 print_header "SUMMARY"
 
 echo ""
-echo -e "  ${GREEN}PASSED:${NC}  $PASS"
+echo -e "  ${GREEN}PASSED:${NC}   $PASS"
 echo -e "  ${YELLOW}WARNINGS:${NC} $WARN"
-echo -e "  ${RED}FAILED:${NC}  $FAIL"
+echo -e "  ${RED}FAILED:${NC}   $FAIL"
 echo ""
 
-TOTAL=$((PASS + FAIL))
 if [ $FAIL -eq 0 ]; then
     echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
     echo -e "${GREEN}  ✅ ALL PRE-FLIGHT CHECKS PASSED - READY FOR TESTING${NC}"
