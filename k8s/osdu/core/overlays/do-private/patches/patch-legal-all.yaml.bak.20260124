@@ -1,0 +1,64 @@
+# patch-legal-all.yaml
+# Hợp nhất tất cả cấu hình cho Legal Core Plus
+# UPDATED Step 23: Fixed cross-namespace secret + Added missing OBM env vars
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-legal
+spec:
+  template:
+    spec:
+      containers:
+        - name: legal
+          env:
+            # === PARTITION SERVICE ===
+            - name: PARTITION_HOST
+              value: "http://osdu-partition:8080"
+            - name: PARTITION_API
+              value: "http://osdu-partition:8080/api/partition/v1"
+            
+            # === ENTITLEMENTS SERVICE ===
+            - name: ENTITLEMENTS_HOST
+              value: "http://osdu-entitlements:8080"
+            - name: ENTITLEMENTS_URL
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+            - name: AUTHORIZE_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+            
+            # === OBJECT STORAGE (Ceph/MinIO) - FIXED in Step 23 ===
+            # OBM Driver - REQUIRED to enable MinIO/S3 driver
+            - name: OBM_DRIVER
+              value: "minio"
+            
+            # MinIO/S3 Endpoint - Ceph RGW internal service
+            - name: OBM_MINIO_ENDPOINT
+              value: "http://rook-ceph-rgw-osdu-store.rook-ceph.svc.cluster.local:80"
+            
+            # MinIO/S3 Bucket for Legal service
+            - name: OBM_MINIO_BUCKET
+              value: "osdu-legal"
+            
+            # S3 Access Key - from local secret (NOT cross-namespace!)
+            - name: OBM_MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-s3-credentials
+                  key: accessKey
+            
+            # S3 Secret Key - from local secret (NOT cross-namespace!)
+            - name: OBM_MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-s3-credentials
+                  key: secretKey
+            
+            # === DATABASE ===
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-postgres-secret
+                  key: POSTGRES_PASSWORD
+            
+            # === LOGGING ===
+            - name: LOG_LEVEL
+              value: "INFO"
