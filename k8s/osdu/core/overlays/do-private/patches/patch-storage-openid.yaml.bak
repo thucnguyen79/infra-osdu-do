@@ -1,6 +1,3 @@
-# patch-storage-openid.yaml
-# Redis + Keycloak/OpenID + OBM config for Storage Core Plus
-# UPDATED Step 23: Added OBM section
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -116,32 +113,3 @@ spec:
             # OpenID Scopes
             - name: OPENID_PROVIDER_SCOPES
               value: "openid profile email"
-            
-            # ===========================================
-            # OBJECT STORAGE (Ceph/MinIO) - ADDED in Step 23
-            # ===========================================
-            # OBM Driver - REQUIRED to enable MinIO/S3 driver
-            - name: OBM_DRIVER
-              value: "minio"
-            
-            # MinIO/S3 Endpoint - Ceph RGW internal service
-            - name: OBM_MINIO_ENDPOINT
-              value: "http://rook-ceph-rgw-osdu-store.rook-ceph.svc.cluster.local:80"
-            
-            # MinIO/S3 Bucket for Storage service
-            - name: OBM_MINIO_BUCKET
-              value: "osdu-storage"
-            
-            # S3 Access Key - from local secret (same namespace)
-            - name: OBM_MINIO_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: osdu-s3-credentials
-                  key: accessKey
-            
-            # S3 Secret Key - from local secret (same namespace)
-            - name: OBM_MINIO_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: osdu-s3-credentials
-                  key: secretKey

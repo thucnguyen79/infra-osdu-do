@@ -1020,3 +1020,45 @@ kubectl -n osdu-data exec deploy/osdu-rabbitmq -- rabbitmqctl list_bindings sour
 2. **CRITICAL**: `REDIS_SEARCH_HOST` is required - Indexer uses different env var than expected
 3. RabbitMQ definitions should be exported and stored in repo for reproducibility
 4. Consider upgrading OQM plugin to Spring 6.x compatible version in future
+
+
+## Step 23 — Fix Legal & Storage OBM Configuration (Repo-first)
+
+### Mục tiêu
+Ghi nhận config OBM (Object Blob Management) vào repo để persist qua ArgoCD sync, đảm bảo Legal và Storage services có đủ config để kết nối S3/Ceph.
+
+### A. Phân tích vấn đề
+- [x] Xác định runtime config chưa được ghi vào repo
+- [x] Phát hiện cross-namespace secret issue trong `patch-legal-all.yaml`
+- [x] Xác định thiếu OBM env vars: `OBM_DRIVER`, `OBM_MINIO_ENDPOINT`, `OBM_MINIO_BUCKET`, `OBM_MINIO_ACCESS_KEY`
+
+### B. Tạo Secret (Out-of-band)
+- [ ] Chạy `scripts/create-s3-secret.sh` để tạo secret `osdu-s3-credentials` trong `osdu-core`
+- [ ] Verify: `kubectl -n osdu-core get secret osdu-s3-credentials`
+
+### C. Update Patches (Repo-first)
+- [ ] Backup files cũ: `patch-legal-all.yaml.bak`, `patch-storage-openid.yaml.bak`
+- [ ] Replace `patches/patch-legal-all.yaml` với version đã fix
+- [ ] Replace `patches/patch-storage-openid.yaml` với version đã update (thêm OBM section)
+- [ ] Validate: `kubectl kustomize k8s/osdu/core/overlays/do-private` thành công
+
+### D. Git Commit
+- [ ] `git add` các files thay đổi
+- [ ] `git commit -m "step23: Fix Legal & Storage OBM config (repo-first)"`
+- [ ] `git push origin main`
+
+### E. Apply & Verify
+- [ ] ArgoCD sync (hoặc đợi auto-sync)
+- [ ] Verify Legal pod có 5 OBM env vars: `kubectl -n osdu-core exec deploy/osdu-legal -- env | grep -i OBM`
+- [ ] Verify Storage pod có 5 OBM env vars: `kubectl -n osdu-core exec deploy/osdu-storage -- env | grep -i OBM`
+- [ ] Test Legal API: GET /legaltags:properties returns JSON
+- [ ] Test Legal API: POST /legaltags creates tag successfully
+
+### F. Artifacts
+- [ ] `artifacts/step23-fix-legal-obm/` created
+- [ ] Evidence files committed (non-secret)
+
+### Notes
+- Secret values KHÔNG được commit vào Git
+- Partition properties được seed bằng `scripts/seed-partition-osdu.sh`
+- Container names trong patches: `legal`, `storage` (không phải `osdu-legal`, `osdu-storage`)
