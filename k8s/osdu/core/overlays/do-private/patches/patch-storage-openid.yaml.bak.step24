@@ -145,18 +145,3 @@ spec:
                 secretKeyRef:
                   name: osdu-s3-credentials
                   key: secretKey
-
-            # ===========================================
-            # SSL/HTTPS REDIRECT FIX (Step 24)
-            # Same as Legal service fix
-            # ===========================================
-            - name: SERVER_FORWARD_HEADERS_STRATEGY
-              value: "framework"
-            - name: SERVER_TOMCAT_REDIRECT_CONTEXT_ROOT
-              value: "false"
-            - name: SECURITY_REQUIRE_SSL
-              value: "false"
-            - name: SERVER_SSL_ENABLED
-              value: "false"
-            - name: SPRING_SECURITY_REQUIRE_SSL
-              value: "false"

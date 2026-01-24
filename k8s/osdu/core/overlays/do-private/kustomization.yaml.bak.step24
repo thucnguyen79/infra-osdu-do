@@ -20,8 +20,6 @@ patches:
   # Storage - Kafka + RabbitMQ retry bypass (Step 20)
   - path: patches/patch-storage-kafka.yaml
   - path: patches/patch-storage-rabbitmq.yaml
-  # Storage - OpenID + OBM + SSL config (Step 24)
-  - path: patches/patch-storage-openid.yaml
 
   # File - Entitlements config (Step 20)
   - path: patches/patch-file-entitlements.yaml
