@@ -1,6 +1,6 @@
 # patch-legal-all.yaml
 # Hợp nhất tất cả cấu hình cho Legal Core Plus
-# UPDATED Step 23: Fixed cross-namespace secret + Added missing OBM env vars
+# UPDATED Step 23: Fixed OBM config + Added SSL env vars for 307 redirect fix
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,7 +25,20 @@ spec:
             - name: AUTHORIZE_API
               value: "http://osdu-entitlements:8080/api/entitlements/v2"
             
-            # === OBJECT STORAGE (Ceph/MinIO) - FIXED in Step 23 ===
+            # === SSL/HTTPS REDIRECT FIX (Step 22) ===
+            # These prevent 307 HTTPS redirect when behind reverse proxy
+            - name: SERVER_FORWARD_HEADERS_STRATEGY
+              value: "framework"
+            - name: SERVER_TOMCAT_REDIRECT_CONTEXT_ROOT
+              value: "false"
+            - name: SECURITY_REQUIRE_SSL
+              value: "false"
+            - name: SERVER_SSL_ENABLED
+              value: "false"
+            - name: SPRING_SECURITY_REQUIRE_SSL
+              value: "false"
+            
+            # === OBJECT STORAGE (Ceph/MinIO) - Step 23 ===
             # OBM Driver - REQUIRED to enable MinIO/S3 driver
             - name: OBM_DRIVER
               value: "minio"
