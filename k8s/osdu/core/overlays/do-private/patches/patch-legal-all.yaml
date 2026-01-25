@@ -75,3 +75,19 @@ spec:
             # === LOGGING ===
             - name: LOG_LEVEL
               value: "INFO"
+
+            # === ADDITIONAL SSL FIX (Step 24) ===
+            # Spring Boot requires these to properly handle forwarded headers
+            - name: SERVER_TOMCAT_REMOTE_IP_HEADER
+              value: "X-Forwarded-For"
+            - name: SERVER_TOMCAT_PROTOCOL_HEADER
+              value: "X-Forwarded-Proto"
+            - name: SERVER_TOMCAT_PROTOCOL_HEADER_HTTPS_VALUE
+              value: "https"
+            - name: SERVER_USE_FORWARD_HEADERS
+              value: "true"
+            # Disable HTTPS channel security at Spring Security level
+            - name: SECURITY_REQUIRE_HTTPS
+              value: "false"
+            - name: SPRING_MVC_SSL_ENABLED
+              value: "false"
