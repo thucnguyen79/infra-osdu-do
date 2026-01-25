@@ -91,3 +91,20 @@ spec:
               value: "false"
             - name: SPRING_MVC_SSL_ENABLED
               value: "false"
+
+            # === OSDU-SPECIFIC SSL FIX (Step 24 attempt 2) ===
+            # Try various OSDU/Spring env vars that might disable HTTPS redirect
+            - name: DISABLE_HTTPS_REDIRECT
+              value: "true"
+            - name: ACCEPT_HTTP
+              value: "true"
+            - name: REQUIRE_HTTPS
+              value: "false"
+            - name: OSDU_SECURITY_HTTPS_REQUIRED
+              value: "false"
+            # Spring Security channel config
+            - name: SPRING_SECURITY_REQUIRE_CHANNEL
+              value: "ANY"
+            # Disable HSTS
+            - name: SERVER_HEADERS_HSTS
+              value: "false"
