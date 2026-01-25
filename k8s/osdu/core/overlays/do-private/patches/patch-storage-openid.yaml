@@ -160,3 +160,16 @@ spec:
               value: "false"
             - name: SPRING_SECURITY_REQUIRE_SSL
               value: "false"
+
+            # ===========================================
+            # ENTITLEMENTS SERVICE CONFIG (Step 24 fix)
+            # Required for Storage to call Entitlements API
+            # ===========================================
+            - name: ENTITLEMENTS_URL
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+            - name: AUTHORIZE_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+            - name: ENTITLEMENTS_HOST
+              value: "http://osdu-entitlements:8080"
+            - name: ENTITLEMENTS_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
