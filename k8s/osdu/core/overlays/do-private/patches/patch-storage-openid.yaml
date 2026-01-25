@@ -173,3 +173,14 @@ spec:
               value: "http://osdu-entitlements:8080"
             - name: ENTITLEMENTS_API
               value: "http://osdu-entitlements:8080/api/entitlements/v2"
+
+            # ===========================================
+            # LEGAL SERVICE CONFIG (Step 24 fix)
+            # Required for Storage to call Legal API for tag validation
+            # ===========================================
+            - name: LEGAL_HOST
+              value: "http://osdu-legal:8080"
+            - name: LEGAL_URL
+              value: "http://osdu-legal:8080/api/legal/v1"
+            - name: LEGAL_API
+              value: "http://osdu-legal:8080/api/legal/v1"
