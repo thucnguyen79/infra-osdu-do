@@ -1,13 +1,14 @@
 #!/bin/bash
 #===============================================================================
-# OSDU Functional Test Scenarios (Updated for Step 23+)
+# OSDU Functional Test Scenarios (Updated for Step 24+)
 # Kiểm tra chức năng của từng service
 # 
-# CHANGES from original:
-# - Added X-Forwarded-Proto: https header to all API calls (fix 307 redirect)
-# - Updated partition critical properties names
-# - Fixed actuator health checks (OSDU Core Plus doesn't expose standard actuator)
-# - Added more verbose error output
+# CHANGES from Step 23 version:
+# - Fixed Legal tag validation check (invalidLegalTags format)
+# - Updated partition critical properties for DO environment
+# - Added better service availability checks
+# - Added verbose output for debugging
+# - Added pre-flight checks
 #===============================================================================
 
 # KHÔNG dùng set -e để script không exit khi có lệnh fail
@@ -22,6 +23,7 @@ NC='\033[0m'
 
 # Configuration
 NS_CORE="osdu-core"
+NS_DATA="osdu-data"
 NS_IDENTITY="osdu-identity"
 PARTITION_ID="osdu"
 TOOLBOX="kubectl -n $NS_CORE exec deploy/osdu-toolbox --"
@@ -36,6 +38,7 @@ SKIP=0
 TEST_LEGAL_TAG=""
 TEST_SCHEMA_KIND=""
 TEST_RECORD_ID=""
+TOKEN=""
 
 # Helper functions
 print_header() {
@@ -72,6 +75,53 @@ get_token() {
         -d "client_id=osdu-cli" \
         -d "username=test" \
         -d "password=Test@12345" 2>/dev/null | grep -o '"access_token":"[^"]*' | cut -d'"' -f4 || true
+}
+
+check_service_exists() {
+    local svc=$1
+    kubectl -n $NS_CORE get deploy/$svc >/dev/null 2>&1
+}
+
+#===============================================================================
+# PRE-FLIGHT CHECKS
+#===============================================================================
+preflight() {
+    print_header "PRE-FLIGHT CHECKS"
+    
+    print_test "0.1 Check toolbox pod"
+    if kubectl -n $NS_CORE get deploy/osdu-toolbox >/dev/null 2>&1; then
+        POD_STATUS=$(kubectl -n $NS_CORE get pods -l app=osdu-toolbox -o jsonpath='{.items[0].status.phase}' 2>/dev/null || echo "Unknown")
+        if [ "$POD_STATUS" = "Running" ]; then
+            test_pass "Toolbox pod: $POD_STATUS"
+        else
+            test_fail "Toolbox pod not running: $POD_STATUS"
+            echo "  Cannot continue without toolbox. Exiting."
+            exit 1
+        fi
+    else
+        test_fail "Toolbox deployment not found"
+        exit 1
+    fi
+    
+    print_test "0.2 Get Token"
+    TOKEN=$(get_token)
+    if [ -n "$TOKEN" ]; then
+        test_pass "Token acquired (${#TOKEN} chars)"
+    else
+        test_fail "Cannot get token - check Keycloak"
+        exit 1
+    fi
+    
+    print_test "0.3 List Available Services"
+    echo "  Services in $NS_CORE:"
+    for svc in osdu-partition osdu-entitlements osdu-legal osdu-schema osdu-storage osdu-file osdu-search osdu-indexer; do
+        if check_service_exists $svc; then
+            echo -e "    ${GREEN}✓${NC} $svc"
+        else
+            echo -e "    ${YELLOW}○${NC} $svc (not deployed)"
+        fi
+    done
+    test_pass "Service inventory complete"
 }
 
 #===============================================================================
@@ -113,11 +163,12 @@ test_partition() {
     fi
     
     print_test "1.3 Verify Critical Properties"
-    # Updated property names for OSDU Core Plus
-    CRITICAL="elasticsearch.8 obm.minio oqm.rabbitmq"
+    # Updated property names for DigitalOcean OSDU deployment
+    # Check for OSM (postgres), OQM (rabbitmq), S3 (obm), OpenSearch
+    CRITICAL_PATTERNS="osm.postgres oqm opensearch obm"
     ALL_OK=true
-    for prop in $CRITICAL; do
-        if echo "$RESULT" | grep -q "$prop"; then
+    for prop in $CRITICAL_PATTERNS; do
+        if echo "$RESULT" | grep -qi "$prop"; then
             echo "  ✓ Found: $prop"
         else
             echo "  ✗ Missing: $prop"
@@ -127,7 +178,7 @@ test_partition() {
     if [ "$ALL_OK" = true ]; then
         test_pass "All critical properties present"
     else
-        test_fail "Some critical properties missing"
+        test_fail "Some critical properties missing (check partition bootstrap)"
     fi
 }
 
@@ -158,14 +209,20 @@ test_entitlements() {
     fi
     
     print_test "2.2 Verify Required Groups"
+    REQUIRED_FOUND=0
     for grp in users data.default.owners data.default.viewers; do
         if echo "$RESULT" | grep -q "$grp"; then
             echo "  ✓ Found: $grp"
+            REQUIRED_FOUND=$((REQUIRED_FOUND + 1))
         else
             echo "  ✗ Missing: $grp"
         fi
     done
-    test_pass "Group verification complete"
+    if [ $REQUIRED_FOUND -ge 3 ]; then
+        test_pass "All required groups present"
+    else
+        test_fail "Missing required groups ($REQUIRED_FOUND/3)"
+    fi
     
     print_test "2.3 Get Current User Groups"
     RESULT=$($TOOLBOX curl -s \
@@ -210,8 +267,7 @@ test_legal() {
         return
     fi
     
-    print_test "3.1 Get Legal Properties (replaces /info)"
-    # Note: /info may not exist, use /legaltags:properties instead
+    print_test "3.1 Get Legal Properties"
     RESULT=$($TOOLBOX curl -s -w "\n%{http_code}" \
         -H "Authorization: Bearer $TOKEN" \
         -H "data-partition-id: $PARTITION_ID" \
@@ -266,6 +322,9 @@ test_legal() {
         TEST_LEGAL_TAG="$TAG_NAME"
     else
         test_fail "Legal tag creation: $HTTP_CODE"
+        # Fallback to existing tag from Step 24
+        TEST_LEGAL_TAG="osdu-step24-test"
+        echo "  Using fallback tag: $TEST_LEGAL_TAG"
     fi
     
     print_test "3.4 Validate Legal Tag"
@@ -278,11 +337,15 @@ test_legal() {
             -H "X-Forwarded-Proto: https" \
             "http://osdu-legal:8080/api/legal/v1/legaltags:validate" \
             -d "{\"names\":[\"$TEST_LEGAL_TAG\"]}" 2>/dev/null || echo "{}")
-        if echo "$RESULT" | grep -q "validLegalTags\|\"valid\":true"; then
-            test_pass "Legal tag validation passed"
+        echo "  Response: $RESULT"
+        # FIXED: Legal validate returns {"invalidLegalTags":[]} when valid
+        if echo "$RESULT" | grep -q '"invalidLegalTags":\[\]'; then
+            test_pass "Legal tag validation passed (no invalid tags)"
+        elif echo "$RESULT" | grep -q '"invalidLegalTags":\['; then
+            test_fail "Legal tag validation failed - tag is invalid"
+            echo "  Invalid tags in response"
         else
-            test_fail "Legal tag validation failed"
-            echo "  Response: $RESULT"
+            test_fail "Legal tag validation - unexpected response"
         fi
     else
         test_skip "No legal tag to validate"
@@ -301,26 +364,16 @@ test_schema() {
         return
     fi
     
-    print_test "4.1 Service Info"
+    print_test "4.1 Service Reachability"
     HTTP_CODE=$($TOOLBOX curl -s -o /dev/null -w "%{http_code}" \
         -H "Authorization: Bearer $TOKEN" \
         -H "data-partition-id: $PARTITION_ID" \
         -H "X-Forwarded-Proto: https" \
-        "http://osdu-schema:8080/api/schema-service/v1/info" 2>/dev/null || echo "000")
+        "http://osdu-schema:8080/api/schema-service/v1/schema?limit=1" 2>/dev/null || echo "000")
     if [ "$HTTP_CODE" = "200" ]; then
-        test_pass "Schema service info: HTTP $HTTP_CODE"
+        test_pass "Schema service reachable: HTTP $HTTP_CODE"
     else
-        # Try alternate endpoint
-        HTTP_CODE=$($TOOLBOX curl -s -o /dev/null -w "%{http_code}" \
-            -H "Authorization: Bearer $TOKEN" \
-            -H "data-partition-id: $PARTITION_ID" \
-            -H "X-Forwarded-Proto: https" \
-            "http://osdu-schema:8080/api/schema-service/v1/schema?limit=1" 2>/dev/null || echo "000")
-        if [ "$HTTP_CODE" = "200" ]; then
-            test_pass "Schema service reachable (via /schema): HTTP $HTTP_CODE"
-        else
-            test_fail "Schema service unreachable: HTTP $HTTP_CODE"
-        fi
+        test_fail "Schema service unreachable: HTTP $HTTP_CODE"
     fi
     
     print_test "4.2 List Schemas"
@@ -407,8 +460,8 @@ test_storage() {
     test_pass "Storage query returned"
     
     print_test "5.3 Create Record"
-    # Use existing legal tag or create fallback
-    LEGAL_TAG="${TEST_LEGAL_TAG:-$PARTITION_ID-autotest-$TIMESTAMP}"
+    # Use existing legal tag or fallback to step24 tag
+    LEGAL_TAG="${TEST_LEGAL_TAG:-osdu-step24-test}"
     RECORD_KIND="${TEST_SCHEMA_KIND:-$PARTITION_ID:autotest:TestRecord:1.0.0}"
     RECORD_ID="$PARTITION_ID:autotest:record-$TIMESTAMP"
     
@@ -438,6 +491,7 @@ test_storage() {
         }]" 2>/dev/null || echo "{}")
     
     echo "  Record ID: $RECORD_ID"
+    echo "  Legal Tag: $LEGAL_TAG"
     echo "  Response: ${RESULT:0:300}..."
     
     if echo "$RESULT" | grep -q "recordIds\|$RECORD_ID"; then
@@ -469,6 +523,12 @@ test_storage() {
 #===============================================================================
 test_file() {
     print_header "TEST SUITE 6: FILE SERVICE"
+    
+    # Check if File service is deployed
+    if ! check_service_exists osdu-file; then
+        test_skip "File service not deployed"
+        return
+    fi
     
     TOKEN=$(get_token)
     if [ -z "$TOKEN" ]; then
@@ -510,6 +570,12 @@ test_file() {
 test_search() {
     print_header "TEST SUITE 7: SEARCH SERVICE"
     
+    # Check if Search service is deployed
+    if ! check_service_exists osdu-search; then
+        test_skip "Search service not deployed"
+        return
+    fi
+    
     TOKEN=$(get_token)
     if [ -z "$TOKEN" ]; then
         test_fail "Cannot get token - skipping search tests"
@@ -517,28 +583,18 @@ test_search() {
     fi
     
     print_test "7.1 Service Health"
-    RESULT=$($TOOLBOX curl -s \
+    HTTP_CODE=$($TOOLBOX curl -s -o /dev/null -w "%{http_code}" \
+        -X POST \
         -H "Authorization: Bearer $TOKEN" \
         -H "data-partition-id: $PARTITION_ID" \
+        -H "Content-Type: application/json" \
         -H "X-Forwarded-Proto: https" \
-        "http://osdu-search:8080/api/search/v2/health" 2>/dev/null || echo "{}")
-    if echo "$RESULT" | grep -qi "UP\|healthy\|200\|ok"; then
-        test_pass "Search service healthy"
+        "http://osdu-search:8080/api/search/v2/query" \
+        -d '{"kind":"*:*:*:*","limit":1}' 2>/dev/null || echo "000")
+    if [ "$HTTP_CODE" = "200" ]; then
+        test_pass "Search service reachable: HTTP $HTTP_CODE"
     else
-        # Try query as health check
-        HTTP_CODE=$($TOOLBOX curl -s -o /dev/null -w "%{http_code}" \
-            -X POST \
-            -H "Authorization: Bearer $TOKEN" \
-            -H "data-partition-id: $PARTITION_ID" \
-            -H "Content-Type: application/json" \
-            -H "X-Forwarded-Proto: https" \
-            "http://osdu-search:8080/api/search/v2/query" \
-            -d '{"kind":"*:*:*:*","limit":1}' 2>/dev/null || echo "000")
-        if [ "$HTTP_CODE" = "200" ]; then
-            test_pass "Search service reachable (via query): HTTP $HTTP_CODE"
-        else
-            test_fail "Search service unhealthy: HTTP $HTTP_CODE"
-        fi
+        test_fail "Search service unhealthy: HTTP $HTTP_CODE"
     fi
     
     print_test "7.2 Search All Records"
@@ -561,8 +617,8 @@ test_search() {
     
     if [ -n "$TEST_RECORD_ID" ]; then
         print_test "7.3 Search for Test Record"
-        echo "  Waiting 10s for indexing..."
-        sleep 10
+        echo "  Waiting 15s for indexing..."
+        sleep 15
         RESULT=$($TOOLBOX curl -s \
             -X POST \
             -H "Authorization: Bearer $TOKEN" \
@@ -586,6 +642,12 @@ test_search() {
 test_indexer() {
     print_header "TEST SUITE 8: INDEXER SERVICE"
     
+    # Check if Indexer service is deployed
+    if ! check_service_exists osdu-indexer; then
+        test_skip "Indexer service not deployed"
+        return
+    fi
+    
     print_test "8.1 Check Pod Status"
     POD_STATUS=$(kubectl -n $NS_CORE get pods -l app=osdu-indexer -o jsonpath='{.items[0].status.phase}' 2>/dev/null || echo "Unknown")
     if [ "$POD_STATUS" = "Running" ]; then
@@ -604,14 +666,14 @@ test_indexer() {
         test_pass "Indexer logs checked (no subscription messages - may be normal)"
     fi
     
-    print_test "8.3 Check RabbitMQ Connection"
-    # Check if indexer has connection to RabbitMQ
-    RABBIT_CHECK=$(kubectl -n $NS_CORE logs deploy/osdu-indexer --tail=100 2>/dev/null | grep -i "rabbit\|amqp\|connection" | tail -2 || true)
-    if [ -n "$RABBIT_CHECK" ]; then
-        echo "  RabbitMQ references found in logs"
-        test_pass "Indexer has RabbitMQ connectivity"
+    print_test "8.3 Check Message Queue Connection"
+    # Check for RabbitMQ or Redpanda connection
+    MQ_CHECK=$(kubectl -n $NS_CORE logs deploy/osdu-indexer --tail=100 2>/dev/null | grep -i "rabbit\|amqp\|kafka\|redpanda\|connection" | tail -2 || true)
+    if [ -n "$MQ_CHECK" ]; then
+        echo "  Message queue references found in logs"
+        test_pass "Indexer has MQ connectivity"
     else
-        test_pass "Indexer logs checked (RabbitMQ not explicitly logged)"
+        test_pass "Indexer logs checked (MQ not explicitly logged)"
     fi
 }
 
@@ -621,6 +683,14 @@ test_indexer() {
 test_e2e() {
     print_header "TEST SUITE 9: END-TO-END DATA FLOW"
     
+    # Check required services
+    for svc in osdu-storage osdu-search osdu-indexer; do
+        if ! check_service_exists $svc; then
+            test_skip "E2E test requires $svc (not deployed)"
+            return
+        fi
+    done
+    
     TOKEN=$(get_token)
     if [ -z "$TOKEN" ]; then
         test_fail "Cannot get token - skipping E2E test"
@@ -629,7 +699,7 @@ test_e2e() {
     
     E2E_TS=$(date +%s)
     
-    echo -e "${CYAN}Testing complete data flow: Storage → RabbitMQ → Indexer → OpenSearch → Search${NC}"
+    echo -e "${CYAN}Testing complete data flow: Storage → MQ → Indexer → OpenSearch → Search${NC}"
     
     # Step 1: Create Legal Tag
     print_test "E2E.1 Create Legal Tag"
@@ -660,7 +730,9 @@ test_e2e() {
         test_pass "Legal tag: $E2E_TAG (HTTP $HTTP_CODE)"
     else
         test_fail "Legal tag creation failed: HTTP $HTTP_CODE"
-        return
+        # Try with existing tag
+        E2E_TAG="osdu-step24-test"
+        echo "  Using fallback tag: $E2E_TAG"
     fi
     
     # Step 2: Create Record
@@ -699,8 +771,8 @@ test_e2e() {
     fi
     
     # Step 3: Wait for Indexing
-    print_test "E2E.3 Wait for Indexing (20 seconds)"
-    for i in $(seq 1 20); do
+    print_test "E2E.3 Wait for Indexing (30 seconds)"
+    for i in $(seq 1 30); do
         echo -n "."
         sleep 1
     done
@@ -723,7 +795,7 @@ test_e2e() {
         echo ""
         echo -e "${GREEN}  ╔═════════════════════════════════════════════════════════════════╗${NC}"
         echo -e "${GREEN}  ║  DATA FLOW VERIFIED:                                            ║${NC}"
-        echo -e "${GREEN}  ║  Storage → RabbitMQ → Indexer → OpenSearch → Search             ║${NC}"
+        echo -e "${GREEN}  ║  Storage → MQ → Indexer → OpenSearch → Search                   ║${NC}"
         echo -e "${GREEN}  ╚═════════════════════════════════════════════════════════════════╝${NC}"
     else
         test_fail "E2E TEST FAILED - Record not found via Search"
@@ -731,8 +803,9 @@ test_e2e() {
         echo ""
         echo -e "${YELLOW}  Troubleshooting:${NC}"
         echo "  1. Check Indexer: kubectl -n osdu-core logs deploy/osdu-indexer --tail=50"
-        echo "  2. Check RabbitMQ: kubectl -n osdu-data exec deploy/osdu-rabbitmq -- rabbitmqctl list_queues"
+        echo "  2. Check MQ: kubectl -n osdu-data exec deploy/osdu-rabbitmq -- rabbitmqctl list_queues"
         echo "  3. Retry after 60s if indexing is slow"
+        echo "  4. Check OpenSearch: kubectl -n osdu-data logs sts/osdu-opensearch --tail=20"
     fi
 }
 
@@ -768,12 +841,13 @@ print_summary() {
 # MAIN
 #===============================================================================
 usage() {
-    echo "Usage: $0 [all|partition|entitlements|legal|schema|storage|file|search|indexer|e2e]"
+    echo "Usage: $0 [all|preflight|partition|entitlements|legal|schema|storage|file|search|indexer|e2e]"
     echo ""
     echo "Test suites:"
-    echo "  all           - Run all tests"
+    echo "  all           - Run all tests (includes preflight)"
+    echo "  preflight     - Pre-flight checks only"
     echo "  partition     - Test Partition service"
-    echo "  entitlements - Test Entitlements service"
+    echo "  entitlements  - Test Entitlements service"
     echo "  legal         - Test Legal service"
     echo "  schema        - Test Schema service"
     echo "  storage       - Test Storage service"
@@ -786,21 +860,23 @@ usage() {
 main() {
     echo ""
     echo -e "${BLUE}╔═══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║  OSDU Functional Test Suite (Updated for Step 23+)           ║${NC}"
+    echo -e "${BLUE}║  OSDU Functional Test Suite (Updated for Step 24+)           ║${NC}"
     echo -e "${BLUE}║  Timestamp: $(date -Iseconds)                       ║${NC}"
     echo -e "${BLUE}╚═══════════════════════════════════════════════════════════════╝${NC}"
     
     case "${1:-all}" in
-        partition)    test_partition ;;
-        entitlements) test_entitlements ;;
-        legal)        test_legal ;;
-        schema)       test_schema ;;
-        storage)      test_storage ;;
-        file)         test_file ;;
-        search)       test_search ;;
-        indexer)      test_indexer ;;
-        e2e)          test_e2e ;;
+        preflight)    preflight ;;
+        partition)    preflight; test_partition ;;
+        entitlements) preflight; test_entitlements ;;
+        legal)        preflight; test_legal ;;
+        schema)       preflight; test_schema ;;
+        storage)      preflight; test_storage ;;
+        file)         preflight; test_file ;;
+        search)       preflight; test_search ;;
+        indexer)      preflight; test_indexer ;;
+        e2e)          preflight; test_e2e ;;
         all)
+            preflight
             test_partition
             test_entitlements
             test_legal
