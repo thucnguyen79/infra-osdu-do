@@ -1071,3 +1071,27 @@ Ghi nhận config OBM (Object Blob Management) vào repo để persist qua ArgoC
 - [x] Create Record: HTTP 201 ✅
 - [x] Read Record: HTTP 200 ✅
 - [x] Evidence saved: artifacts/step24-storage-fix/
+
+## Step 24 - Storage Service Fix
+### A. Issues Fixed
+- [x] Legal HTTP 307 redirect → Added SSL disable env vars
+- [x] Legal HTTP 500 (LegalTagOsm not found) → Created table in storage.osdu schema
+- [x] Storage HTTP 500 (search_path) → ALTER ROLE osduadmin SET search_path
+- [x] Storage HTTP 500 (NoSuchBucket) → Created osdu-poc-osdu-records bucket
+
+### B. Repo-first Documentation
+- [x] Env var patches committed to Git
+- [x] PostgreSQL bootstrap script: `scripts/osdu/bootstrap-postgres-osdu-schema.sql`
+- [x] S3 bootstrap script: `scripts/osdu/bootstrap-s3-buckets.sh`
+- [x] Step documentation: `docs/osdu/40-step24-storage-fix.md`
+
+### C. Test Results
+- [x] Create Record: HTTP 201 ✅
+- [x] Read Record: HTTP 200 ✅
+- [x] Evidence saved: `artifacts/step24-storage-fix/`
+
+### D. Key Learnings
+- OSM uses shared datasource (storage DB) for all services
+- PostgreSQL search_path: Role-level overrides database-level
+- Spring Security requires multiple env vars to disable HTTPS redirect
+- Bucket naming convention: {gcpProjectId}-osdu-records
