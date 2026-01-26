@@ -1,0 +1,15 @@
+{
+  "description": "OSM Partition properties - CRITICAL for Schema service",
+  "notes": [
+    "Schema service reads generic osm.postgres.* properties",
+    "Legal service reads osm.legal.postgres.* properties",
+    "osm.postgres.datasource.url MUST point to 'schema' database for Schema service to work"
+  ],
+  "properties": {
+    "osm.postgres.datasource.url": {"sensitive": false, "value": "jdbc:postgresql://osdu-postgres.osdu-data.svc.cluster.local:5432/schema"},
+    "osm.postgres.datasource.username": {"sensitive": false, "value": "osduadmin"},
+    "osm.postgres.datasource.password": {"sensitive": false, "value": "CHANGE_ME_STRONG"},
+    "osm.postgres.datasource.schema": {"sensitive": false, "value": "dataecosystem"}
+  },
+  "apply_command": "curl -X PATCH -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' -H 'data-partition-id: osdu' 'http://osdu-partition:8080/api/partition/v1/partitions/osdu' -d @osm-properties-payload.json"
+}

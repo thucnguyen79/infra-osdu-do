@@ -1106,3 +1106,33 @@ Ghi nhận config OBM (Object Blob Management) vào repo để persist qua ArgoC
 - [x] All 8 OSDU services running 1/1
 - [x] Search API returns valid response
 - [x] Git commits pushed to main
+
+## Step 25-26 - Search & Schema Service Fix
+
+### Step 25 - Search Service (OpenSearch Proxy)
+- [x] Identified root cause: ES 8.x client incompatible with OpenSearch 2.x
+- [x] Attempted: OpenSearch compatibility mode - not sufficient
+- [x] Attempted: Java system properties - ES client doesn't respect
+- [x] Deployed opensearch-proxy (Nginx) to rewrite headers
+- [x] Fixed nginx config: use `map` directive instead of `set`
+- [x] Added X-Elastic-Product header for ES 8.x client
+- [x] Updated partition property `elasticsearch.8.host` to proxy
+- [x] ArgoCD Application created for opensearch-proxy
+- [x] Search API returns valid response (HTTP 200)
+
+### Step 26 - Schema Service Fix
+- [x] Identified error: Entitlements connection failure (`UnknownHostException: entitlements`)
+- [x] Added ENTITLEMENTS_* env vars to Schema deployment
+- [x] Identified second error: Database relation not found
+- [x] Root cause: `osm.postgres.datasource.url` pointed to `storage` DB instead of `schema` DB
+- [x] Attempted: Add `osm.schema.postgres.*` properties - Schema doesn't read these
+- [x] Fixed: Updated `osm.postgres.datasource.url` to point to `schema` database
+- [x] Schema API returns valid response (HTTP 200)
+
+### Repo-First Compliance
+- [x] opensearch-proxy manifests in repo
+- [x] ArgoCD Application in repo
+- [x] Documentation created: `docs/issues/step25-26-search-schema-fix.md`
+- [ ] TODO: Update Schema deployment YAML with ENTITLEMENTS_* env vars
+- [ ] TODO: Create partition init script/job for OSM properties
+- [x] OSM properties documented in `k8s/osdu/core/base/partition-init/osm-properties-payload.json`
