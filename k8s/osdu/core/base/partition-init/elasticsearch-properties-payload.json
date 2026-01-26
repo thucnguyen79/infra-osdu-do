@@ -1,0 +1,14 @@
+{
+  "properties": {
+    "elasticsearch.8.host": {"sensitive": false, "value": "opensearch-proxy.osdu-data.svc.cluster.local"},
+    "elasticsearch.8.port": {"sensitive": false, "value": "9200"},
+    "elasticsearch.8.https": {"sensitive": false, "value": "false"},
+    "elasticsearch.8.tls": {"sensitive": false, "value": "false"},
+    "elasticsearch.8.ssl.enabled": {"sensitive": false, "value": "false"},
+    "elasticsearch.8.https.enabled": {"sensitive": false, "value": "false"},
+    "elasticsearch.8.scheme": {"sensitive": false, "value": "http"},
+    "elasticsearch.8.protocol": {"sensitive": false, "value": "http"},
+    "elasticsearch.8.user": {"sensitive": false, "value": ""},
+    "elasticsearch.8.password": {"sensitive": true, "value": ""}
+  }
+}

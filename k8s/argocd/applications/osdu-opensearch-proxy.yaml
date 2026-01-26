@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: osdu-opensearch-proxy
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: osdu
+  source:
+    repoURL: git@github.com:thucnguyen79/infra-osdu-do.git
+    targetRevision: main
+    path: k8s/osdu/deps/base/opensearch-proxy
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: osdu-data
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true
