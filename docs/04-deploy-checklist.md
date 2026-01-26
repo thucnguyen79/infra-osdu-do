@@ -1095,3 +1095,14 @@ Ghi nhận config OBM (Object Blob Management) vào repo để persist qua ArgoC
 - PostgreSQL search_path: Role-level overrides database-level
 - Spring Security requires multiple env vars to disable HTTPS redirect
 - Bucket naming convention: {gcpProjectId}-osdu-records
+
+## Step 25 - Search Service Fix (OpenSearch Proxy)
+- [x] Identified root cause: ES 8.x client incompatible with OpenSearch 2.x
+- [x] Deployed opensearch-proxy (Nginx) to rewrite headers
+- [x] Added X-Elastic-Product header for ES 8.x client
+- [x] Updated partition property elasticsearch.8.host to proxy
+- [x] ArgoCD Application created for opensearch-proxy
+- [x] Partition properties documented in repo
+- [x] All 8 OSDU services running 1/1
+- [x] Search API returns valid response
+- [x] Git commits pushed to main
