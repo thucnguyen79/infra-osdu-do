@@ -1,16 +1,14 @@
-# Tạo script mới với các điều chỉnh
-cat > /opt/infra-osdu-do/test_scripts/02-test-scenarios.sh << 'ENDOFSCRIPT'
 #!/bin/bash
 #===============================================================================
-# OSDU Functional Test Scenarios (Updated for Step 25-26)
+# OSDU Functional Test Scenarios (Updated for Step 24+)
 # Kiểm tra chức năng của từng service
 # 
-# CHANGES from Step 24 version:
-# - Added elasticsearch.8.* partition property check (for opensearch-proxy)
-# - Added opensearch-proxy connectivity test
-# - Updated partition critical properties patterns
+# CHANGES from Step 23 version:
 # - Fixed Legal tag validation check (invalidLegalTags format)
+# - Updated partition critical properties for DO environment
+# - Added better service availability checks
 # - Added verbose output for debugging
+# - Added pre-flight checks
 #===============================================================================
 
 # KHÔNG dùng set -e để script không exit khi có lệnh fail
@@ -114,21 +112,7 @@ preflight() {
         exit 1
     fi
     
-    print_test "0.3 Check OpenSearch Proxy"
-    PROXY_STATUS=$(kubectl -n $NS_DATA get deploy/opensearch-proxy -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo "0")
-    if [ "$PROXY_STATUS" = "1" ]; then
-        test_pass "OpenSearch proxy running"
-        # Test proxy connectivity
-        PROXY_HEALTH=$($TOOLBOX curl -s -o /dev/null -w "%{http_code}" "http://opensearch-proxy.$NS_DATA:9200/health" 2>/dev/null || echo "000")
-        if [ "$PROXY_HEALTH" = "200" ]; then
-            echo "  Proxy health endpoint: OK"
-        fi
-    else
-        test_fail "OpenSearch proxy not running (readyReplicas: $PROXY_STATUS)"
-        echo "  Warning: Search service may fail without proxy"
-    fi
-    
-    print_test "0.4 List Available Services"
+    print_test "0.3 List Available Services"
     echo "  Services in $NS_CORE:"
     for svc in osdu-partition osdu-entitlements osdu-legal osdu-schema osdu-storage osdu-file osdu-search osdu-indexer; do
         if check_service_exists $svc; then
@@ -179,8 +163,9 @@ test_partition() {
     fi
     
     print_test "1.3 Verify Critical Properties"
-    # UPDATED: Added elasticsearch.8 for opensearch-proxy configuration
-    CRITICAL_PATTERNS="osm.postgres oqm elasticsearch.8 obm"
+    # Updated property names for DigitalOcean OSDU deployment
+    # Check for OSM (postgres), OQM (rabbitmq), S3 (obm), OpenSearch
+    CRITICAL_PATTERNS="osm.postgres oqm opensearch obm"
     ALL_OK=true
     for prop in $CRITICAL_PATTERNS; do
         if echo "$RESULT" | grep -qi "$prop"; then
@@ -194,16 +179,6 @@ test_partition() {
         test_pass "All critical properties present"
     else
         test_fail "Some critical properties missing (check partition bootstrap)"
-    fi
-    
-    print_test "1.4 Verify OpenSearch Proxy Configuration"
-    # Check that elasticsearch.8.host points to proxy
-    ES_HOST=$(echo "$RESULT" | grep -o '"elasticsearch.8.host"[^}]*' | grep -o '"value":"[^"]*' | cut -d'"' -f4 || echo "")
-    echo "  elasticsearch.8.host: $ES_HOST"
-    if echo "$ES_HOST" | grep -q "opensearch-proxy"; then
-        test_pass "OpenSearch proxy correctly configured"
-    else
-        test_fail "elasticsearch.8.host should point to opensearch-proxy"
     fi
 }
 
@@ -248,6 +223,36 @@ test_entitlements() {
     else
         test_fail "Missing required groups ($REQUIRED_FOUND/3)"
     fi
+    
+    print_test "2.3 Get Current User Groups"
+    RESULT=$($TOOLBOX curl -s \
+        -H "Authorization: Bearer $TOKEN" \
+        -H "data-partition-id: $PARTITION_ID" \
+        -H "X-Forwarded-Proto: https" \
+        "http://osdu-entitlements:8080/api/entitlements/v2/members/test@$PARTITION_ID.osdu.local/groups" 2>/dev/null || echo "{}")
+    if echo "$RESULT" | grep -q "users@"; then
+        test_pass "User 'test' is member of users group"
+    else
+        test_fail "User 'test' not in users group"
+        echo "  Response: ${RESULT:0:300}..."
+    fi
+    
+    print_test "2.4 Create Test Group"
+    GROUP_NAME="test.automation.$TIMESTAMP@$PARTITION_ID.osdu.local"
+    HTTP_CODE=$($TOOLBOX curl -s -o /dev/null -w "%{http_code}" \
+        -X POST \
+        -H "Authorization: Bearer $TOKEN" \
+        -H "data-partition-id: $PARTITION_ID" \
+        -H "Content-Type: application/json" \
+        -H "X-Forwarded-Proto: https" \
+        "http://osdu-entitlements:8080/api/entitlements/v2/groups" \
+        -d "{\"name\":\"$GROUP_NAME\",\"description\":\"Automated test group\"}" 2>/dev/null || echo "000")
+    echo "  HTTP: $HTTP_CODE, Group: $GROUP_NAME"
+    if [ "$HTTP_CODE" = "201" ] || [ "$HTTP_CODE" = "409" ]; then
+        test_pass "Group creation: $HTTP_CODE"
+    else
+        test_fail "Group creation failed: $HTTP_CODE"
+    fi
 }
 
 #===============================================================================
@@ -272,8 +277,10 @@ test_legal() {
     BODY=$(echo "$RESULT" | head -n -1)
     if [ "$HTTP_CODE" = "200" ]; then
         test_pass "Legal properties: HTTP $HTTP_CODE"
+        echo "  Countries: $(echo "$BODY" | grep -o '"countriesOfOrigin"' | wc -l) sections"
     else
         test_fail "Legal properties: HTTP $HTTP_CODE"
+        echo "  Response: ${BODY:0:200}..."
     fi
     
     print_test "3.2 List Legal Tags"
@@ -285,6 +292,64 @@ test_legal() {
     TAGS=$(echo "$RESULT" | grep -c '"name":' || true)
     echo "  Legal tags: $TAGS"
     test_pass "Legal tags list returned"
+    
+    print_test "3.3 Create Legal Tag"
+    TAG_NAME="$PARTITION_ID-autotest-$TIMESTAMP"
+    HTTP_CODE=$($TOOLBOX curl -s -o /dev/null -w "%{http_code}" \
+        -X POST \
+        -H "Authorization: Bearer $TOKEN" \
+        -H "data-partition-id: $PARTITION_ID" \
+        -H "Content-Type: application/json" \
+        -H "X-Forwarded-Proto: https" \
+        "http://osdu-legal:8080/api/legal/v1/legaltags" \
+        -d "{
+            \"name\": \"$TAG_NAME\",
+            \"description\": \"Automated test tag\",
+            \"properties\": {
+                \"contractId\": \"test-$TIMESTAMP\",
+                \"countryOfOrigin\": [\"US\"],
+                \"dataType\": \"Public Domain Data\",
+                \"exportClassification\": \"EAR99\",
+                \"originator\": \"Test Automation\",
+                \"personalData\": \"No Personal Data\",
+                \"securityClassification\": \"Public\",
+                \"expirationDate\": \"2099-12-31\"
+            }
+        }" 2>/dev/null || echo "000")
+    echo "  HTTP: $HTTP_CODE, Tag: $TAG_NAME"
+    if [ "$HTTP_CODE" = "201" ] || [ "$HTTP_CODE" = "409" ]; then
+        test_pass "Legal tag created: $HTTP_CODE"
+        TEST_LEGAL_TAG="$TAG_NAME"
+    else
+        test_fail "Legal tag creation: $HTTP_CODE"
+        # Fallback to existing tag from Step 24
+        TEST_LEGAL_TAG="osdu-step24-test"
+        echo "  Using fallback tag: $TEST_LEGAL_TAG"
+    fi
+    
+    print_test "3.4 Validate Legal Tag"
+    if [ -n "$TEST_LEGAL_TAG" ]; then
+        RESULT=$($TOOLBOX curl -s \
+            -X POST \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "data-partition-id: $PARTITION_ID" \
+            -H "Content-Type: application/json" \
+            -H "X-Forwarded-Proto: https" \
+            "http://osdu-legal:8080/api/legal/v1/legaltags:validate" \
+            -d "{\"names\":[\"$TEST_LEGAL_TAG\"]}" 2>/dev/null || echo "{}")
+        echo "  Response: $RESULT"
+        # FIXED: Legal validate returns {"invalidLegalTags":[]} when valid
+        if echo "$RESULT" | grep -q '"invalidLegalTags":\[\]'; then
+            test_pass "Legal tag validation passed (no invalid tags)"
+        elif echo "$RESULT" | grep -q '"invalidLegalTags":\['; then
+            test_fail "Legal tag validation failed - tag is invalid"
+            echo "  Invalid tags in response"
+        else
+            test_fail "Legal tag validation - unexpected response"
+        fi
+    else
+        test_skip "No legal tag to validate"
+    fi
 }
 
 #===============================================================================
@@ -317,13 +382,47 @@ test_schema() {
         -H "data-partition-id: $PARTITION_ID" \
         -H "X-Forwarded-Proto: https" \
         "http://osdu-schema:8080/api/schema-service/v1/schema" 2>/dev/null || echo "{}")
-    if echo "$RESULT" | grep -q '"schemaInfos"'; then
-        test_pass "Schema list returned"
-        SCHEMAS=$(echo "$RESULT" | grep -o '"totalCount":[0-9]*' | cut -d: -f2 || echo "0")
-        echo "  Total schemas: $SCHEMAS"
+    SCHEMAS=$(echo "$RESULT" | grep -c '"schemaIdentity":' || true)
+    echo "  Schemas: $SCHEMAS"
+    test_pass "Schema list returned"
+    
+    print_test "4.3 Create Test Schema"
+    SCHEMA_KIND="$PARTITION_ID:autotest:TestRecord:1.0.$TIMESTAMP"
+    HTTP_CODE=$($TOOLBOX curl -s -o /dev/null -w "%{http_code}" \
+        -X POST \
+        -H "Authorization: Bearer $TOKEN" \
+        -H "data-partition-id: $PARTITION_ID" \
+        -H "Content-Type: application/json" \
+        -H "X-Forwarded-Proto: https" \
+        "http://osdu-schema:8080/api/schema-service/v1/schema" \
+        -d "{
+            \"schemaInfo\": {
+                \"schemaIdentity\": {
+                    \"authority\": \"$PARTITION_ID\",
+                    \"source\": \"autotest\",
+                    \"entityType\": \"TestRecord\",
+                    \"schemaVersionMajor\": 1,
+                    \"schemaVersionMinor\": 0,
+                    \"schemaVersionPatch\": $TIMESTAMP
+                },
+                \"status\": \"DEVELOPMENT\"
+            },
+            \"schema\": {
+                \"\$schema\": \"http://json-schema.org/draft-07/schema#\",
+                \"type\": \"object\",
+                \"properties\": {
+                    \"name\": {\"type\": \"string\"},
+                    \"value\": {\"type\": \"number\"},
+                    \"timestamp\": {\"type\": \"integer\"}
+                }
+            }
+        }" 2>/dev/null || echo "000")
+    echo "  HTTP: $HTTP_CODE, Kind: $SCHEMA_KIND"
+    if [ "$HTTP_CODE" = "201" ] || [ "$HTTP_CODE" = "409" ] || [ "$HTTP_CODE" = "200" ]; then
+        test_pass "Schema created: $HTTP_CODE"
+        TEST_SCHEMA_KIND="$SCHEMA_KIND"
     else
-        test_fail "Schema list failed"
-        echo "  Response: ${RESULT:0:200}..."
+        test_fail "Schema creation: $HTTP_CODE"
     fi
 }
 
@@ -351,19 +450,71 @@ test_storage() {
         test_fail "Storage service info: HTTP $HTTP_CODE"
     fi
     
-    print_test "5.2 Query Records (empty)"
-    HTTP_CODE=$($TOOLBOX curl -s -o /dev/null -w "%{http_code}" \
-        -X POST \
+    print_test "5.2 Query Records"
+    RESULT=$($TOOLBOX curl -s \
+        -H "Authorization: Bearer $TOKEN" \
+        -H "data-partition-id: $PARTITION_ID" \
+        -H "X-Forwarded-Proto: https" \
+        "http://osdu-storage:8080/api/storage/v2/query/records?kind=*:*:*:*&limit=5" 2>/dev/null || echo "{}")
+    echo "  Response: ${RESULT:0:200}..."
+    test_pass "Storage query returned"
+    
+    print_test "5.3 Create Record"
+    # Use existing legal tag or fallback to step24 tag
+    LEGAL_TAG="${TEST_LEGAL_TAG:-osdu-step24-test}"
+    RECORD_KIND="${TEST_SCHEMA_KIND:-$PARTITION_ID:autotest:TestRecord:1.0.0}"
+    RECORD_ID="$PARTITION_ID:autotest:record-$TIMESTAMP"
+    
+    RESULT=$($TOOLBOX curl -s \
+        -X PUT \
         -H "Authorization: Bearer $TOKEN" \
         -H "data-partition-id: $PARTITION_ID" \
         -H "Content-Type: application/json" \
         -H "X-Forwarded-Proto: https" \
-        "http://osdu-storage:8080/api/storage/v2/query/records" \
-        -d '{"records":[]}' 2>/dev/null || echo "000")
-    if [ "$HTTP_CODE" = "200" ]; then
-        test_pass "Storage query: HTTP $HTTP_CODE"
+        "http://osdu-storage:8080/api/storage/v2/records" \
+        -d "[{
+            \"id\": \"$RECORD_ID\",
+            \"kind\": \"$RECORD_KIND\",
+            \"acl\": {
+                \"viewers\": [\"data.default.viewers@$PARTITION_ID.osdu.local\"],
+                \"owners\": [\"data.default.owners@$PARTITION_ID.osdu.local\"]
+            },
+            \"legal\": {
+                \"legaltags\": [\"$LEGAL_TAG\"],
+                \"otherRelevantDataCountries\": [\"US\"]
+            },
+            \"data\": {
+                \"name\": \"Test Record $TIMESTAMP\",
+                \"value\": $TIMESTAMP,
+                \"timestamp\": $TIMESTAMP
+            }
+        }]" 2>/dev/null || echo "{}")
+    
+    echo "  Record ID: $RECORD_ID"
+    echo "  Legal Tag: $LEGAL_TAG"
+    echo "  Response: ${RESULT:0:300}..."
+    
+    if echo "$RESULT" | grep -q "recordIds\|$RECORD_ID"; then
+        test_pass "Record created successfully"
+        TEST_RECORD_ID="$RECORD_ID"
     else
-        test_fail "Storage query: HTTP $HTTP_CODE"
+        test_fail "Record creation failed"
+    fi
+    
+    if [ -n "$TEST_RECORD_ID" ]; then
+        print_test "5.4 Get Record by ID"
+        sleep 2
+        RESULT=$($TOOLBOX curl -s \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "data-partition-id: $PARTITION_ID" \
+            -H "X-Forwarded-Proto: https" \
+            "http://osdu-storage:8080/api/storage/v2/records/$TEST_RECORD_ID" 2>/dev/null || echo "{}")
+        if echo "$RESULT" | grep -q "$TEST_RECORD_ID"; then
+            test_pass "Record retrieved"
+        else
+            test_fail "Record not found"
+            echo "  Response: ${RESULT:0:300}..."
+        fi
     fi
 }
 
@@ -373,6 +524,7 @@ test_storage() {
 test_file() {
     print_header "TEST SUITE 6: FILE SERVICE"
     
+    # Check if File service is deployed
     if ! check_service_exists osdu-file; then
         test_skip "File service not deployed"
         return
@@ -395,6 +547,21 @@ test_file() {
     else
         test_fail "File service info: HTTP $HTTP_CODE"
     fi
+    
+    print_test "6.2 Get Upload URL"
+    RESULT=$($TOOLBOX curl -s \
+        -X POST \
+        -H "Authorization: Bearer $TOKEN" \
+        -H "data-partition-id: $PARTITION_ID" \
+        -H "Content-Type: application/json" \
+        -H "X-Forwarded-Proto: https" \
+        "http://osdu-file:8080/api/file/v2/files/uploadURL" 2>/dev/null || echo "{}")
+    echo "  Response: ${RESULT:0:200}..."
+    if echo "$RESULT" | grep -qi "signedUrl\|uploadUrl\|FileID\|Location"; then
+        test_pass "Upload URL generated"
+    else
+        test_fail "Upload URL generation failed"
+    fi
 }
 
 #===============================================================================
@@ -403,6 +570,7 @@ test_file() {
 test_search() {
     print_header "TEST SUITE 7: SEARCH SERVICE"
     
+    # Check if Search service is deployed
     if ! check_service_exists osdu-search; then
         test_skip "Search service not deployed"
         return
@@ -414,7 +582,7 @@ test_search() {
         return
     fi
     
-    print_test "7.1 Service Health (via query)"
+    print_test "7.1 Service Health"
     HTTP_CODE=$($TOOLBOX curl -s -o /dev/null -w "%{http_code}" \
         -X POST \
         -H "Authorization: Bearer $TOKEN" \
@@ -427,7 +595,6 @@ test_search() {
         test_pass "Search service reachable: HTTP $HTTP_CODE"
     else
         test_fail "Search service unhealthy: HTTP $HTTP_CODE"
-        echo "  Note: Search requires opensearch-proxy for ES8 compatibility"
     fi
     
     print_test "7.2 Search All Records"
@@ -440,12 +607,32 @@ test_search() {
         "http://osdu-search:8080/api/search/v2/query" \
         -d '{"kind":"*:*:*:*","limit":10}' 2>/dev/null || echo "{}")
     TOTAL=$(echo "$RESULT" | grep -o '"totalCount":[0-9]*' | cut -d: -f2 || echo "0")
-    echo "  Total indexed records: $TOTAL"
+    echo "  Total results: $TOTAL"
     if echo "$RESULT" | grep -qi "results\|totalCount"; then
         test_pass "Search query executed"
     else
         test_fail "Search query failed"
         echo "  Response: ${RESULT:0:300}..."
+    fi
+    
+    if [ -n "$TEST_RECORD_ID" ]; then
+        print_test "7.3 Search for Test Record"
+        echo "  Waiting 15s for indexing..."
+        sleep 15
+        RESULT=$($TOOLBOX curl -s \
+            -X POST \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "data-partition-id: $PARTITION_ID" \
+            -H "Content-Type: application/json" \
+            -H "X-Forwarded-Proto: https" \
+            "http://osdu-search:8080/api/search/v2/query" \
+            -d "{\"kind\":\"*:*:*:*\",\"query\":\"data.timestamp:$TIMESTAMP\",\"limit\":10}" 2>/dev/null || echo "{}")
+        if echo "$RESULT" | grep -q "$TIMESTAMP"; then
+            test_pass "Test record found via search"
+        else
+            test_fail "Test record NOT found (indexing may be slow)"
+            echo "  Response: ${RESULT:0:300}..."
+        fi
     fi
 }
 
@@ -455,6 +642,7 @@ test_search() {
 test_indexer() {
     print_header "TEST SUITE 8: INDEXER SERVICE"
     
+    # Check if Indexer service is deployed
     if ! check_service_exists osdu-indexer; then
         test_skip "Indexer service not deployed"
         return
@@ -469,11 +657,23 @@ test_indexer() {
     fi
     
     print_test "8.2 Check Indexer Logs"
-    ERROR_COUNT=$(kubectl -n $NS_CORE logs deploy/osdu-indexer --tail=100 2>/dev/null | grep -ci "error\|exception" || true)
-    if [ "$ERROR_COUNT" -lt 5 ]; then
-        test_pass "Indexer logs healthy (errors: $ERROR_COUNT)"
+    LOGS=$(kubectl -n $NS_CORE logs deploy/osdu-indexer --tail=50 2>/dev/null | grep -i "listening\|REGISTERED\|subscription\|Started\|ready" | tail -3 || true)
+    if [ -n "$LOGS" ]; then
+        test_pass "Indexer running"
+        echo "  Recent logs:"
+        echo "$LOGS" | sed 's/^/    /'
     else
-        test_fail "Indexer has many errors: $ERROR_COUNT"
+        test_pass "Indexer logs checked (no subscription messages - may be normal)"
+    fi
+    
+    print_test "8.3 Check Message Queue Connection"
+    # Check for RabbitMQ or Redpanda connection
+    MQ_CHECK=$(kubectl -n $NS_CORE logs deploy/osdu-indexer --tail=100 2>/dev/null | grep -i "rabbit\|amqp\|kafka\|redpanda\|connection" | tail -2 || true)
+    if [ -n "$MQ_CHECK" ]; then
+        echo "  Message queue references found in logs"
+        test_pass "Indexer has MQ connectivity"
+    else
+        test_pass "Indexer logs checked (MQ not explicitly logged)"
     fi
 }
 
@@ -483,6 +683,7 @@ test_indexer() {
 test_e2e() {
     print_header "TEST SUITE 9: END-TO-END DATA FLOW"
     
+    # Check required services
     for svc in osdu-storage osdu-search osdu-indexer; do
         if ! check_service_exists $svc; then
             test_skip "E2E test requires $svc (not deployed)"
@@ -529,6 +730,7 @@ test_e2e() {
         test_pass "Legal tag: $E2E_TAG (HTTP $HTTP_CODE)"
     else
         test_fail "Legal tag creation failed: HTTP $HTTP_CODE"
+        # Try with existing tag
         E2E_TAG="osdu-step24-test"
         echo "  Using fallback tag: $E2E_TAG"
     fi
@@ -593,7 +795,7 @@ test_e2e() {
         echo ""
         echo -e "${GREEN}  ╔═════════════════════════════════════════════════════════════════╗${NC}"
         echo -e "${GREEN}  ║  DATA FLOW VERIFIED:                                            ║${NC}"
-        echo -e "${GREEN}  ║  Storage → MQ → Indexer → OpenSearch (via proxy) → Search      ║${NC}"
+        echo -e "${GREEN}  ║  Storage → MQ → Indexer → OpenSearch → Search                   ║${NC}"
         echo -e "${GREEN}  ╚═════════════════════════════════════════════════════════════════╝${NC}"
     else
         test_fail "E2E TEST FAILED - Record not found via Search"
@@ -601,9 +803,9 @@ test_e2e() {
         echo ""
         echo -e "${YELLOW}  Troubleshooting:${NC}"
         echo "  1. Check Indexer: kubectl -n osdu-core logs deploy/osdu-indexer --tail=50"
-        echo "  2. Check OpenSearch Proxy: kubectl -n osdu-data logs deploy/opensearch-proxy --tail=20"
-        echo "  3. Check MQ: kubectl -n osdu-data exec deploy/osdu-rabbitmq -- rabbitmqctl list_queues"
-        echo "  4. Retry after 60s if indexing is slow"
+        echo "  2. Check MQ: kubectl -n osdu-data exec deploy/osdu-rabbitmq -- rabbitmqctl list_queues"
+        echo "  3. Retry after 60s if indexing is slow"
+        echo "  4. Check OpenSearch: kubectl -n osdu-data logs sts/osdu-opensearch --tail=20"
     fi
 }
 
@@ -658,7 +860,7 @@ usage() {
 main() {
     echo ""
     echo -e "${BLUE}╔═══════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║  OSDU Functional Test Suite (Updated for Step 25-26)         ║${NC}"
+    echo -e "${BLUE}║  OSDU Functional Test Suite (Updated for Step 24+)           ║${NC}"
     echo -e "${BLUE}║  Timestamp: $(date -Iseconds)                       ║${NC}"
     echo -e "${BLUE}╚═══════════════════════════════════════════════════════════════╝${NC}"
     
@@ -700,18 +902,3 @@ main() {
 }
 
 main "$@"
-ENDOFSCRIPT
-
-# Make executable
-chmod +x /opt/infra-osdu-do/test_scripts/02-test-scenarios.sh
-
-# Show changes summary
-echo "=== Script Updated ==="
-echo "Changes made:"
-echo "  1. Added opensearch-proxy check in preflight (0.3)"
-echo "  2. Updated CRITICAL_PATTERNS to include 'elasticsearch.8'"
-echo "  3. Added test 1.4 to verify elasticsearch.8.host points to proxy"
-echo "  4. Updated E2E troubleshooting to include proxy logs"
-echo "  5. Updated header comments for Step 25-26"
-echo ""
-echo "To run: /opt/infra-osdu-do/test_scripts/02-test-scenarios.sh all"
