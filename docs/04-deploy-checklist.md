@@ -1062,3 +1062,12 @@ Ghi nhận config OBM (Object Blob Management) vào repo để persist qua ArgoC
 - Secret values KHÔNG được commit vào Git
 - Partition properties được seed bằng `scripts/seed-partition-osdu.sh`
 - Container names trong patches: `legal`, `storage` (không phải `osdu-legal`, `osdu-storage`)
+
+## Step 24 - Storage Service Fix
+- [x] Legal 307 redirect fixed (SSL env vars)
+- [x] Legal 500 fixed (LegalTagOsm in storage.osdu)
+- [x] Storage search_path fixed (ALTER ROLE osduadmin)
+- [x] S3 bucket created (osdu-poc-osdu-records)
+- [x] Create Record: HTTP 201 ✅
+- [x] Read Record: HTTP 200 ✅
+- [x] Evidence saved: artifacts/step24-storage-fix/
