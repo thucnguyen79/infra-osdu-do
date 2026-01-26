@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opensearch-proxy-config
+  namespace: osdu-data
+data:
+  nginx.conf: |
+    worker_processes 1;
+    events { worker_connections 1024; }
+    http {
+      upstream opensearch_backend {
+        server osdu-opensearch.osdu-data.svc.cluster.local:9200;
+      }
+      
+      map $http_content_type $proxy_content_type {
+        ~*application/vnd\.elasticsearch  "application/json";
+        default                           $http_content_type;
+      }
+      
+      server {
+        listen 9200;
+        
+        location / {
+          proxy_pass http://opensearch_backend;
+          proxy_set_header Host $host;
+          proxy_set_header Content-Type $proxy_content_type;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          
+          # Timeouts for large queries
+          proxy_connect_timeout 60s;
+          proxy_send_timeout 60s;
+          proxy_read_timeout 60s;
+          
+          # Buffer settings
+          proxy_buffer_size 128k;
+          proxy_buffers 4 256k;
+          proxy_busy_buffers_size 256k;
+        }
+        
+        location = /health {
+          return 200 'OK';
+          add_header Content-Type text/plain;
+        }
+      }
+    }
