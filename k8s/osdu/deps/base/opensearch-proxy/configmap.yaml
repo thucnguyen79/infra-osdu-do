@@ -27,6 +27,12 @@ data:
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
           
+          # Add X-Elastic-Product header to response (required by ES 8.x client)
+          add_header X-Elastic-Product "Elasticsearch" always;
+          
+          # Preserve original headers from upstream
+          proxy_pass_header X-Elastic-Product;
+          
           # Timeouts for large queries
           proxy_connect_timeout 60s;
           proxy_send_timeout 60s;
