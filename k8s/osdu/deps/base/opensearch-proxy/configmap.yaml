@@ -20,6 +20,30 @@ data:
       server {
         listen 9200;
         
+        # Root endpoint - return static response with build_flavor for ES 8.x client
+        location = / {
+          default_type application/json;
+          add_header X-Elastic-Product "Elasticsearch" always;
+          return 200 '{
+            "name": "opensearch-proxy",
+            "cluster_name": "osdu-cluster",
+            "cluster_uuid": "osdu-proxy-uuid",
+            "version": {
+              "number": "7.10.2",
+              "build_flavor": "default",
+              "build_type": "docker",
+              "build_hash": "unknown",
+              "build_date": "2024-01-01T00:00:00.000000Z",
+              "build_snapshot": false,
+              "lucene_version": "9.11.1",
+              "minimum_wire_compatibility_version": "7.10.0",
+              "minimum_index_compatibility_version": "7.0.0"
+            },
+            "tagline": "You Know, for Search"
+          }';
+        }
+        
+        # All other endpoints - proxy to OpenSearch
         location / {
           proxy_pass http://opensearch_backend;
           proxy_set_header Host $host;
