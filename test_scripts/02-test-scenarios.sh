@@ -1,5 +1,3 @@
-# Tạo script mới với các điều chỉnh
-cat > /opt/infra-osdu-do/test_scripts/02-test-scenarios.sh << 'ENDOFSCRIPT'
 #!/bin/bash
 #===============================================================================
 # OSDU Functional Test Scenarios (Updated for Step 25-26)
@@ -700,18 +698,3 @@ main() {
 }
 
 main "$@"
-ENDOFSCRIPT
-
-# Make executable
-chmod +x /opt/infra-osdu-do/test_scripts/02-test-scenarios.sh
-
-# Show changes summary
-echo "=== Script Updated ==="
-echo "Changes made:"
-echo "  1. Added opensearch-proxy check in preflight (0.3)"
-echo "  2. Updated CRITICAL_PATTERNS to include 'elasticsearch.8'"
-echo "  3. Added test 1.4 to verify elasticsearch.8.host points to proxy"
-echo "  4. Updated E2E troubleshooting to include proxy logs"
-echo "  5. Updated header comments for Step 25-26"
-echo ""
-echo "To run: /opt/infra-osdu-do/test_scripts/02-test-scenarios.sh all"

@@ -37,6 +37,9 @@ patches:
   - path: patches/revision-history/patch-search.yaml
   - path: patches/revision-history/patch-indexer.yaml
 
+  # Indexer - OpenSearch Proxy (Step 27)
+  - path: patches/patch-indexer-opensearch-proxy.yaml
+
 generatorOptions:
   disableNameSuffixHash: true
 
@@ -52,9 +55,10 @@ configMapGenerator:
       - REDIS_GROUP_HOST=osdu-redis.osdu-data.svc.cluster.local
       - REDIS_GROUP_PORT=6379
       - KAFKA_BOOTSTRAP_SERVERS=osdu-kafka.osdu-data.svc.cluster.local:9092
-      - OPENSEARCH_HOST=osdu-opensearch.osdu-data.svc.cluster.local
+      - OPENSEARCH_HOST=opensearch-proxy.osdu-data.svc.cluster.local
       - OPENSEARCH_PORT=9200
       - KEYCLOAK_ISSUER_URI=http://keycloak.osdu-identity.svc.cluster.local/realms/osdu
       - PARTITION_API=http://osdu-partition:8080/api/partition/v1
       - JAVA_OPTS=-Xms256m -Xmx512m
       - SERVER_PORT=8080
+
