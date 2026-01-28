@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-indexer
+spec:
+  template:
+    spec:
+      containers:
+        - name: indexer
+          env:
+            # OpenID Provider for service-to-service auth
+            - name: OPENID_PROVIDER_URL
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
+            - name: OPENID_PROVIDER_ISSUER
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
+            - name: OPENID_PROVIDER_CLIENT_ID
+              value: "osdu-service"
+            - name: OPENID_PROVIDER_CLIENT_SECRET
+              value: "ryvMX5routkeriIt6VHP0M801shqMy9q"
+            - name: OPENID_PROVIDER_SCOPES
+              value: "openid profile email"

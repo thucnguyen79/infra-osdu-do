@@ -39,6 +39,7 @@ patches:
 
   # Indexer - OpenSearch Proxy (Step 27)
   - path: patches/patch-indexer-opensearch-proxy.yaml
+  - path: patches/patch-indexer-openid.yaml
 
 generatorOptions:
   disableNameSuffixHash: true
