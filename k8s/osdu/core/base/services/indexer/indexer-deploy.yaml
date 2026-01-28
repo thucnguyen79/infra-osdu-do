@@ -177,7 +177,7 @@ spec:
             - name: STORAGE_API
               value: "http://osdu-storage:8080/api/storage/v2"
             - name: SCHEMA_HOST
-              value: "http://osdu-schema:8080"
+              value: "http://osdu-schema:8080/api/schema-service/v1/schema"
             - name: SCHEMA_API
               value: "http://osdu-schema:8080/api/schema-service/v1"
             - name: LEGAL_HOST
