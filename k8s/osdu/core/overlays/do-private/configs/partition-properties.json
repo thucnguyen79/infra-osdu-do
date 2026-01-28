@@ -1,0 +1,55 @@
+{
+  "properties": {
+    "id": {"sensitive": false, "value": "osdu"},
+    
+    "compliance-rule-set": {"sensitive": false, "value": "shared"},
+    "legal-tag-associated-contracts": {"sensitive": false, "value": "5"},
+    
+    "elasticsearch.port": {"sensitive": false, "value": "9200"},
+    "elasticsearch.host": {"sensitive": false, "value": "opensearch-proxy.osdu-data.svc.cluster.local"},
+    "elasticsearch.ssl.enabled": {"sensitive": false, "value": "false"},
+    "elasticsearch.security.https.certificate.trust": {"sensitive": false, "value": "false"},
+    "elasticsearch.username": {"sensitive": false, "value": "admin"},
+    "elasticsearch.password": {"sensitive": true, "value": "ELASTICSEARCH_PASSWORD"},
+    
+    "storage.bucketKind": {"sensitive": false, "value": "S3"},
+    "storage.bucketName": {"sensitive": false, "value": "osdu-storage"},
+    "storage.s3.endpoint": {"sensitive": false, "value": "http://rook-ceph-rgw-osdu-store.rook-ceph:80"},
+    "storage.s3.region": {"sensitive": false, "value": "us-east-1"},
+    "storage.s3.accessKeyId": {"sensitive": false, "value": "S3_ACCESS_KEY_PLACEHOLDER"},
+    "storage.s3.secretAccessKey": {"sensitive": false, "value": "S3_SECRET_KEY_PLACEHOLDER"},
+    
+    "obm.minio.endpoint": {"sensitive": false, "value": "http://rook-ceph-rgw-osdu-store.rook-ceph:80"},
+    "obm.minio.region": {"sensitive": false, "value": "us-east-1"},
+    "obm.minio.accessKey": {"sensitive": false, "value": "S3_ACCESS_KEY_PLACEHOLDER"},
+    "obm.minio.secretKey": {"sensitive": false, "value": "S3_SECRET_KEY_PLACEHOLDER"},
+    "obm.minio.bucket": {"sensitive": false, "value": "osdu-storage"},
+    "obm.minio.schema.bucket": {"sensitive": false, "value": "osdu-poc-osdu-schema"},
+    
+    "system.schema.bucket.name": {"sensitive": false, "value": "osdu-poc-osdu-schema"},
+    
+    "oqm.rabbitmq.amqp.host": {"sensitive": false, "value": "osdu-rabbitmq.osdu-data.svc.cluster.local"},
+    "oqm.rabbitmq.amqp.port": {"sensitive": false, "value": "5672"},
+    "oqm.rabbitmq.amqp.username": {"sensitive": false, "value": "osdu"},
+    "oqm.rabbitmq.amqp.password": {"sensitive": true, "value": "RABBITMQ_PASSWORD_PLACEHOLDER"},
+    
+    "oqm.s3.endpoint": {"sensitive": false, "value": "http://rook-ceph-rgw-osdu-store.rook-ceph:80"},
+    "oqm.s3.region": {"sensitive": false, "value": "us-east-1"},
+    "oqm.s3.accessKeyId": {"sensitive": false, "value": "S3_ACCESS_KEY_PLACEHOLDER"},
+    "oqm.s3.secretAccessKey": {"sensitive": false, "value": "S3_SECRET_KEY_PLACEHOLDER"},
+    
+    "redis.database.host": {"sensitive": false, "value": "osdu-redis.osdu-data.svc.cluster.local"},
+    "redis.database.port": {"sensitive": false, "value": "6379"},
+    
+    "keycloak.host": {"sensitive": false, "value": "http://keycloak.osdu-identity.svc.cluster.local"},
+    "keycloak.realm": {"sensitive": false, "value": "osdu"},
+    "keycloak.client.id": {"sensitive": false, "value": "osdu-cli"}
+  },
+  "_notes": {
+    "S3_ACCESS_KEY_PLACEHOLDER": "Replace with actual S3 access key from rook-ceph secret",
+    "S3_SECRET_KEY_PLACEHOLDER": "Replace with actual S3 secret key from rook-ceph secret",
+    "RABBITMQ_PASSWORD_PLACEHOLDER": "Replace with actual RabbitMQ password",
+    "ELASTICSEARCH_PASSWORD": "Replace with actual OpenSearch admin password",
+    "sensitive_false_for_s3": "IMPORTANT: S3 credentials must have sensitive=false for Schema service to work"
+  }
+}

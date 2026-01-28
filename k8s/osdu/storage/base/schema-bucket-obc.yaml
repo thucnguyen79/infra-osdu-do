@@ -1,0 +1,13 @@
+# ObjectBucketClaim for Schema Service S3 storage
+# This bucket stores schema JSON files
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: osdu-schema-bucket
+  namespace: rook-ceph
+  labels:
+    app: osdu
+    component: schema
+spec:
+  bucketName: osdu-poc-osdu-schema
+  storageClassName: rook-ceph-bucket

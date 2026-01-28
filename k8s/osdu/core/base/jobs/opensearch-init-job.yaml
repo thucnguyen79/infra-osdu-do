@@ -1,0 +1,111 @@
+# Job to initialize OpenSearch with:
+# 1. Index template (workaround for flattened type)
+# 2. Pre-create common OSDU indices
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: opensearch-init
+  namespace: osdu-core
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: init
+        image: curlimages/curl:8.5.0
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -e
+          OPENSEARCH_URL="http://osdu-opensearch.osdu-data:9200"
+          AUTH="admin:admin"
+          
+          echo "=== Creating Index Template ==="
+          curl -s -X PUT -u $AUTH \
+            -H "Content-Type: application/json" \
+            "$OPENSEARCH_URL/_index_template/osdu-template" \
+            -d '{
+            "index_patterns": ["osdu-*"],
+            "priority": 100,
+            "template": {
+              "settings": {"number_of_shards": 1, "number_of_replicas": 1},
+              "mappings": {
+                "dynamic_templates": [
+                  {"tags_as_object": {"match": "tags", "mapping": {"type": "object", "enabled": false}}},
+                  {"strings_as_keywords": {"match_mapping_type": "string", "mapping": {"type": "keyword"}}}
+                ],
+                "properties": {
+                  "id": {"type": "keyword"},
+                  "kind": {"type": "keyword"},
+                  "namespace": {"type": "keyword"},
+                  "type": {"type": "keyword"},
+                  "version": {"type": "long"},
+                  "acl": {"properties": {"viewers": {"type": "keyword"}, "owners": {"type": "keyword"}}},
+                  "legal": {"properties": {"legaltags": {"type": "keyword"}, "otherRelevantDataCountries": {"type": "keyword"}}},
+                  "tags": {"type": "object", "enabled": false},
+                  "index": {"properties": {"statusCode": {"type": "integer"}, "lastUpdateTime": {"type": "date"}, "trace": {"type": "text"}}},
+                  "authority": {"type": "keyword"},
+                  "source": {"type": "keyword"},
+                  "createUser": {"type": "keyword"},
+                  "createTime": {"type": "date"},
+                  "modifyUser": {"type": "keyword"},
+                  "modifyTime": {"type": "date"},
+                  "x-acl": {"type": "keyword"}
+                }
+              }
+            }
+          }'
+          
+          echo ""
+          echo "=== Pre-creating common OSDU indices ==="
+          
+          KINDS="
+            osdu-wks-master-data--well-1.0.0
+            osdu-wks-master-data--wellbore-1.0.0
+            osdu-wks-master-data--organisation-1.0.0
+            osdu-wks-master-data--field-1.0.0
+            osdu-wks-master-data--basin-1.0.0
+            osdu-wks-work-product--document-1.0.0
+            osdu-wks-work-product-component--welllog-1.0.0
+          "
+          
+          MAPPING='{
+            "settings": {"number_of_shards": 1, "number_of_replicas": 1},
+            "mappings": {
+              "properties": {
+                "id": {"type": "keyword"},
+                "kind": {"type": "keyword"},
+                "namespace": {"type": "keyword"},
+                "type": {"type": "keyword"},
+                "version": {"type": "long"},
+                "acl": {"properties": {"viewers": {"type": "keyword"}, "owners": {"type": "keyword"}}},
+                "legal": {"properties": {"legaltags": {"type": "keyword"}, "otherRelevantDataCountries": {"type": "keyword"}}},
+                "tags": {"type": "object", "enabled": false},
+                "data": {"type": "object", "dynamic": true},
+                "index": {"properties": {"statusCode": {"type": "integer"}, "lastUpdateTime": {"type": "date"}, "trace": {"type": "text"}}},
+                "authority": {"type": "keyword"},
+                "source": {"type": "keyword"},
+                "createUser": {"type": "keyword"},
+                "createTime": {"type": "date"},
+                "modifyUser": {"type": "keyword"},
+                "modifyTime": {"type": "date"},
+                "x-acl": {"type": "keyword"}
+              }
+            }
+          }'
+          
+          for INDEX in $KINDS; do
+            echo "Creating index: $INDEX"
+            curl -s -X PUT -u $AUTH \
+              -H "Content-Type: application/json" \
+              "$OPENSEARCH_URL/$INDEX" \
+              -d "$MAPPING" 2>/dev/null | grep -o '"acknowledged":true' && echo " OK" || echo " (exists)"
+          done
+          
+          echo ""
+          echo "=== Done ==="
