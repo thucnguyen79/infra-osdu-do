@@ -1,0 +1,12 @@
+health status index                                          uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   .opendistro_security                           wjLFvTI7RQm6o9-oWckXtA   1   0         10            0     80.1kb         80.1kb
+green  open   .opensearch-observability                      nGHQIxaWSoqxtyrccVFIPw   1   0          0            0       208b           208b
+green  open   .plugins-ml-config                             TtbswBD1SsKMiNj-eNz-FQ   1   0          1            0      3.9kb          3.9kb
+yellow open   osdu-wks-master-data--basin-1.0.0              K-cmbYsOT4eKjvx6FxesYw   1   1          0            0       208b           208b
+yellow open   osdu-wks-master-data--field-1.0.0              gBGWZYEpShy_ai81Ixv5UQ   1   1          0            0       208b           208b
+yellow open   osdu-wks-master-data--organisation-1.0.0       rUab4Q_hSvGGzthI0tBsVg   1   1          0            0       208b           208b
+yellow open   osdu-wks-master-data--well-1.0.0               chxU65GETg2L5Ft7BfxhHQ   1   1         16            0     59.3kb         59.3kb
+yellow open   osdu-wks-master-data--wellbore-1.0.0           eSQNwF3QTfS397HlP7XAqA   1   1          2            0     24.4kb         24.4kb
+yellow open   osdu-wks-work-product--document-1.0.0          WblNL5NoRd-oR2X4K0cu_w   1   1          0            0       208b           208b
+yellow open   osdu-wks-work-product-component--welllog-1.0.0 WIQP5BuxSEi3brn6rxuaJg   1   1          0            0       208b           208b
+yellow open   security-auditlog-2026.01.17                   EFVaTaYRRAKbBSUm5GrK0g   1   1          8            0    171.1kb        171.1kb

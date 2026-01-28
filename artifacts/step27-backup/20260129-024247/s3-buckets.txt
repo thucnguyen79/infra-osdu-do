@@ -1,0 +1,5 @@
+osdu-file
+osdu-legal
+osdu-poc-osdu-records
+osdu-poc-osdu-schema
+osdu-storage

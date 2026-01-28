@@ -1,0 +1,107 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  data:
+    ca.crt: |
+      -----BEGIN CERTIFICATE-----
+      MIIDBTCCAe2gAwIBAgIIfeHOrBGI6xUwDQYJKoZIhvcNAQELBQAwFTETMBEGA1UE
+      AxMKa3ViZXJuZXRlczAeFw0yNTEyMjQwNzE0MDBaFw0zNTEyMjIwNzE5MDBaMBUx
+      EzARBgNVBAMTCmt1YmVybmV0ZXMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
+      AoIBAQDFuSh4YI+ft8Asi01XaPNYtgCL2SYTvQ9XJMKV2RFull27izXMNOby6eS6
+      tWSIUUGKeHJyWAOkWaUSr8x6ES297eLuzecJczKc8JLXHqrVdQhLmG1I6+k4u3yM
+      V3lKTv28IUvpdUQV7beu8S8bdNWZje/u6Uw3TjTakAn41lRSwMIu8AdqQpgaxDk+
+      KEdpCRXwWttK0KP6fJ/iICAbsK6C1dWx0hApQ92JmfwAdWoI6z9U0s1DoF6gkLRP
+      Uy7aVO3/P3d9s7NqI77efkNOpbzs5yLu34SLf98fO6mHhWSGhSIUDOpP87w+Vgxt
+      SEHtQMapNLEGLgMcXsOLx2bCgoohAgMBAAGjWTBXMA4GA1UdDwEB/wQEAwICpDAP
+      BgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQfCVPQO6AYvSts0U6nt0p3hI0QvDAV
+      BgNVHREEDjAMggprdWJlcm5ldGVzMA0GCSqGSIb3DQEBCwUAA4IBAQAxrAFY9hwk
+      ybDNYijZYRZxPec6L3la8z2z8sv979HHkNIeRA+zpHptZUIfYtOwOL46xxP5RUlI
+      tLW8lw+wiG9L3Yi6aykCSH/9AZ9IyQANSzB1D7JQFYL/IWkA5dD+RGWvUGRgdNrt
+      hAeqeJHil+J2dAdpth0z7Skz8ohC7r9+GU70CXubU8GVNkiGzCaJ3JMHGixzsG5H
+      fpD7I2rMpTh0fdVyXYPPFeVFa1NC0oNJYYvP/V0Ks6qRelvFIkOgjZLqJDciy7hl
+      xhuKKBB8x/tWs0auPkHVPIbQQpte4CK+iYon5nCQecT76jqiO2ssfstnkhoElEnU
+      J7M3i42wR/6F
+      -----END CERTIFICATE-----
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubernetes.io/description: Contains a CA bundle that can be used to verify the
+        kube-apiserver when using internal endpoints such as the internal service
+        IP or kubernetes.default.svc. No other usage is guaranteed across distributions
+        of Kubernetes clusters.
+    creationTimestamp: "2026-01-03T23:57:41Z"
+    name: kube-root-ca.crt
+    namespace: osdu-core
+    resourceVersion: "2353773"
+    uid: f3143c39-25bb-468c-9dac-9d2ae0dcaf13
+- apiVersion: v1
+  data:
+    JAVA_OPTS: -Xms256m -Xmx512m
+    KAFKA_BOOTSTRAP_SERVERS: osdu-kafka.osdu-data.svc.cluster.local:9092
+    KEYCLOAK_ISSUER_URI: http://keycloak.osdu-identity.svc.cluster.local/realms/osdu
+    OPENSEARCH_HOST: opensearch-proxy.osdu-data.svc.cluster.local
+    OPENSEARCH_PORT: "9200"
+    PARTITION_API: http://osdu-partition:8080/api/partition/v1
+    POSTGRES_HOST: osdu-postgres.osdu-data.svc.cluster.local
+    POSTGRES_PORT: "5432"
+    REDIS_GROUP_HOST: osdu-redis.osdu-data.svc.cluster.local
+    REDIS_GROUP_PORT: "6379"
+    REDIS_HOST: osdu-redis.osdu-data.svc.cluster.local
+    REDIS_PORT: "6379"
+    REDIS_STORAGE_HOST: osdu-redis.osdu-data.svc.cluster.local
+    REDIS_STORAGE_PORT: "6379"
+    SCHEMA_HOST: http://osdu-schema:8080/api/schema-service/v1/schema
+    SERVER_PORT: "8080"
+  kind: ConfigMap
+  metadata:
+    annotations:
+      argocd.argoproj.io/tracking-id: osdu-core:/ConfigMap:osdu-core/osdu-core-env
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"JAVA_OPTS":"-Xms256m -Xmx512m","KAFKA_BOOTSTRAP_SERVERS":"osdu-kafka.osdu-data.svc.cluster.local:9092","KEYCLOAK_ISSUER_URI":"http://keycloak.osdu-identity.svc.cluster.local/realms/osdu","OPENSEARCH_HOST":"opensearch-proxy.osdu-data.svc.cluster.local","OPENSEARCH_PORT":"9200","PARTITION_API":"http://osdu-partition:8080/api/partition/v1","POSTGRES_HOST":"osdu-postgres.osdu-data.svc.cluster.local","POSTGRES_PORT":"5432","REDIS_GROUP_HOST":"osdu-redis.osdu-data.svc.cluster.local","REDIS_GROUP_PORT":"6379","REDIS_HOST":"osdu-redis.osdu-data.svc.cluster.local","REDIS_PORT":"6379","REDIS_STORAGE_HOST":"osdu-redis.osdu-data.svc.cluster.local","REDIS_STORAGE_PORT":"6379","SERVER_PORT":"8080"},"kind":"ConfigMap","metadata":{"name":"osdu-core-env","namespace":"osdu-core"}}
+    creationTimestamp: "2026-01-18T00:02:09Z"
+    name: osdu-core-env
+    namespace: osdu-core
+    resourceVersion: "8502350"
+    uid: 0b1a1f66-628d-45b4-856e-e914baf25b54
+- apiVersion: v1
+  data:
+    env: do-private
+    note: Created by Step17
+    owner: gitops
+  kind: ConfigMap
+  metadata:
+    annotations:
+      argocd.argoproj.io/tracking-id: osdu-core:/ConfigMap:osdu-core/osdu-core-marker
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"env":"do-private","note":"Created by Step17","owner":"gitops"},"kind":"ConfigMap","metadata":{"name":"osdu-core-marker","namespace":"osdu-core"}}
+    creationTimestamp: "2026-01-18T00:02:09Z"
+    name: osdu-core-marker
+    namespace: osdu-core
+    resourceVersion: "8377331"
+    uid: 2d26e27e-a0d5-425d-a2d2-1f4ab67d88c5
+- apiVersion: v1
+  data:
+    application.properties: |
+      cache.host=osdu-redis.osdu-data.svc.cluster.local
+      cache.port=6379
+      cache.redis.host=osdu-redis.osdu-data.svc.cluster.local
+      cache.redis.port=6379
+      redis.host=osdu-redis.osdu-data.svc.cluster.local
+      redis.port=6379
+      spring.redis.host=osdu-redis.osdu-data.svc.cluster.local
+      spring.redis.port=6379
+      spring.data.redis.host=osdu-redis.osdu-data.svc.cluster.local
+      spring.data.redis.port=6379
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"application.properties":"cache.host=osdu-redis.osdu-data.svc.cluster.local\ncache.port=6379\ncache.redis.host=osdu-redis.osdu-data.svc.cluster.local\ncache.redis.port=6379\nredis.host=osdu-redis.osdu-data.svc.cluster.local\nredis.port=6379\nspring.redis.host=osdu-redis.osdu-data.svc.cluster.local\nspring.redis.port=6379\nspring.data.redis.host=osdu-redis.osdu-data.svc.cluster.local\nspring.data.redis.port=6379\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"osdu-storage-config","namespace":"osdu-core"}}
+    creationTimestamp: "2026-01-06T08:31:24Z"
+    name: osdu-storage-config
+    namespace: osdu-core
+    resourceVersion: "2945548"
+    uid: eaea4b8d-358f-4101-bcea-4af9c2fcdff2
+kind: List
+metadata:
+  resourceVersion: ""

@@ -1,0 +1,16 @@
+ table_name |  id  |       data       
+------------+------+------------------
+ authority  | osdu | {"name": "osdu"}
+(1 row)
+
+ table_name | id  |      data       
+------------+-----+-----------------
+ source     | wks | {"name": "wks"}
+(1 row)
+
+ table_name |          id           |               data                
+------------+-----------------------+-----------------------------------
+ entityType | master-data--Well     | {"name": "master-data--Well"}
+ entityType | master-data--Wellbore | {"name": "master-data--Wellbore"}
+(2 rows)
+

@@ -1,0 +1,1 @@
+storage: -Dcache.host=osdu-redis.osdu-data.svc.cluster.local -Dcache.port=6379 -Dspring.rabbitmq.virtual-host=/ -Doqm.rabbitmq.amqp.virtual-host=/ -Doqm.rabbitmq.amqp.vhost=/ -Doqm.rabbitmq.amqp.path=/

@@ -1,0 +1,23 @@
+Timeout: 60.0 seconds ...
+Listing queues for vhost / ...
+name	messages
+storage-oqm-replaytopic	0
+dead-lettering-replay-subscription	0
+osdu.replaytopicsubscription-exchange	0
+reprocess-subscription	0
+indexer-legaltags-changed	0
+storage-oqm-legaltags-changed	0
+osdu.dead-lettering-replay-subscription	0
+osdu.indexer-records-changed	0
+osdu.storage-oqm-legaltags-changed	0
+replaytopicsubscription	0
+indexer-records-changed	0
+indexer-schema-changed	0
+storage-oqm-replaytopic.dlq	0
+indexer-reindex	0
+osdu.storage-oqm-replaytopic	0
+storage-oqm-legaltags-changed.dlq	0
+replaytopicsubscription-exchange	0
+records-changed-subscription	0
+osdu.records-changed-subscription	0
+indexer-reprocess	0

@@ -1,0 +1,25 @@
+Listing exchanges for vhost / ...
+name	type
+legaltags-changed.dlx	topic
+amq.rabbitmq.trace	topic
+amq.fanout	fanout
+	direct
+reprocess	topic
+replaytopic.dlx	topic
+schema-changed	topic
+replaytopicsubscription-exchange	topic
+amq.match	headers
+amq.topic	topic
+dead-lettering-replay	topic
+amq.direct	direct
+osdu.dead-lettering-replay-subscription	topic
+amq.headers	headers
+osdu.dead-lettering-replay	topic
+records-changed	topic
+reindex	topic
+legaltags-changed	topic
+osdu.records-changed	topic
+replaytopic	topic
+dead-lettering-replay-subscription	topic
+osdu.replaytopicsubscription-exchange	topic
+osdu.legaltags-changed	topic
