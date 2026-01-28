@@ -367,3 +367,180 @@ Git repo changes → Persistent (ArgoCD sync)
 # Dùng heredoc để tránh escaping issues:
 kubectl exec -i pod -- bash -c "psql" << 'EOF'
 INSERT INTO table VALUES ('{"key": "value"}');
+EOF
+```
+
+---
+
+## 5. Cấu Hình Cuối Cùng
+
+### 5.1. Indexer Environment (Git Repo)
+File: `k8s/osdu/core/base/services/indexer/indexer-deploy.yaml`
+```yaml
+- name: SCHEMA_HOST
+  value: "http://osdu-schema:8080/api/schema-service/v1/schema"
+- name: SCHEMA_API
+  value: "http://osdu-schema:8080/api/schema-service/v1"
+```
+
+### 5.2. Partition Properties (Runtime)
+```json
+{
+  "obm.minio.accessKey": {"sensitive": false, "value": "HNKMSNYU1OWFA4TH3QWT"},
+  "obm.minio.secretKey": {"sensitive": false, "value": "zPPZGaCsDytP84Dqw3bIl0QEd8pwboDUryAMErlg"},
+  "obm.minio.schema.bucket": {"sensitive": false, "value": "osdu-poc-osdu-schema"},
+  "system.schema.bucket.name": {"sensitive": false, "value": "osdu-poc-osdu-schema"},
+  "storage.s3.accessKeyId": {"sensitive": false, "value": "HNKMSNYU1OWFA4TH3QWT"},
+  "storage.s3.secretAccessKey": {"sensitive": false, "value": "zPPZGaCsDytP84Dqw3bIl0QEd8pwboDUryAMErlg"},
+  "oqm.s3.accessKeyId": {"sensitive": false, "value": "HNKMSNYU1OWFA4TH3QWT"},
+  "oqm.s3.secretAccessKey": {"sensitive": false, "value": "zPPZGaCsDytP84Dqw3bIl0QEd8pwboDUryAMErlg"}
+}
+```
+
+### 5.3. S3 Buckets
+```
+osdu-file
+osdu-legal
+osdu-poc-osdu-records
+osdu-poc-osdu-schema  ← Created for Schema Service
+osdu-storage
+```
+
+### 5.4. OpenSearch Indices (Pre-created)
+```
+osdu-wks-master-data--well-1.0.0
+osdu-wks-master-data--wellbore-1.0.0
+osdu-wks-master-data--organisation-1.0.0
+osdu-wks-master-data--field-1.0.0
+osdu-wks-master-data--basin-1.0.0
+osdu-wks-work-product--document-1.0.0
+osdu-wks-work-product-component--welllog-1.0.0
+```
+
+### 5.5. Index Mapping (Compatible với OpenSearch)
+```json
+{
+  "mappings": {
+    "properties": {
+      "id": {"type": "keyword"},
+      "kind": {"type": "keyword"},
+      "tags": {"type": "object", "enabled": false},  // Thay vì flattened
+      "data": {"type": "object", "dynamic": true},
+      "acl": {"properties": {"viewers": {"type": "keyword"}, "owners": {"type": "keyword"}}},
+      "legal": {"properties": {"legaltags": {"type": "keyword"}, "otherRelevantDataCountries": {"type": "keyword"}}},
+      "index": {"properties": {"statusCode": {"type": "integer"}, "lastUpdateTime": {"type": "date"}}},
+      ...
+    }
+  }
+}
+```
+
+### 5.6. Scripts và Jobs (Git Repo)
+```
+scripts/create-osdu-index.sh          # Manual pre-create index
+k8s/osdu/core/base/jobs/opensearch-init-job.yaml  # Auto pre-create indices
+k8s/osdu/storage/base/schema-bucket-obc.yaml      # Schema bucket definition
+```
+
+---
+
+## 6. Quy Trình Khi Thêm Kind Mới
+
+### Step-by-step
+1. **Tạo Schema:**
+```bash
+   curl -X POST "http://osdu-schema:8080/api/schema-service/v1/schema" \
+     -H "Authorization: Bearer $TOKEN" \
+     -H "data-partition-id: osdu" \
+     -d '{"schemaInfo": {...}, "schema": {...}}'
+```
+
+2. **Pre-create Index:**
+```bash
+   ./scripts/create-osdu-index.sh osdu:wks:master-data--NewEntity:1.0.0
+```
+
+3. **Create Record:**
+```bash
+   curl -X PUT "http://osdu-storage:8080/api/storage/v2/records" \
+     -H "Authorization: Bearer $TOKEN" \
+     -d '[{"kind": "osdu:wks:master-data--NewEntity:1.0.0", ...}]'
+```
+
+4. **Verify:**
+```bash
+   curl -X POST "http://osdu-search:8080/api/search/v2/query" \
+     -d '{"kind": "osdu:wks:master-data--NewEntity:1.0.0"}'
+```
+
+---
+
+## 7. Restore Procedure (Nếu Cần Rollback)
+
+### 7.1. Restore Partition Properties
+```bash
+curl -X PUT "http://osdu-partition:8080/api/partition/v1/partitions/osdu" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d @artifacts/step27-backup/YYYYMMDD-HHMMSS/partition-properties.json
+```
+
+### 7.2. Recreate S3 Bucket
+```python
+import boto3
+s3 = boto3.client('s3', endpoint_url='...', ...)
+s3.create_bucket(Bucket='osdu-poc-osdu-schema')
+```
+
+### 7.3. Recreate OpenSearch Indices
+```bash
+./scripts/create-osdu-index.sh osdu:wks:master-data--Well:1.0.0
+./scripts/create-osdu-index.sh osdu:wks:master-data--Wellbore:1.0.0
+# ... các kind khác
+```
+
+---
+
+## 8. Files Reference
+
+### Git Repo
+```
+k8s/osdu/core/base/services/indexer/indexer-deploy.yaml  # SCHEMA_HOST fix
+k8s/osdu/core/base/jobs/opensearch-init-job.yaml         # Pre-create indices
+k8s/osdu/storage/base/schema-bucket-obc.yaml             # Schema bucket
+k8s/osdu/core/overlays/do-private/configs/partition-properties.json  # Template
+scripts/create-osdu-index.sh                              # Manual script
+docs/osdu/38-step27-known-issues.md                       # Known issues
+```
+
+### Backup
+```
+artifacts/step27-backup/YYYYMMDD-HHMMSS/
+├── partition-properties.json    # 172 keys
+├── env-indexer.txt              # 71 vars
+├── env-schema.txt               # 12 vars
+├── env-storage.txt              # 93 vars
+├── opensearch-indices.txt       # 7 indices
+├── opensearch-template.json     # Index template
+├── mapping-*.json               # Index mappings
+├── s3-buckets.txt               # 5 buckets
+├── rabbitmq-queues.txt          # Queue list
+└── SUMMARY.md                   # Backup summary
+```
+
+---
+
+## 9. Kết Luận
+
+Step 27 đã hoàn thành với nhiều challenges:
+1. **OSDU Reference Implementation** được build cho GCP/Azure, cần adapt cho self-hosted
+2. **OpenSearch vs Elasticsearch** có incompatibility cần workaround
+3. **Partition Properties** có nhiều properties cần configure đúng
+4. **Repo-first** là best practice nhưng một số config chỉ có thể runtime
+
+**Recommendation cho Production:**
+- Upgrade OpenSearch 2.x (có flat_object type)
+- Hoặc chuyển sang Elasticsearch
+- Implement External Secrets cho sensitive values
+- Automate index pre-creation trong CI/CD pipeline
+
