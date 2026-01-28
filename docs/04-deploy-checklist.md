@@ -1136,3 +1136,23 @@ Ghi nhận config OBM (Object Blob Management) vào repo để persist qua ArgoC
 - [ ] TODO: Update Schema deployment YAML with ENTITLEMENTS_* env vars
 - [ ] TODO: Create partition init script/job for OSM properties
 - [x] OSM properties documented in `k8s/osdu/core/base/partition-init/osm-properties-payload.json`
+
+## Step 27 - OSDU E2E Pipeline
+- [x] Schema Service S3 bucket created (osdu-poc-osdu-schema)
+- [x] S3 credentials sensitive=false
+- [x] SCHEMA_HOST URL fixed in Git repo
+- [x] OpenSearch indices pre-created (flattened workaround)
+- [x] Script created: scripts/create-osdu-index.sh
+- [x] E2E test: Create → Index → Search ✅
+- [x] 16 Well records + 2 Wellbore records indexed
+
+### E2E Verification
+- [x] Authentication: Token acquired
+- [x] Partition: 172 properties
+- [x] Entitlements: 1000 groups
+- [x] Legal: 9 LegalTags
+- [x] Schema: 2 schemas
+- [x] Storage: Records persisted
+- [x] Indexer: Auto-index working
+- [x] Search: 16 Well + 2 Wellbore
+- [x] RabbitMQ queues: 0 pending messages
