@@ -5,6 +5,7 @@ namespace: osdu-core
 resources:
   - ../../base
   - marker-configmap.yaml
+  - ingress-public.yaml
   - extra/00-keycloak-internal-dns-alias.yaml
 
 patches:
