@@ -1156,3 +1156,39 @@ Ghi nhận config OBM (Object Blob Management) vào repo để persist qua ArgoC
 - [x] Indexer: Auto-index working
 - [x] Search: 16 Well + 2 Wellbore
 - [x] RabbitMQ queues: 0 pending messages
+
+## Step 28 — External Access (Cloudflare + Public OSDU)
+
+### 28.1 Cloudflare DNS
+- [x] A record `keycloak-do-osdu` → 142.93.154.5 (Proxied)
+- [x] A record `api-do-osdu` → 142.93.154.5 (Proxied)
+
+### 28.2 Cloudflare SSL/TLS
+- [x] SSL Mode = Full
+- [x] Always Use HTTPS = ON
+
+### 28.3 Origin CA
+- [x] Origin Certificate generated (keycloak-do-osdu + api-do-osdu, 15 years)
+- [x] Secret cf-origin-keycloak-tls created (osdu-identity)
+- [x] Secret cf-origin-osdu-api-tls created (osdu-core)
+
+### 28.4 DO Firewall + HAProxy
+- [x] HAProxy K8s API: bind 10.118.0.8:6443 only
+- [x] FW-APPSERVER01: TCP 80,443 from 0.0.0.0/0
+- [x] curl http://142.93.154.5 from Internet OK (404 default backend)
+
+### 28.5 Keycloak public
+- [x] Ingress keycloak-public: keycloak-do-osdu.esstar.com.vn
+- [x] Token endpoint from Internet OK
+- [x] Committed to repo
+
+### 28.6 OSDU API public
+- [x] Ingress osdu-api-public: api-do-osdu.esstar.com.vn
+- [x] Path routing: 8 services
+- [x] E2E from Internet: token → partition → search ✅ (19 records)
+- [x] Committed to repo
+
+### Issues encountered
+- Cloudflare Free Universal SSL only covers *.esstar.com.vn (1 level)
+- Changed from sub-subdomain (*.do-osdu.esstar.com.vn) to single-level (keycloak-do-osdu, api-do-osdu)
+- Keycloak Account Console shows error due to issuer=keycloak.internal (API/token flow unaffected)
