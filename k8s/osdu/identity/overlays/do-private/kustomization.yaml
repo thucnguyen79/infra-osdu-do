@@ -1,4 +1,5 @@
 resources:
+  - ingress-public.yaml
   - ../../base
 
 patches:
