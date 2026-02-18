@@ -11,10 +11,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - keycloak.do-osdu.esstar.com.vn
+    - keycloak-do-osdu.esstar.com.vn
     secretName: cf-origin-keycloak-tls
   rules:
-  - host: keycloak.do-osdu.esstar.com.vn
+  - host: keycloak-do-osdu.esstar.com.vn
     http:
       paths:
       - path: /
