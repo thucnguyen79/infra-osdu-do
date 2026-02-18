@@ -68,7 +68,7 @@ backend be_https_nodeport
 # K8S API 6443 -> controlplanes:6443
 # -------------------------
 frontend fe_k8s_api_6443
-  bind *:6443
+  bind 10.118.0.8:6443
   mode tcp
   option tcplog
   default_backend be_k8s_api_6443
