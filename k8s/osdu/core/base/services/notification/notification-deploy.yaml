@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: notification
-          image: community.opengroup.org:5555/osdu/platform/system/notification/core-plus-notification-release:a32d940f
+          image: community.opengroup.org:5555/osdu/platform/system/notification/core-plus-notification-release:220801ac
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
