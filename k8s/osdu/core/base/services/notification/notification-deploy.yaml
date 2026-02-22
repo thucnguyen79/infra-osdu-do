@@ -65,11 +65,11 @@ spec:
             # ===========================================
             # DATABASE (core-plus uses Partition for DB config)
             # ===========================================
-            - name: NOTIFICATION_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: osdu-postgres-secret-core
-                  key: POSTGRES_PASSWORD
+            #- name: NOTIFICATION_DB_PASSWORD
+            #  valueFrom:
+            #    secretKeyRef:
+            #      name: osdu-postgres-secret-core
+            #      key: POSTGRES_PASSWORD
             # ===========================================
             # JAVA OPTS
             # ===========================================
