@@ -50,9 +50,9 @@ spec:
             - name: SPRING_RABBITMQ_PORT
               value: "5672"
             - name: SPRING_RABBITMQ_USERNAME
-              value: "guest"
+              value: "osdu"
             - name: SPRING_RABBITMQ_PASSWORD
-              value: "guest"
+              value: "osdu123"
             # ===========================================
             # NOTIFICATION-SPECIFIC
             # ===========================================
@@ -64,6 +64,10 @@ spec:
               value: "http://osdu-register:8080/api/register/v1"
             - name: SPRING_DATASOURCE_PASSWORD
               value: "CHANGE_ME_STRONG"
+            - name: OQM_RABBITMQ_AMQP_PASSWORD
+              value: "osdu123"
+            - name: OQM_RABBITMQ_ADMIN_PASSWORD
+              value: "osdu123"
             # ===========================================
             # DATABASE (core-plus uses Partition for DB config)
             # ===========================================
