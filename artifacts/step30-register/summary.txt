@@ -1,0 +1,8 @@
+Step 30 — Register Service
+Date: 2026-02-22
+Status: COMPLETED
+Image: core-plus-register-release:9ce538e7
+Health: port 8081, /health
+Key fix: Tables in "schema" DB (generic osm.postgres.*), not "register" DB
+Tables: osdu."SUBSCRIPTION", osdu."ACTION", osdu."DDL"
+API: GET /api/register/v1/subscriptions → HTTP 200 []
