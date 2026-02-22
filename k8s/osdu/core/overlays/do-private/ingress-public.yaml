@@ -77,3 +77,10 @@ spec:
             name: osdu-file
             port:
               number: 8080
+      - path: /api/notification/v1
+        pathType: Prefix
+        backend:
+          service:
+            name: osdu-notification
+            port:
+              number: 8080

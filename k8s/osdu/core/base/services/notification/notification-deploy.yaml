@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-notification
+  labels:
+    app: osdu-notification
+    app.kubernetes.io/name: notification
+    app.kubernetes.io/part-of: osdu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-notification
+  template:
+    metadata:
+      labels:
+        app: osdu-notification
+        app.kubernetes.io/name: notification
+        app.kubernetes.io/part-of: osdu
+    spec:
+      containers:
+        - name: notification
+          image: community.opengroup.org:5555/osdu/platform/system/notification/core-plus-notification-release:a32d940f
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: osdu-core-env
+          env:
+            # ===========================================
+            # KEYCLOAK / OPENID CONFIG
+            # ===========================================
+            - name: OPENID_PROVIDER_URL
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
+            - name: OPENID_PROVIDER_CLIENT_ID
+              value: "osdu-cli"
+            - name: OPENID_PROVIDER_CLIENT_SECRET
+              value: "dummy-secret-value"
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
+            # ===========================================
+            # OQM / MESSAGE QUEUE (RabbitMQ)
+            # ===========================================
+            - name: SPRING_CLOUD_STREAM_BINDERS_RABBIT_TYPE
+              value: "rabbit"
+            - name: SPRING_RABBITMQ_HOST
+              value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+            - name: SPRING_RABBITMQ_USERNAME
+              value: "guest"
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: "guest"
+            # ===========================================
+            # NOTIFICATION-SPECIFIC
+            # ===========================================
+            - name: PARTITION_API
+              value: "http://osdu-partition:8080/api/partition/v1"
+            - name: ENTITLEMENTS_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+            - name: REGISTER_API
+              value: "http://osdu-register:8080/api/register/v1"
+            # ===========================================
+            # DATABASE (core-plus uses Partition for DB config)
+            # ===========================================
+            - name: NOTIFICATION_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-postgres-secret-core
+                  key: POSTGRES_PASSWORD
+            # ===========================================
+            # JAVA OPTS
+            # ===========================================
+            - name: JAVA_OPTS
+              value: "-Xms256m -Xmx512m"
+            - name: SERVER_PORT
+              value: "8080"
+            - name: LOG_LEVEL
+              value: "INFO"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 384Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi
+          readinessProbe:
+            httpGet:
+              path: /api/notification/v1/readiness_check
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /api/notification/v1/liveness_check
+              port: 8080
+            initialDelaySeconds: 90
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3

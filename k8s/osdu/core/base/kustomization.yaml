@@ -22,3 +22,6 @@ resources:
   # indexer service (Step 23)
   - services/indexer/indexer-deploy.yaml
   - services/indexer/indexer-svc.yaml
+  # notification (Step 29)
+  - services/notification/notification-deploy.yaml
+  - services/notification/notification-svc.yaml
