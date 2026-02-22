@@ -61,9 +61,9 @@ spec:
             - name: ENTITLEMENTS_API
               value: "http://osdu-entitlements:8080/api/entitlements/v2"
             - name: REGISTER_API
+              value: "http://osdu-register:8080/api/register/v1"
             - name: SPRING_DATASOURCE_PASSWORD
               value: "CHANGE_ME_STRONG"
-              value: "http://osdu-register:8080/api/register/v1"
             # ===========================================
             # DATABASE (core-plus uses Partition for DB config)
             # ===========================================
