@@ -64,16 +64,16 @@ spec:
               memory: 768Mi
           readinessProbe:
             httpGet:
-              path: /api/register/v1/readiness_check
-              port: 8080
+              path: /actuator/health
+              port: 8081
             initialDelaySeconds: 60
             periodSeconds: 15
             timeoutSeconds: 5
             failureThreshold: 5
           livenessProbe:
             httpGet:
-              path: /api/register/v1/liveness_check
-              port: 8080
+              path: /actuator/health
+              port: 8081
             initialDelaySeconds: 90
             periodSeconds: 20
             timeoutSeconds: 5
