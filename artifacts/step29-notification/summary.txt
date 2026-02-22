@@ -1,0 +1,7 @@
+Step 29 — Notification Service
+Date: 2026-02-22
+Status: BLOCKED (upstream Spring 6 incompatibility)
+Workaround: replicas=0
+Image tested: a32d940f, 220801ac, b9c48d5b, c2b6fb0f, cd835e8a (all fail)
+Error: NoSuchMethodError HttpClientErrorException.getStatusCode()
+See: docs/issues/step29-notification-spring6-incompatibility.md
