@@ -35,9 +35,9 @@ spec:
             - name: OPENID_PROVIDER_URL
               value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
             - name: OPENID_PROVIDER_CLIENT_ID
-              value: "osdu-cli"
+              value: "osdu-service"
             - name: OPENID_PROVIDER_CLIENT_SECRET
-              value: "dummy-secret-value"
+              value: "osdu-service-secret"
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
               value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
             # ===========================================
