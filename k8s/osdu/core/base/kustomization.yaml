@@ -25,3 +25,6 @@ resources:
   # notification (Step 29)
   - services/notification/notification-deploy.yaml
   - services/notification/notification-svc.yaml
+  # register service (Step 30)
+  - services/register/register-deploy.yaml
+  - services/register/register-svc.yaml

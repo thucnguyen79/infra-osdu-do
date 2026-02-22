@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-register
+  labels:
+    app: osdu-register
+    app.kubernetes.io/name: register
+    app.kubernetes.io/part-of: osdu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-register
+  template:
+    metadata:
+      labels:
+        app: osdu-register
+        app.kubernetes.io/name: register
+        app.kubernetes.io/part-of: osdu
+    spec:
+      containers:
+        - name: register
+          image: community.opengroup.org:5555/osdu/platform/system/register/core-plus-register-release:9ce538e7
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: osdu-core-env
+          env:
+            - name: OPENID_PROVIDER_URL
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
+            - name: OPENID_PROVIDER_CLIENT_ID
+              value: "osdu-service"
+            - name: OPENID_PROVIDER_CLIENT_SECRET
+              value: "osdu-service-secret"
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
+            - name: SPRING_RABBITMQ_HOST
+              value: "osdu-rabbitmq.osdu-data.svc.cluster.local"
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+            - name: SPRING_RABBITMQ_USERNAME
+              value: "guest"
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: "guest"
+            - name: PARTITION_API
+              value: "http://osdu-partition:8080/api/partition/v1"
+            - name: ENTITLEMENTS_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+            - name: JAVA_OPTS
+              value: "-Xms256m -Xmx512m"
+            - name: SERVER_PORT
+              value: "8080"
+            - name: LOG_LEVEL
+              value: "INFO"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 384Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi
+          readinessProbe:
+            httpGet:
+              path: /api/register/v1/readiness_check
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /api/register/v1/liveness_check
+              port: 8080
+            initialDelaySeconds: 90
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
