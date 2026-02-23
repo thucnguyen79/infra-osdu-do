@@ -64,3 +64,6 @@ configMapGenerator:
       - JAVA_OPTS=-Xms256m -Xmx512m
       - SERVER_PORT=8080
 
+  - path: patches/revision-history/patch-notification.yaml
+  - path: patches/revision-history/patch-register.yaml
+  - path: patches/revision-history/patch-secret.yaml
