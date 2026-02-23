@@ -31,3 +31,5 @@ resources:
   # secret service (Step 31)
   - services/secret/secret-deploy.yaml
   - services/secret/secret-svc.yaml
+  - services/secret/entitlements-alias-svc.yaml
+  - services/secret/partition-alias-svc.yaml
