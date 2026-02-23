@@ -28,3 +28,6 @@ resources:
   # register service (Step 30)
   - services/register/register-deploy.yaml
   - services/register/register-svc.yaml
+  # secret service (Step 31)
+  - services/secret/secret-deploy.yaml
+  - services/secret/secret-svc.yaml
