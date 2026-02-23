@@ -33,3 +33,4 @@ resources:
   - services/secret/secret-svc.yaml
   - services/secret/entitlements-alias-svc.yaml
   - services/secret/partition-alias-svc.yaml
+  - services/secret/secret-rbac.yaml
