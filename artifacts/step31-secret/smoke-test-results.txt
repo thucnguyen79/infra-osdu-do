@@ -1,0 +1,17 @@
+Step 31 — Secret Service Smoke Test
+Date: 2026-02-23
+
+Create:  POST   /api/secret/v2/secrets                → 201 ✅
+Get:     GET    /api/secret/v2/secrets/{id}            → 200 ✅
+Update:  PUT    /api/secret/v2/secrets/{id}            → 202 ✅
+Enable:  PATCH  /api/secret/v2/secrets/{id}/enable     → 202 ✅
+Disable: PATCH  /api/secret/v2/secrets/{id}/disable    → 202 ✅
+Delete:  DELETE /api/secret/v2/secrets/{id}            → 204 ✅
+List:    GET    /api/secret/v2/secrets/list            → 404 ⚠️ (iterates ALL K8s secrets, fails on TLS cert)
+Health:  GET    /api/secret/v1/health                  → 200 ✅
+Info:    GET    /api/secret/v2/info                    → 200 ✅
+
+Known issue: List fails because KsDriver iterates ALL K8s Secrets 
+in namespace osdu-core, including non-OSDU ones (e.g. cf-origin-osdu-api-tls).
+Workaround: Use dedicated namespace for secret service, or accept 
+that List may fail if non-OSDU secrets exist in same namespace.
