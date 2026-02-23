@@ -42,6 +42,11 @@ patches:
   - path: patches/patch-indexer-opensearch-proxy.yaml
   - path: patches/patch-indexer-openid.yaml
 
+  # Notification, Register, Secret
+  - path: patches/revision-history/patch-notification.yaml
+  - path: patches/revision-history/patch-register.yaml
+  - path: patches/revision-history/patch-secret.yaml
+
 generatorOptions:
   disableNameSuffixHash: true
 
@@ -64,6 +69,3 @@ configMapGenerator:
       - JAVA_OPTS=-Xms256m -Xmx512m
       - SERVER_PORT=8080
 
-  - path: patches/revision-history/patch-notification.yaml
-  - path: patches/revision-history/patch-register.yaml
-  - path: patches/revision-history/patch-secret.yaml
