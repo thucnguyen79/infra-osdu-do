@@ -1,0 +1,7 @@
+NAME                                  READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS       IMAGES                                                                                                                         SELECTOR
+deployment.apps/osdu-crs-catalog      1/1     1            1           12m   crs-catalog      community.opengroup.org:5555/osdu/platform/system/reference/crs-catalog-service/core-plus-crs-catalog-release:fad7df45         app=osdu-crs-catalog
+deployment.apps/osdu-crs-conversion   1/1     1            1           12m   crs-conversion   community.opengroup.org:5555/osdu/platform/system/reference/crs-conversion-service/core-plus-crs-conversion-release:a21cfb41   app=osdu-crs-conversion
+
+NAME                                       READY   STATUS    RESTARTS   AGE   IP                NODE           NOMINATED NODE   READINESS GATES
+pod/osdu-crs-catalog-66c6b8cb8c-bkks2      1/1     Running   0          12m   192.168.246.193   workernode02   <none>           <none>
+pod/osdu-crs-conversion-76b5495767-xvbdx   1/1     Running   0          12m   192.168.246.255   workernode02   <none>           <none>

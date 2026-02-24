@@ -1,0 +1,10 @@
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+ {correlation-id=f2b40f6a-2307-4984-9658-8eed1365a2d3, data-partition-id=osdu}, context=default}
+{timestamp=2026-02-24 16:46:14.256, level=DEBUG, thread=http-nio-8080-exec-3, logger=org.opengroup.osdu.core.common.logging.DefaultLogWriter, message=crs-conversion.app: User authenticated | User: test@osdu.osdu.local {correlation-id=6da289cc-08f4-4049-8578-7292511969e6, data-partition-id=osdu}, context=default}

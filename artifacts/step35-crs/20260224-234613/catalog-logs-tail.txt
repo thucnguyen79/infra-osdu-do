@@ -1,0 +1,10 @@
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.consumeTask(AdaptiveExecutionStrategy.java:441)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.tryProduce(AdaptiveExecutionStrategy.java:293)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.run(AdaptiveExecutionStrategy.java:201)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:311)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:979)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.doRunJob(QueuedThreadPool.java:1209)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1164)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+ {correlation-id=ba0b9230-0973-4d97-a4c6-6c98110ce4a6, data-partition-id=osdu}, context=default}
+{timestamp=2026-02-24 16:44:46.060, level=INFO, thread=qtp374145466-18, logger=org.opengroup.osdu.core.common.logging.DefaultLogWriter, message=crs-catalog.app: User authenticated | User: test@osdu.osdu.local {correlation-id=93686806-3253-4ac5-8094-38d2fa5b5b6e, data-partition-id=osdu}, context=default}
