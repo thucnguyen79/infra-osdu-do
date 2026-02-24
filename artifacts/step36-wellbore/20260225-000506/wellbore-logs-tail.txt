@@ -1,0 +1,30 @@
+  File "/wdms/venv/lib/python3.11/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/wdms/venv/lib/python3.11/site-packages/starlette/routing.py", line 460, in handle
+    await self.app(scope, receive, send)
+  File "/wdms/venv/lib/python3.11/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/wdms/venv/lib/python3.11/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/wdms/venv/lib/python3.11/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/wdms/venv/lib/python3.11/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/wdms/venv/lib/python3.11/site-packages/starlette/middleware/base.py", line 187, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/wdms/app/middleware/basic_context_middleware.py", line 63, in dispatch
+    tenant = await resolve_tenant(partition_id)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/wdms/app/tenant/tenant_provider.py", line 32, in resolve_tenant
+    data_partition_info = await DataPartitionInfoGetter(Config.partition_url.value).get_partition_info(data_partition_id)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/wdms/venv/lib/python3.11/site-packages/osdu_baremetal/data_partition/data_partition_info.py", line 74, in get_partition_info
+    raise KeyError(f"'{BUCKET_KEY}' is missing in Partition service") from e
+KeyError: "'wellbore-dms-bucket' is missing in Partition service"
+INFO:     192.168.52.146:38324 - "GET /api/os-wellbore-ddms/readiness HTTP/1.1" 200 OK
+INFO:Request from: 192.168.52.146:37642 - "GET /api/os-wellbore-ddms/version" 200 OK
+INFO:     192.168.52.146:37642 - "GET /api/os-wellbore-ddms/version HTTP/1.1" 200 OK
+INFO:     192.168.52.146:53568 - "GET /api/os-wellbore-ddms/healthz HTTP/1.1" 200 OK
+INFO:Request from: 192.168.52.146:53580 - "GET /api/os-wellbore-ddms/about" 200 OK
+INFO:     192.168.52.146:53580 - "GET /api/os-wellbore-ddms/about HTTP/1.1" 200 OK
