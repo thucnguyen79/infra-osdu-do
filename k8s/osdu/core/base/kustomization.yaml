@@ -40,3 +40,6 @@ resources:
   # workflow service (Step 33)
   - services/workflow/workflow-deploy.yaml
   - services/workflow/workflow-svc.yaml
+  # unit service (Step 34)
+  - services/unit/unit-deploy.yaml
+  - services/unit/unit-svc.yaml

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-unit
+  labels:
+    app: osdu-unit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-unit
+  template:
+    metadata:
+      labels:
+        app: osdu-unit
+    spec:
+      containers:
+        - name: unit
+          image: community.opengroup.org:5555/osdu/platform/system/reference/unit-service/core-plus-unit-release:9be2aad3
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: osdu-core-env
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "anthos"
+            - name: SERVER_PORT
+              value: "8080"
+          readinessProbe:
+            httpGet:
+              path: /api/unit/v3/readiness_check
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /api/unit/v3/liveness_check
+              port: 8080
+            initialDelaySeconds: 90
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 384Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi
