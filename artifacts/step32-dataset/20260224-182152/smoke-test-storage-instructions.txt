@@ -1,0 +1,7 @@
+--- File storageInstructions ---
+{"providerKey":"ANTHOS","storageLocation":{"signedUrl":"http://rook-ceph-rgw-osdu-store.rook-ceph.svc.cluster.local/osdu-poc-osdu-staging-area/6ae64bbc-d817-46ad-bfda-fdeb633410c8/6188996bcad04ab488de4a6688086120?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=HNKMSNYU1OWFA4TH3QWT%2F20260224%2Fosdu-store%2Fs3%2Faws4_request&X-Amz-Date=20260224T112157Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=cd7bbfbe93e0ded94c4d1cd3a001f2eae984c3eb0cd0bdf00ae1c2f7b8511f4a","createdBy":"test@osdu.osdu.local","fileSource":"/6ae64bbc-d817-46ad-bfda-fdeb633410c8/6188996bcad04ab488de4a6688086120"}}
+HTTP: 200
+
+--- Dataset storageInstructions ---
+{"providerKey":"ANTHOS","storageLocation":{"signedUrl":"http://rook-ceph-rgw-osdu-store.rook-ceph.svc.cluster.local/osdu-poc-osdu-staging-area/2ca7bd8b-8e9f-45dd-a3f0-2b5b966bb26f/8d5b742e0c83486ca7ff6ba283af025f?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=HNKMSNYU1OWFA4TH3QWT%2F20260224%2Fosdu-store%2Fs3%2Faws4_request&X-Amz-Date=20260224T112157Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=f4e669314a638cb72049b85586e72a8e9fec6a68cbab501c5d88b485665e8f45","createdBy":"test@osdu.osdu.local","fileSource":"/2ca7bd8b-8e9f-45dd-a3f0-2b5b966bb26f/8d5b742e0c83486ca7ff6ba283af025f"}}
+HTTP: 200

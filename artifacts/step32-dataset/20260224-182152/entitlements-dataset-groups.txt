@@ -1,0 +1,7 @@
+[
+  "service.dataset.editors@osdu.osdu.local",
+  "service.dataset.viewers@osdu.osdu.local",
+  "service.dataset.editor@osdu.osdu.local",
+  "service.dataset.admin@osdu.osdu.local",
+  "service.dataset.user@osdu.osdu.local"
+]

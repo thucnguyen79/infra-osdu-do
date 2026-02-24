@@ -1,0 +1,1 @@
+{"groupId":"org.opengroup.osdu","artifactId":"dataset-core-plus","version":"0.28.1-SNAPSHOT","buildTime":"2025-05-15T15:03:55.211Z","branch":"release/0.28","commitId":"4cae824dbd40513035959b4dfe57f95beefaa614","commitMessage":"Updating NOTICE","connectedOuterServices":[]}

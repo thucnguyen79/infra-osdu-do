@@ -37,3 +37,6 @@ resources:
   # dataset service (Step 32)
   - services/dataset/dataset-deploy.yaml
   - services/dataset/dataset-svc.yaml
+  # workflow service (Step 33)
+  - services/workflow/workflow-deploy.yaml
+  - services/workflow/workflow-svc.yaml

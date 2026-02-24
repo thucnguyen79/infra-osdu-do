@@ -46,6 +46,7 @@ patches:
   - path: patches/revision-history/patch-notification.yaml
   - path: patches/revision-history/patch-register.yaml
   - path: patches/revision-history/patch-secret.yaml
+  - path: patches/revision-history/patch-workflow.yaml
 
 generatorOptions:
   disableNameSuffixHash: true

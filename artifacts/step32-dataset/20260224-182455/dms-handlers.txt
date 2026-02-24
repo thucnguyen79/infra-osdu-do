@@ -1,0 +1,6 @@
+            id             |                                                                                                data                                                                                                 
+---------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ dataset--File.*           | {"apiKey": "", "datasetKind": "dataset--File.*", "isStorageAllowed": true, "dmsServiceBaseUrl": "http://osdu-file:8080/api/file/v2/files", "isStagingLocationSupported": true}
+ dataset--FileCollection.* | {"apiKey": "", "datasetKind": "dataset--FileCollection.*", "isStorageAllowed": true, "dmsServiceBaseUrl": "http://osdu-file:8080/api/file/v2/file-collections", "isStagingLocationSupported": true}
+(2 rows)
+

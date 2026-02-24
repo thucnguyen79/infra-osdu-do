@@ -1,0 +1,2 @@
+NAME                           READY   STATUS    RESTARTS   AGE   IP               NODE           NOMINATED NODE   READINESS GATES
+osdu-dataset-57df866df-5hmc8   1/1     Running   0          39m   192.168.52.176   workernode01   <none>           <none>
