@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-dataset
+  labels:
+    app: osdu-dataset
+    app.kubernetes.io/name: dataset
+    app.kubernetes.io/part-of: osdu
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: osdu-dataset
+  template:
+    metadata:
+      labels:
+        app: osdu-dataset
+        app.kubernetes.io/name: dataset
+        app.kubernetes.io/part-of: osdu
+    spec:
+      containers:
+        - name: dataset
+          image: community.opengroup.org:5555/osdu/platform/system/dataset/core-plus-dataset-release:4cae824d
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: osdu-core-env
+            - secretRef:
+                name: osdu-objectstore-secret
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://$(POSTGRES_HOST):$(POSTGRES_PORT)/dataset"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-postgres-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: osdu-postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: "$(KEYCLOAK_ISSUER_URI)"
+            - name: PARTITION_SERVICE_ENDPOINT
+              value: "http://osdu-partition:8080"
+            - name: ENTITLEMENTS_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+            - name: STORAGE_API
+              value: "http://osdu-storage:8080/api/storage/v2"
+            - name: SCHEMA_API
+              value: "http://osdu-schema:8080/api/schema-service/v1"
+            - name: FILE_SERVICE_ENDPOINT
+              value: "http://osdu-file:8080/api/file/v2"
+            - name: CLOUD_PROVIDER
+              value: "minio"
+            - name: LOG_LEVEL
+              value: "INFO"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 384Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi
+          readinessProbe:
+            httpGet:
+              path: /api/dataset/v1/info
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /api/dataset/v1/info
+              port: 8080
+            initialDelaySeconds: 90
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
