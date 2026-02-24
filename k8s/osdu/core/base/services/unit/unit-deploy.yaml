@@ -27,15 +27,19 @@ spec:
               value: "anthos"
             - name: SERVER_PORT
               value: "8080"
+            - name: AUTHORIZE_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+            - name: ENTITLEMENTS_HOST
+              value: "http://osdu-entitlements:8080"
+            - name: ENTITLEMENTS_PATH
+              value: "/api/entitlements/v2/"
           readinessProbe:
-            httpGet:
-              path: /api/unit/v3/readiness_check
+            tcpSocket:
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 15
           livenessProbe:
-            httpGet:
-              path: /api/unit/v3/liveness_check
+            tcpSocket:
               port: 8080
             initialDelaySeconds: 90
             periodSeconds: 20
