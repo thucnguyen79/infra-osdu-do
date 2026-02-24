@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-crs-catalog
+  labels:
+    app: osdu-crs-catalog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-crs-catalog
+  template:
+    metadata:
+      labels:
+        app: osdu-crs-catalog
+    spec:
+      containers:
+        - name: crs-catalog
+          image: community.opengroup.org:5555/osdu/platform/system/reference/crs-catalog-service/core-plus-crs-catalog-release:fad7df45
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: osdu-core-env
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "anthos"
+            - name: SERVER_PORT
+              value: "8080"
+            - name: AUTHORIZE_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+            - name: ENTITLEMENTS_HOST
+              value: "http://osdu-entitlements:8080"
+            - name: ENTITLEMENTS_PATH
+              value: "/api/entitlements/v2/"
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 90
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 384Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi

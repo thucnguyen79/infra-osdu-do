@@ -43,3 +43,8 @@ resources:
   # unit service (Step 34)
   - services/unit/unit-deploy.yaml
   - services/unit/unit-svc.yaml
+  # CRS services (Step 35)
+  - services/crs-catalog/crs-catalog-deploy.yaml
+  - services/crs-catalog/crs-catalog-svc.yaml
+  - services/crs-conversion/crs-conversion-deploy.yaml
+  - services/crs-conversion/crs-conversion-svc.yaml
