@@ -1192,3 +1192,33 @@ Ghi nhận config OBM (Object Blob Management) vào repo để persist qua ArgoC
 - Cloudflare Free Universal SSL only covers *.esstar.com.vn (1 level)
 - Changed from sub-subdomain (*.do-osdu.esstar.com.vn) to single-level (keycloak-do-osdu, api-do-osdu)
 - Keycloak Account Console shows error due to issuer=keycloak.internal (API/token flow unaffected)
+
+## Step 32 — Dataset Service + File/Dataset DMS Integration
+
+### A. Triển khai
+- [x] Dataset service deployed (image: `core-plus-dataset-release:4cae824d`)
+- [x] Database `dataset` created trong PostgreSQL
+- [x] Entitlements groups domain fixed (`@osdu.group` → `@osdu.osdu.local`)
+- [x] Plural groups created: `service.dataset.editors`, `service.dataset.viewers`
+- [x] DMS handler table `DmsServiceProperties` created (DB `schema`, schema `public`)
+- [x] DMS handlers seeded: `dataset--File.*`, `dataset--FileCollection.*`
+- [x] Table `DeletedDataset` created (DB `schema`, schema `osdu`)
+- [x] S3 buckets created: `osdu-poc-osdu-staging-area`, `osdu-poc-osdu-file-persistent-area`
+- [x] File service env updated: `SEARCH_QUERY_RECORD_HOST`
+
+### B. Verification
+- [x] Dataset pod Running (`kubectl -n osdu-core get pod -l app=osdu-dataset`)
+- [x] Dataset info endpoint OK (`/api/dataset/v1/info` → 200)
+- [x] Entitlements returns plural groups (`service.dataset.editors@osdu.osdu.local`)
+- [x] File `storageInstructions` → HTTP 200 (signedUrl returned)
+- [x] Dataset `storageInstructions?kindSubType=dataset--File.Generic` → HTTP 200
+
+### C. Issues resolved
+- [x] 403 → Entitlements groups domain fix + membership
+- [x] 500 → OSM table `DmsServiceProperties` + seed data
+- [x] 404 → DMS handler registration
+- [x] 401 → Plural groups (`editors`/`viewers`) required by `@PreAuthorize`
+- [x] 500 → `NoSuchBucket` → Created staging + persistent buckets
+
+### Evidence
+- `artifacts/step32-dataset/` (pod status, API responses, bucket list, entitlements groups)
