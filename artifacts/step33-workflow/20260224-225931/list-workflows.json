@@ -1,0 +1,1 @@
+[{"workflowId":"be0e2c6a-61e5-454a-b271-43cdf5475172","workflowName":"test-ingestion-workflow","description":"Test workflow for POC validation","createdBy":"test@osdu.osdu.local","creationTimestamp":1771948682563,"version":1,"registrationInstructions":{"dagName":"test_dag"}}]
