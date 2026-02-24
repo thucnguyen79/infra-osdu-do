@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-wellbore
+  labels:
+    app: osdu-wellbore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-wellbore
+  template:
+    metadata:
+      labels:
+        app: osdu-wellbore
+    spec:
+      containers:
+        - name: wellbore
+          image: community.opengroup.org:5555/osdu/platform/domain-data-mgmt-services/wellbore/wellbore-domain-services/core-plus-wellbore-release:fd5fb05e
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: wellbore-config
+          env:
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: wellbore-s3-secret
+                  key: ACCESS_KEY
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: wellbore-s3-secret
+                  key: SECRET_KEY
+            - name: S3_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: wellbore-s3-secret
+                  key: ENDPOINT
+            - name: KEYCLOAK_URL
+              value: "http://keycloak.osdu-identity.svc.cluster.local"
+            - name: KEYCLOAK_REALM
+              value: "osdu"
+            - name: KEYCLOAK_CLIENT_ID
+              value: "osdu-cli"
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 370m
+              memory: 710Mi
+            limits:
+              cpu: "1"
+              memory: 3Gi

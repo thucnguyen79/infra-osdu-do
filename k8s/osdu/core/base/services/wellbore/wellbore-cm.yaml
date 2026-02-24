@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wellbore-config
+data:
+  CLOUD_PROVIDER: "baremetal"
+  KEYCLOAK_AUTH: "yes"
+  LOG_LEVEL: "INFO"
+  BASE_BUCKET: "wellbore"
+  SERVICE_HOST_SEARCH: "http://osdu-search:8080/api/search/v2"
+  SERVICE_HOST_SCHEMA: "http://osdu-schema:8080/api/schema-service/v1"
+  SERVICE_HOST_STORAGE: "http://osdu-storage:8080/api/storage/v2"
+  SERVICE_HOST_WDMS_WORKER: ""
+  OPENAPI_PREFIX: "/api/os-wellbore-ddms"

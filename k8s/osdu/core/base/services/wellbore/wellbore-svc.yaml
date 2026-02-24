@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: osdu-wellbore
+spec:
+  selector:
+    app: osdu-wellbore
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP

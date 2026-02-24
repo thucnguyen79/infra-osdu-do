@@ -48,3 +48,7 @@ resources:
   - services/crs-catalog/crs-catalog-svc.yaml
   - services/crs-conversion/crs-conversion-deploy.yaml
   - services/crs-conversion/crs-conversion-svc.yaml
+  # Wellbore DDMS (Step 36)
+  - services/wellbore/wellbore-cm.yaml
+  - services/wellbore/wellbore-deploy.yaml
+  - services/wellbore/wellbore-svc.yaml
