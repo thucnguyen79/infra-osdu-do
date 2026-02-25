@@ -1,0 +1,16 @@
+        path: /api/partition/
+        path: /api/entitlements/
+        path: /api/legal/
+        path: /api/schema-service/
+        path: /api/storage/
+        path: /api/indexer/
+        path: /api/search/
+        path: /api/file/
+        path: /api/dataset/
+        path: /api/workflow/
+        path: /api/register/
+        path: /api/unit/
+        path: /api/crs/catalog/
+        path: /api/crs/converter/
+        path: /api/os-wellbore-ddms/
+        path: /api/seismic-store/

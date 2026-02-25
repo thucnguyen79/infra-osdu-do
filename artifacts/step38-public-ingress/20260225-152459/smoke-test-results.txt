@@ -1,0 +1,20 @@
+=== Step 38: Public Ingress Update (8 new paths) ===
+Date: $(date -u)
+Total paths: 16 (8 existing + 8 new)
+
+New paths (all 200 OK via HTTPS LB):
+  /api/dataset/v1/info                     -> 200
+  /api/workflow/v1/readiness_check         -> 200
+  /api/register/v1/info                    -> 200
+  /api/unit/v3/info                        -> 200
+  /api/crs/catalog/v3/info                 -> 200
+  /api/crs/converter/v3/info               -> 200
+  /api/os-wellbore-ddms/about              -> 200
+  /api/seismic-store/v3/svcstatus          -> 200
+
+Existing paths (still working):
+  /api/search/v2/query                     -> 200
+
+Skipped services:
+  - Secret: No API endpoints registered (Swagger UI only)
+  - Notification: Pod disabled
