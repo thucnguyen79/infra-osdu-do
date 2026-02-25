@@ -21,6 +21,7 @@ spec:
   - host: api-do-osdu.esstar.com.vn
     http:
       paths:
+      # === Core Services (existing 8) ===
       - path: /api/partition/
         pathType: Prefix
         backend:
@@ -77,10 +78,61 @@ spec:
             name: osdu-file
             port:
               number: 8080
-      - path: /api/notification/v1
+      # === Supporting Services (NEW) ===
+      - path: /api/dataset/
         pathType: Prefix
         backend:
           service:
-            name: osdu-notification
+            name: osdu-dataset
             port:
               number: 8080
+      - path: /api/workflow/
+        pathType: Prefix
+        backend:
+          service:
+            name: osdu-workflow
+            port:
+              number: 8080
+      - path: /api/register/
+        pathType: Prefix
+        backend:
+          service:
+            name: register
+            port:
+              number: 80
+      # === Domain Services (NEW) ===
+      - path: /api/unit/
+        pathType: Prefix
+        backend:
+          service:
+            name: osdu-unit
+            port:
+              number: 8080
+      - path: /api/crs/catalog/
+        pathType: Prefix
+        backend:
+          service:
+            name: osdu-crs-catalog
+            port:
+              number: 8080
+      - path: /api/crs/converter/
+        pathType: Prefix
+        backend:
+          service:
+            name: osdu-crs-conversion
+            port:
+              number: 8080
+      - path: /api/os-wellbore-ddms/
+        pathType: Prefix
+        backend:
+          service:
+            name: osdu-wellbore
+            port:
+              number: 8080
+      - path: /api/seismic-store/
+        pathType: Prefix
+        backend:
+          service:
+            name: osdu-seismic-store
+            port:
+              number: 5000
