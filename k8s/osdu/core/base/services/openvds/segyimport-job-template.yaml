@@ -1,0 +1,58 @@
+# Template: kubectl create -f segyimport-job.yaml
+# Cần thay: SEGY_SOURCE, VDS_TARGET trước khi apply
+# Ví dụ:
+#   SEGY_SOURCE: /data/sample.segy (mount từ PVC hoặc download)
+#   VDS_TARGET:  s3://osdu-seismic/surveys/sample
+#   CONNECTION:  Endpoint=http://rook-ceph-rgw-osdu-store.rook-ceph.svc:80
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: segyimport-sample
+  labels:
+    app: openvds-job
+    type: segyimport
+spec:
+  backoffLimit: 2
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        app: openvds-job
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: segyimport
+          image: community.opengroup.org:5555/osdu/platform/domain-data-mgmt-services/seismic/open-vds/openvds-ingestion:3.4.9
+          command:
+            - SEGYImport
+          args:
+            - "--url"
+            - "s3://osdu-seismic/surveys/sample"
+            - "--connection"
+            - "Endpoint=http://rook-ceph-rgw-osdu-store.rook-ceph.svc:80 Region=us-east-1"
+            - "/data/sample.segy"
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: openvds-s3-secret
+                  key: ACCESS_KEY
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openvds-s3-secret
+                  key: SECRET_KEY
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: "1"
+              memory: 2Gi
+            limits:
+              cpu: "4"
+              memory: 8Gi
+      volumes:
+        - name: data
+          emptyDir:
+            sizeLimit: 50Gi

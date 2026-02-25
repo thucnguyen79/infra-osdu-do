@@ -56,3 +56,5 @@ resources:
   - services/seismic-store/seismic-store-cm.yaml
   - services/seismic-store/seismic-store-deploy.yaml
   - services/seismic-store/seismic-store-svc.yaml
+  # OpenVDS Toolbox (Step 37 - OpenVDS)
+  - services/openvds/openvds-toolbox-deploy.yaml
