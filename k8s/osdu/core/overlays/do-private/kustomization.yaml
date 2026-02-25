@@ -51,6 +51,7 @@ patches:
   - path: patches/revision-history/patch-crs-catalog.yaml
   - path: patches/revision-history/patch-crs-conversion.yaml
   - path: patches/revision-history/patch-wellbore.yaml
+  - path: patches/revision-history/patch-seismic-store.yaml
 
 generatorOptions:
   disableNameSuffixHash: true

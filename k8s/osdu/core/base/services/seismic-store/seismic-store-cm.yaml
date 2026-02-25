@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: seismic-store-config
+data:
+  CLOUDPROVIDER: "anthos"
+  PORT: "5000"
+  LOG_LEVEL: "INFO"
+  SERVICE_ENV: "dev"
+  DES_SERVICE_HOST_COMPLIANCE: "http://osdu-legal:8080"
+  DES_SERVICE_HOST_ENTITLEMENT: "http://osdu-entitlements:8080"
+  DES_SERVICE_HOST_STORAGE: "http://osdu-storage:8080"
+  DES_SERVICE_HOST_PARTITION: "http://osdu-partition:8080"
+  ENTITLEMENT_BASE_URL_PATH: "/api/entitlements/v2"
+  DES_SERVICE_HOST: "http://des"
+  LOCKSMAP_REDIS_INSTANCE_ADDRESS: "osdu-redis.osdu-data.svc.cluster.local"
+  LOCKSMAP_REDIS_INSTANCE_PORT: "6379"
+  LOCKSMAP_REDIS_INSTANCE_TLS_DISABLE: "true"

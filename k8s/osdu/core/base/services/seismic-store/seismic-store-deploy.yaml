@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-seismic-store
+  labels:
+    app: osdu-seismic-store
+    type: ddms
+    source: typescript
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-seismic-store
+  template:
+    metadata:
+      labels:
+        app: osdu-seismic-store
+    spec:
+      containers:
+        - name: seismic-store
+          image: community.opengroup.org:5555/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-service/core-plus-seismic-store-release:289c42d7
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: seismic-store-config
+            - secretRef:
+                name: seismic-store-secrets
+          env:
+            - name: DES_REDIS_INSTANCE_KEY
+              value: ""
+            - name: LOCKSMAP_REDIS_INSTANCE_KEY
+              value: ""
+          readinessProbe:
+            tcpSocket:
+              port: 5000
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          livenessProbe:
+            tcpSocket:
+              port: 5000
+            initialDelaySeconds: 120
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi

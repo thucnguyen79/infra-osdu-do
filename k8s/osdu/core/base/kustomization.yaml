@@ -52,3 +52,7 @@ resources:
   - services/wellbore/wellbore-cm.yaml
   - services/wellbore/wellbore-deploy.yaml
   - services/wellbore/wellbore-svc.yaml
+  # Seismic Store (Step 37)
+  - services/seismic-store/seismic-store-cm.yaml
+  - services/seismic-store/seismic-store-deploy.yaml
+  - services/seismic-store/seismic-store-svc.yaml
