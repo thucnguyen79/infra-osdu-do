@@ -1,0 +1,5 @@
+NAME                                 READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS      IMAGES                                                                                                                                                          SELECTOR
+deployment.apps/osdu-seismic-store   1/1     1            1           5m51s   seismic-store   community.opengroup.org:5555/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-service/core-plus-seismic-store-release:289c42d7   app=osdu-seismic-store
+
+NAME                                      READY   STATUS    RESTARTS   AGE     IP                NODE           NOMINATED NODE   READINESS GATES
+pod/osdu-seismic-store-75778575c4-zqz9c   1/1     Running   0          5m51s   192.168.246.209   workernode02   <none>           <none>

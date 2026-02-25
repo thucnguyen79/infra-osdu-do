@@ -1,0 +1,21 @@
+- Initializing cloud provider
+- Initializing anthos configurations
+- Initializing redis locker cache
+- Initializing redis shared cache
+- Initializing redis operations cache
+- Initializing storage transfer daemon
+- Initializing schema managers
+(node:1) NOTE: We are formalizing our plans to enter AWS SDK for JavaScript (v2) into maintenance mode in 2023.
+
+Please migrate your code to use AWS SDK for JavaScript (v3).
+For more information, check the migration guide at https://a.co/7PzMCcy
+    at emitWarning (/seistore-service/node_modules/aws-sdk/lib/maintenance_mode_message.js:37:13)
+    at Timeout._onTimeout (/seistore-service/node_modules/aws-sdk/lib/maintenance_mode_message.js:45:5)
+    at listOnTimeout (node:internal/timers:588:17)
+    at process.processTimers (node:internal/timers:523:7)
+- Initializing swagger-doc manager
+- Initializing caller header forwarding
+- Initializing cloud tracer
+- Server is listening on port 5000...
+[GET]/api/seismic-store/v3/svcstatus/readiness
+[GET]/api/seismic-store/v3/subproject
