@@ -1,0 +1,20 @@
+Step 37 - OpenVDS SEGYImport POC Test
+=====================================
+Date: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+Tool: OpenVDS 3.4.9 (e2cdbbe2)
+
+Test SEGY: 25 traces (5x5 grid), 100 samples @ 4ms, IEEE Float
+File size: 19,600 bytes
+
+Pipeline:
+1. Generate SEGY (python3 in-pod)           -> /data/test.segy (19.6KB)
+2. SEGYImport to local VDS                  -> /data/test.vds (303KB) ✅
+3. SEGYImport direct to S3/Ceph             -> s3://osdu-seismic/test/sample-002/2B7CAA1B3E5A18EF ✅
+4. VDSInfo from S3                          -> 3 axes, 3 channels, amplitude [-894,1499] ✅
+
+Key learnings:
+- Binary header offsets: 16=sample_interval, 20=num_samples (NOT reversed)
+- SEGYImport creates hash subdirectory (2B7CAA1B3E5A18EF) under --url path
+- VDSInfo --connection (not --url-connection) for reading
+- VDSCopy has no --output-connection; use SEGYImport direct to S3
+- Minimal SEGY needs proper trace headers (bytes 188/192 for inline/crossline)

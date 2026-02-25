@@ -1,0 +1,77 @@
+{
+   "axisDescriptors" : 
+   [
+      {
+         "coordinateMax" : 396.0,
+         "coordinateMin" : 0.0,
+         "name" : "Sample",
+         "numSamples" : 100,
+         "unit" : "ms"
+      },
+      {
+         "coordinateMax" : 5.0,
+         "coordinateMin" : 1.0,
+         "name" : "Crossline",
+         "numSamples" : 5,
+         "unit" : "unitless"
+      },
+      {
+         "coordinateMax" : 5.0,
+         "coordinateMin" : 1.0,
+         "name" : "Inline",
+         "numSamples" : 5,
+         "unit" : "unitless"
+      }
+   ],
+   "channelDescriptors" : 
+   [
+      {
+         "allowLossyCompression" : true,
+         "channelMapping" : "Direct",
+         "components" : "Components_1",
+         "discrete" : false,
+         "format" : "Format_R32",
+         "integerOffset" : -0.0,
+         "integerScale" : 1.0,
+         "mappedValues" : 1,
+         "name" : "Amplitude",
+         "noValue" : 0.0,
+         "renderable" : true,
+         "unit" : "",
+         "useNoValue" : false,
+         "valueRange" : [ -894.5526123046875, 1499.7928466796875 ]
+      },
+      {
+         "allowLossyCompression" : false,
+         "channelMapping" : "PerTrace",
+         "components" : "Components_1",
+         "discrete" : true,
+         "format" : "Format_U8",
+         "integerOffset" : 0.0,
+         "integerScale" : 1.0,
+         "mappedValues" : 1,
+         "name" : "Trace",
+         "noValue" : 0.0,
+         "renderable" : true,
+         "unit" : "",
+         "useNoValue" : false,
+         "valueRange" : [ 0.0, 1.0 ]
+      },
+      {
+         "allowLossyCompression" : false,
+         "channelMapping" : "PerTrace",
+         "components" : "Components_1",
+         "discrete" : true,
+         "format" : "Format_U8",
+         "integerOffset" : 0.0,
+         "integerScale" : 1.0,
+         "mappedValues" : 240,
+         "name" : "SEGYTraceHeader",
+         "noValue" : 0.0,
+         "renderable" : false,
+         "unit" : "",
+         "useNoValue" : false,
+         "valueRange" : [ 0.0, 255.0 ]
+      }
+   ]
+}
