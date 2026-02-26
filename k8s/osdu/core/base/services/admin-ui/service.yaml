@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: osdu-admin-ui
+  namespace: osdu-core
+spec:
+  selector:
+    app: osdu-admin-ui
+  ports:
+    - port: 8080
+      targetPort: 8080

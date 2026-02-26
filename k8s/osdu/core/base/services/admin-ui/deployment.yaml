@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-admin-ui
+  namespace: osdu-core
+  labels:
+    app: osdu-admin-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osdu-admin-ui
+  template:
+    metadata:
+      labels:
+        app: osdu-admin-ui
+    spec:
+      containers:
+        - name: admin-ui
+          image: docker.io/library/osdu-admin-ui:keycloak
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: BASE_URL
+              value: "https://api-do-osdu.esstar.com.vn"
+            - name: DATA_PARTITION_ID
+              value: "osdu"
+            - name: CLIENT_ID
+              value: "osdu-admin-ui"
+            - name: REDIRECT_URI
+              value: "https://admin-do-osdu.esstar.com.vn"
+            - name: KEYCLOAK_ISSUER
+              value: "https://keycloak-do-osdu.esstar.com.vn/realms/osdu"
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits:   { cpu: 200m, memory: 128Mi }
+          livenessProbe:
+            httpGet: { path: /health, port: 8080 }
+            initialDelaySeconds: 5
+          readinessProbe:
+            httpGet: { path: /health, port: 8080 }
+            initialDelaySeconds: 3

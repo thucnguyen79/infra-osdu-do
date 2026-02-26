@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: osdu-admin-ui-public
+  namespace: osdu-core
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - admin-do-osdu.esstar.com.vn
+      secretName: cf-origin-admin-tls
+  rules:
+    - host: admin-do-osdu.esstar.com.vn
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: osdu-admin-ui
+                port:
+                  number: 8080
