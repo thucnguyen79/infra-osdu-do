@@ -4,6 +4,7 @@ namespace: osdu-core
 
 resources:
   - ../../base
+  - ../../base/services/admin-ui
   - marker-configmap.yaml
   - ingress-public.yaml
   - extra/00-keycloak-internal-dns-alias.yaml
@@ -76,4 +77,3 @@ configMapGenerator:
       - JAVA_OPTS=-Xms256m -Xmx512m
       - SERVER_PORT=8080
 
-  - ../../base/services/admin-ui
