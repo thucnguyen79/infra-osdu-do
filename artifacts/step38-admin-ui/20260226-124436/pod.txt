@@ -1,0 +1,2 @@
+NAME                            READY   STATUS    RESTARTS   AGE   IP                NODE           NOMINATED NODE   READINESS GATES
+osdu-admin-ui-b6cc7fc9c-mlsx7   1/1     Running   0          49m   192.168.246.199   workernode02   <none>           <none>

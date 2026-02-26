@@ -1,0 +1,15 @@
+health: 200
+HTTP/2 200 
+date: Thu, 26 Feb 2026 05:44:36 GMT
+content-type: text/html
+last-modified: Thu, 26 Feb 2026 04:19:24 GMT
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=CTYZKcjSVCNdDvqDaSR499FveD7cFLh6Oa7fYxiPKQWjKLZN8pvdh5Kp9TQCQWBz%2B%2BMJ6uqGn7uIvMj8OhSLbUKGfIrU1I3FY6kvLEHiP%2BWS6VS19%2B8xNQkuTg%3D%3D"}]}
+cache-control: no-cache
+strict-transport-security: max-age=31536000; includeSubDomains
+x-content-type-options: nosniff
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-cache-status: DYNAMIC
+server: cloudflare
+cf-ray: 9d3d21ac787ea3f1-YYZ
+alt-svc: h3=":443"; ma=86400
+

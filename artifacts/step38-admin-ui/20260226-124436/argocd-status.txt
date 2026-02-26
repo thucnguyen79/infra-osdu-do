@@ -1,0 +1,2 @@
+NAME        SYNC     HEALTH
+osdu-core   Synced   Healthy
