@@ -82,9 +82,11 @@ spec:
               value: "osdu-poc"
             - name: GROUP_ID
               value: "osdu.local"
+            - name: LOGGING_LEVEL_ORG_OPENGROUP_OSDU
+              value: "DEBUG"
+            - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_JDBC
+              value: "DEBUG"
+            - name: LOG_LEVEL
+              value: "DEBUG"
             - name: CLOUD_PROVIDER
               value: "minio"
-        - name: LOGGING_LEVEL_ORG_OPENGROUP_OSDU
-          value: "DEBUG"
-        - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_JDBC
-          value: "DEBUG"
