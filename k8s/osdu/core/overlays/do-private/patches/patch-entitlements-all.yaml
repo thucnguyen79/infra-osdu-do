@@ -51,3 +51,31 @@ spec:
                 secretKeyRef:
                   name: osdu-postgres-secret
                   key: POSTGRES_PASSWORD
+
+            # === OPENID PROVIDER (token provisioning for Partition API) ===
+            # Copied from Storage service (working). Required for
+            # PartitionTenantInfoFactoryConfig to set "token provider configured: true"
+            - name: OPENID_PROVIDER_URL
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
+            - name: OPENID_PROVIDER_ISSUER
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
+            - name: OPENID_PROVIDER_ISSUER_URI
+              value: "http://keycloak.osdu-identity.svc.cluster.local/realms/osdu"
+            - name: OPENID_PROVIDER_CLIENT_ID
+              value: "osdu"
+            - name: OPENID_PROVIDER_CLIENT_SECRET
+              value: "dummy-secret-value"
+            - name: OPENID_PROVIDER_SCOPES
+              value: "openid profile email"
+
+            # === PARTITION & AUTHORIZE ENDPOINTS ===
+            - name: PARTITION_SERVICE_ENDPOINT
+              value: "http://osdu-partition:8080"
+            - name: PARTITION_HOST
+              value: "http://osdu-partition:8080"
+            - name: AUTHORIZE_API
+              value: "http://osdu-entitlements:8080/api/entitlements/v2"
+
+            # === CLOUD PROVIDER ===
+            - name: CLOUD_PROVIDER
+              value: "minio"
