@@ -84,3 +84,7 @@ spec:
               value: "osdu.local"
             - name: CLOUD_PROVIDER
               value: "minio"
+        - name: LOGGING_LEVEL_ORG_OPENGROUP_OSDU
+          value: "DEBUG"
+        - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_JDBC
+          value: "DEBUG"
