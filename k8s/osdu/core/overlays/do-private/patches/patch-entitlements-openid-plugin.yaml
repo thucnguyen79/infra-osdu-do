@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: osdu-entitlements
+spec:
+  template:
+    spec:
+      volumes:
+        - name: plugins
+          emptyDir: {}
+      initContainers:
+        # Step 1: Copy existing entitlements plugins to shared volume
+        - name: copy-base-plugins
+          image: community.opengroup.org:5555/osdu/platform/security-and-compliance/entitlements/core-plus-entitlements-v2-release:9e5865f1
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c", "cp /app/plugins/*.jar /plugins/ && ls -la /plugins/"]
+          volumeMounts:
+            - name: plugins
+              mountPath: /plugins
+        # Step 2: Copy apd-openid.jar from Storage image
+        - name: copy-openid-plugin
+          image: community.opengroup.org:5555/osdu/platform/system/storage/core-plus-storage-core-plus-release:dcc4c072
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c", "cp /app/plugins/apd-openid.jar /plugins/ && ls -la /plugins/"]
+          volumeMounts:
+            - name: plugins
+              mountPath: /plugins
+      containers:
+        - name: entitlements
+          volumeMounts:
+            - name: plugins
+              mountPath: /app/plugins
