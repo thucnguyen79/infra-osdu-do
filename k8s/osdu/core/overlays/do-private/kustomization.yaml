@@ -15,7 +15,6 @@ patches:
 
   # Entitlements
   - path: patches/patch-entitlements-all.yaml
-  - path: patches/patch-entitlements-openid-plugin.yaml
 
   # Legal
   - path: patches/patch-legal-all.yaml
