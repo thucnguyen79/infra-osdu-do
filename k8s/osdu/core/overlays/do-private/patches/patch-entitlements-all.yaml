@@ -77,5 +77,10 @@ spec:
               value: "http://osdu-entitlements:8080/api/entitlements/v2"
 
             # === CLOUD PROVIDER ===
+            # === DOMAIN (app.domain for email validation) ===
+            - name: APP_PROJECTID
+              value: "osdu-poc"
+            - name: GROUP_ID
+              value: "osdu.local"
             - name: CLOUD_PROVIDER
               value: "minio"
