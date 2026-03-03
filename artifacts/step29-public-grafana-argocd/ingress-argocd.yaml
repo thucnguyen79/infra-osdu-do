@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"nginx.ingress.kubernetes.io/proxy-buffer-size":"64k","nginx.ingress.kubernetes.io/proxy-buffers-number":"4"},"name":"argocd-public","namespace":"argocd"},"spec":{"ingressClassName":"nginx","rules":[{"host":"argocd-do-osdu.esstar.com.vn","http":{"paths":[{"backend":{"service":{"name":"argocd-server","port":{"number":80}}},"path":"/","pathType":"Prefix"}]}}],"tls":[{"hosts":["argocd-do-osdu.esstar.com.vn"],"secretName":"cf-origin-argocd-tls"}]}}
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 64k
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+  creationTimestamp: "2026-03-02T11:05:56Z"
+  generation: 1
+  name: argocd-public
+  namespace: argocd
+  resourceVersion: "16571350"
+  uid: 480b9b9c-bff9-43d5-b7b4-b6048bed1d74
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: argocd-do-osdu.esstar.com.vn
+    http:
+      paths:
+      - backend:
+          service:
+            name: argocd-server
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - argocd-do-osdu.esstar.com.vn
+    secretName: cf-origin-argocd-tls
+status:
+  loadBalancer:
+    ingress:
+    - ip: 10.118.0.6
+    - ip: 10.118.0.7
