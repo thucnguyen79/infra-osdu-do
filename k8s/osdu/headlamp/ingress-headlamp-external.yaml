@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: headlamp-ingress-external
+  namespace: kube-system
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - k8s-do-osdu.esstar.com.vn
+      secretName: cf-origin-headlamp-tls
+  rules:
+    - host: k8s-do-osdu.esstar.com.vn
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: headlamp
+                port:
+                  number: 80
