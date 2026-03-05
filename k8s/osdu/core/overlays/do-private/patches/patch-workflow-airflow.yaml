@@ -11,7 +11,7 @@ spec:
             - name: OSDU_AIRFLOW_ENABLED
               value: "true"
             - name: OSDU_AIRFLOW_URL
-              value: "http://airflow-webserver.osdu-airflow.svc.cluster.local:8080/api/v1"
+              value: "http://airflow-webserver.osdu-airflow.svc.cluster.local:8080"
             - name: OSDU_AIRFLOW_USERNAME
               value: "admin"
             - name: OSDU_AIRFLOW_PASSWORD
