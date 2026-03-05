@@ -5,7 +5,6 @@
 # =============================================
 
 executor: KubernetesExecutor
-
 defaultAirflowRepository: apache/airflow
 defaultAirflowTag: "2.10.5"
 
@@ -30,6 +29,15 @@ webserver:
     email: admin@esstar.com.vn
     firstName: OSDU
     lastName: Admin
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values: ["workernode02"]
 
 # ---- Scheduler ----
 scheduler:
@@ -41,6 +49,15 @@ scheduler:
     limits:
       cpu: 1000m
       memory: 1Gi
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values: ["workernode02"]
 
 # ---- Triggerer ----
 triggerer:
@@ -65,7 +82,6 @@ redis:
 # ---- External PostgreSQL (reuse osdu-postgres) ----
 postgresql:
   enabled: false
-
 data:
   metadataConnection:
     existingSecret: airflow-db-secret
@@ -93,7 +109,7 @@ config:
     delete_worker_pods: "True"
     delete_worker_pods_on_failure: "False"
 
-# ---- DAGs: PVC for POC (simple) ----
+# ---- DAGs: PVC for POC ----
 dags:
   persistence:
     enabled: true
@@ -110,29 +126,7 @@ logs:
     size: 5Gi
     storageClassName: do-block-storage-retain
 
-# ---- Ingress (disabled, create separately) ----
+# ---- Ingress (create separately) ----
 ingress:
   web:
     enabled: false
-
-# ---- Placement (prefer worker02 for balance) ----
-webserver:
-  affinity:
-    nodeAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          preference:
-            matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values: ["workernode02"]
-scheduler:
-  affinity:
-    nodeAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          preference:
-            matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values: ["workernode02"]
