@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: osdu-airflow
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/compare-options: IgnoreExtraneous
 spec:
   project: default
   source:
@@ -13,14 +11,68 @@ spec:
     targetRevision: 1.16.0
     helm:
       releaseName: airflow
+      valuesObject:
+        executor: KubernetesExecutor
+        defaultAirflowRepository: apache/airflow
+        defaultAirflowTag: "2.10.5"
+        webserver:
+          replicas: 1
+          defaultUser:
+            enabled: true
+            role: Admin
+            username: admin
+            password: Airflow@2026
+            email: admin@esstar.com.vn
+            firstName: OSDU
+            lastName: Admin
+        scheduler:
+          replicas: 1
+        triggerer:
+          enabled: true
+          replicas: 1
+        workers:
+          replicas: 0
+        flower:
+          enabled: false
+        redis:
+          enabled: false
+        postgresql:
+          enabled: false
+        data:
+          metadataConnection:
+            user: osduadmin
+            pass: "CHANGE_ME_STRONG"
+            protocol: postgresql
+            host: osdu-postgres.osdu-data.svc.cluster.local
+            port: 5432
+            db: airflow
+            sslmode: disable
+        fernetKeySecretName: airflow-fernet-key
+        webserverSecretKeySecretName: airflow-webserver-secret
+        config:
+          api:
+            auth_backends: "airflow.api.auth.backend.basic_auth"
+          core:
+            dags_are_paused_at_creation: "False"
+            load_examples: "False"
+        dags:
+          persistence:
+            enabled: true
+            size: 1Gi
+            storageClassName: do-block-storage-retain
+            accessMode: ReadWriteOnce
+          gitSync:
+            enabled: false
+        logs:
+          persistence:
+            enabled: false
+        ingress:
+          web:
+            enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: osdu-airflow
-  # No syncPolicy = manual only, observe mode
-  ignoreDifferences:
-    - group: "*"
-      kind: "*"
-      jsonPointers:
-        - /spec
-        - /data
-        - /metadata/annotations
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
