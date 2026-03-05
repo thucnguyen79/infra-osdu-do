@@ -1,0 +1,138 @@
+# =============================================
+# Apache Airflow - OSDU Integration
+# Chart: apache-airflow/airflow 1.16.0 (Airflow 2.10.5)
+# Executor: KubernetesExecutor (lightweight, on-demand workers)
+# =============================================
+
+executor: KubernetesExecutor
+
+defaultAirflowRepository: apache/airflow
+defaultAirflowTag: "2.10.5"
+
+# ---- Webserver ----
+webserver:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  startupProbe:
+    failureThreshold: 20
+    periodSeconds: 10
+  defaultUser:
+    enabled: true
+    role: Admin
+    username: admin
+    password: Airflow@2026
+    email: admin@esstar.com.vn
+    firstName: OSDU
+    lastName: Admin
+
+# ---- Scheduler ----
+scheduler:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+# ---- Triggerer ----
+triggerer:
+  enabled: true
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# ---- Không cần với KubernetesExecutor ----
+workers:
+  enabled: false
+flower:
+  enabled: false
+redis:
+  enabled: false
+
+# ---- External PostgreSQL (reuse osdu-postgres) ----
+postgresql:
+  enabled: false
+
+data:
+  metadataConnection:
+    existingSecret: airflow-db-secret
+    existingSecretKey: connection
+
+# ---- Secrets ----
+fernetKeySecretName: airflow-fernet-key
+webserverSecretKeySecretName: airflow-webserver-secret
+
+# ---- Airflow config ----
+config:
+  api:
+    auth_backends: "airflow.api.auth.backend.basic_auth"
+  core:
+    dags_are_paused_at_creation: "False"
+    load_examples: "False"
+  webserver:
+    expose_config: "True"
+    rbac: "True"
+    warn_deployment_exposure: "False"
+  kubernetes_executor:
+    namespace: "osdu-airflow"
+    worker_container_repository: "apache/airflow"
+    worker_container_tag: "2.10.5"
+    delete_worker_pods: "True"
+    delete_worker_pods_on_failure: "False"
+
+# ---- DAGs: PVC for POC (simple) ----
+dags:
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClassName: do-block-storage-retain
+    accessMode: ReadWriteOnce
+  gitSync:
+    enabled: false
+
+# ---- Logs ----
+logs:
+  persistence:
+    enabled: true
+    size: 5Gi
+    storageClassName: do-block-storage-retain
+
+# ---- Ingress (disabled, create separately) ----
+ingress:
+  web:
+    enabled: false
+
+# ---- Placement (prefer worker02 for balance) ----
+webserver:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values: ["workernode02"]
+scheduler:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values: ["workernode02"]
