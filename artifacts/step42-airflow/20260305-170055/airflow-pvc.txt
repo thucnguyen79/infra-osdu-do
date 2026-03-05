@@ -1,0 +1,3 @@
+NAME                       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS              VOLUMEATTRIBUTESCLASS   AGE
+airflow-dags               Bound    pvc-753ff0d9-3290-4bc0-b2c6-3bea2c8f758b   1Gi        RWO            do-block-storage-retain   <unset>                 39m
+logs-airflow-triggerer-0   Bound    pvc-37d58720-dad5-45ff-a3a0-e8eba44d158a   100Gi      RWO            do-block-storage          <unset>                 30m

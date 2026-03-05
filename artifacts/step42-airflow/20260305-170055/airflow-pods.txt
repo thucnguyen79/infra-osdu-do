@@ -1,0 +1,5 @@
+NAME                                 READY   STATUS    RESTARTS   AGE   IP                NODE           NOMINATED NODE   READINESS GATES
+airflow-scheduler-7ffcfd445-sxmjh    2/2     Running   0          32m   192.168.246.252   workernode02   <none>           <none>
+airflow-statsd-78b94c6899-k72qn      1/1     Running   0          34m   192.168.246.241   workernode02   <none>           <none>
+airflow-triggerer-0                  2/2     Running   0          30m   192.168.246.235   workernode02   <none>           <none>
+airflow-webserver-77685665f5-ww82x   1/1     Running   0          32m   192.168.246.203   workernode02   <none>           <none>

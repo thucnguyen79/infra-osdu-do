@@ -1,0 +1,2 @@
+NAME   	NAMESPACE   	REVISION	UPDATED                                	STATUS  	CHART         	APP VERSION
+airflow	osdu-airflow	3       	2026-03-05 16:30:11.410920822 +0700 +07	deployed	airflow-1.16.0	2.10.5     
