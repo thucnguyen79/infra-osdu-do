@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: osdu-airflow
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: airflow
+    repoURL: https://airflow.apache.org
+    targetRevision: 1.16.0
+    helm:
+      valueFiles: []
+      values: ""
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: osdu-airflow
+  syncPolicy:
+    syncOptions:
+      - Validate=false
+      - CreateNamespace=false
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
+    automated:
+      prune: false
+      selfHeal: false
