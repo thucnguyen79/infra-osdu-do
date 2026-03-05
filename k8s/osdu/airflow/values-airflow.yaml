@@ -1,7 +1,6 @@
 # =============================================
 # Apache Airflow - OSDU Integration
 # Chart: apache-airflow/airflow 1.16.0 (Airflow 2.10.5)
-# Executor: KubernetesExecutor (lightweight, on-demand workers)
 # =============================================
 
 executor: KubernetesExecutor
@@ -71,21 +70,31 @@ triggerer:
       cpu: 500m
       memory: 512Mi
 
-# ---- Không cần với KubernetesExecutor ----
+# ---- Workers (KubernetesExecutor = on-demand, set replicas 0) ----
 workers:
-  enabled: false
+  replicas: 0
+
+# ---- Flower (not needed) ----
 flower:
   enabled: false
+
+# ---- Redis (not needed for KubernetesExecutor) ----
 redis:
   enabled: false
 
-# ---- External PostgreSQL (reuse osdu-postgres) ----
+# ---- External PostgreSQL ----
 postgresql:
   enabled: false
+
 data:
   metadataConnection:
-    existingSecret: airflow-db-secret
-    existingSecretKey: connection
+    user: osduadmin
+    pass: CHANGE_ME_STRONG
+    protocol: postgresql
+    host: osdu-postgres.osdu-data.svc.cluster.local
+    port: 5432
+    db: airflow
+    sslmode: disable
 
 # ---- Secrets ----
 fernetKeySecretName: airflow-fernet-key
