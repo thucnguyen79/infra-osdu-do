@@ -131,7 +131,7 @@ dags:
 # ---- Logs ----
 logs:
   persistence:
-    enabled: true
+    enabled: false
     size: 5Gi
     storageClassName: do-block-storage-retain
 
