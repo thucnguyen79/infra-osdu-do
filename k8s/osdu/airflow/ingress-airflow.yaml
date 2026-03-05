@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: airflow-ingress
+  namespace: osdu-airflow
+  annotations:
+    cert-manager.io/cluster-issuer: internal-ca
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - airflow.internal
+      secretName: airflow-internal-tls
+  rules:
+    - host: airflow.internal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: airflow-webserver
+                port:
+                  number: 8080
