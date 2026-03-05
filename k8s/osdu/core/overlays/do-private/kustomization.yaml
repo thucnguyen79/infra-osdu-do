@@ -48,6 +48,7 @@ patches:
   - path: patches/revision-history/patch-register.yaml
   - path: patches/revision-history/patch-secret.yaml
   - path: patches/revision-history/patch-workflow.yaml
+  - path: patches/patch-workflow-airflow.yaml
   - path: patches/revision-history/patch-unit.yaml
   - path: patches/revision-history/patch-crs-catalog.yaml
   - path: patches/revision-history/patch-crs-conversion.yaml
